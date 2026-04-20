@@ -9,26 +9,26 @@
 
 维护前优先读规格包的 `spec-summary.md`、`requirements/_index.md`、`architecture/_index.md`、`epics/_index.md`，再读 workflow 的 `IMPL_PLAN.md`、`TODO_LIST.md`、`.task/IMPL-*.json`、`.process/PLAN_VERIFICATION.md` 和 `.process/verify_expression.py`。
 
-UI 改版已完成分析与规划但尚未执行，位置：
+UI 改版已完成分析、规划与实现，位置：
 
 - `../.workflow/.analysis/ANL-2026-04-20-game-content-extraction-ui-redesign/`
 - `../.workflow/active/WFS-game-content-ui-redesign/`
 
-执行 UI 改版前先读 `IMPL_PLAN.md`、`TODO_LIST.md`、`.task/IMPL-*.json`、`.process/context-package.json` 和 `.process/PLAN_VERIFICATION.md`；质量门为 `PROCEED_WITH_CAUTION`，建议按任务顺序执行。
+维护 UI 双工作区前先读 `IMPL_PLAN.md`、`TODO_LIST.md`、`.task/IMPL-*.json`、`.process/context-package.json` 和 `.process/PLAN_VERIFICATION.md`；质量门记录为 `PROCEED_WITH_CAUTION`。
 
 ## 当前功能
 
-- 图形界面输入盲盒编号和动物类型。
-- 主界面按钮 `人物表情抽取` 可打开独立表情抽取窗口。
+- 主窗口顶部可在 `盲盒物品/动物抽取` 与 `人物表情抽取` 两个工作区间切换。
+- 默认工作区输入盲盒编号和动物类型。
 - 支持多个盲盒编号，程序随机选中一个盲盒。
 - 支持物品类别、动物内容类别开关和数量设置。
 - 支持“物品状态词 + 物品名”组合输出。
 - 支持输入附加指令：禁用某类内容、调整某类抽取数量。
 - 支持复制结果、清空输入、自动粘贴。
 
-## 待执行 UI 改版规划
+## 已实现 UI 改版
 
-目标：把当前“主窗口盲盒/动物 + 人物表情 `Toplevel`”改为单主窗口双工作区。
+当前界面已从“主窗口盲盒/动物 + 人物表情 `Toplevel`”改为单主窗口双工作区。
 
 - 顶部两个切换按钮：`盲盒物品/动物抽取`、`人物表情抽取`。
 - 默认显示盲盒物品/动物抽取；点击人物表情后在同一主窗口切换内容，不再默认弹出独立窗口。
@@ -36,13 +36,13 @@ UI 改版已完成分析与规划但尚未执行，位置：
 - 参考 `../UI风格参考.png` 做轻量 Tkinter 转译：浅灰蓝背景、白色内容区、蓝色主操作、胶囊式切换、宽松间距。
 - 第一版不引入第三方 UI 依赖，不追求完整阴影、真实圆角或像素级复刻。
 
-实现建议：
+实现结构：
 
-1. `setup_ui()` 只负责主壳、样式、切换按钮和工作区容器。
-2. 盲盒/动物控件迁入 `build_blind_box_workspace(parent)`，保留 `input_entry`、`state_var`、`category_vars`、`category_spin_vars`、`animal_vars`、`animal_spin_vars`、`auto_paste_var`、`output_text`。
-3. 表情控件迁入 `build_expression_workspace(parent)`，保留 `expression_input_text`、`expression_output_text`、`expression_template_mode_var`、`expression_template_index_var`。
-4. `open_expression_window()` 可改为兼容薄包装：切换到人物表情工作区并聚焦输入框。
-5. 两个工作区建议持久存在，切换时隐藏/显示，不要反复销毁控件。
+1. `setup_ui()` 负责主壳、样式、切换按钮和工作区容器。
+2. 盲盒/动物控件位于 `_build_blind_box_workspace(parent)`，保留 `input_entry`、`state_var`、`category_vars`、`category_spin_vars`、`animal_vars`、`animal_spin_vars`、`auto_paste_var`、`output_text`。
+3. 表情控件位于 `_build_expression_workspace(parent)`，保留 `expression_input_text`、`expression_output_text`、`expression_template_mode_var`、`expression_template_index_var`。
+4. `open_expression_window()` 是兼容薄包装：切换到人物表情工作区并聚焦输入框，不再作为默认弹窗入口。
+5. 两个工作区持久存在，切换时隐藏/显示，不反复销毁控件。
 
 ## 历史机制
 
@@ -56,7 +56,7 @@ UI 改版已完成分析与规划但尚未执行，位置：
 
 ## 关键文件
 
-- `内容抽取.py`：界面、输入解析、抽取逻辑、历史读写、按钮行为；当前人物表情窗口入口、`Toplevel` 和 `enhance_expression_text` 也在此文件；UI 改版后应成为主窗口双工作区。
+- `内容抽取.py`：界面、输入解析、抽取逻辑、历史读写、按钮行为、主窗口双工作区、`open_expression_window` 兼容入口和 `enhance_expression_text`。
 - `data/blind_boxes.py`：盲盒物品数据常量 `BLIND_BOXES`。
 - `data/animals.py`：动物数据常量 `ANIMALS`。
 - `data/item_states.py`：物品状态词 `ITEM_STATE_GROUPS` 和权重 `ITEM_STATE_GROUP_WEIGHTS`。
@@ -97,7 +97,7 @@ UI 改版已完成分析与规划但尚未执行，位置：
 - 改内容优先看 `data/`；改 UI、解析、抽取算法、历史、输出格式才进入 `内容抽取.py`。
 - 不要把 `data/` 拆得过碎，不要在 `data/` 中加入 UI、抽样逻辑或历史保存逻辑。
 
-## 人物表情抽取窗口
+## 人物表情抽取工作区
 
 目标：把 `组图 23 表情前置.md` 输出的表情组文本，自动补全为 `组图 23.md` 可用的眉 / 眼 / 嘴描述。
 
@@ -111,7 +111,7 @@ UI 改版已完成分析与规划但尚未执行，位置：
 
 已实现行为与约束：
 
-- 使用独立 `Toplevel`，不复用现有盲盒/动物单行输入框。
+- 使用主窗口 `expression` 工作区，不复用现有盲盒/动物单行输入框；独立 `Toplevel` 说法已过时。
 - `组图 23 表情库.md` 是单一事实源；每类 1-4 为单人模板，5-8 为多人模板。
 - 支持指定模板编号；随机只作为可选策略。
 - UI 默认策略优先“指定模板编号”；验收样例必须能稳定选择模板编号 4。
@@ -129,7 +129,7 @@ UI 改版已完成分析与规划但尚未执行，位置：
 维护入口：
 
 1. 纯逻辑：`enhance_expression_text` 及其辅助方法负责字段解析、表情库解析、模板编号选择、原文局部回填。
-2. UI：`open_expression_window`、`extract_expression_content`、`clear_expression_content`、`copy_expression_result` 负责独立窗口行为。
+2. UI：`open_expression_window`、`extract_expression_content`、`clear_expression_content`、`copy_expression_result` 负责表情工作区行为；`open_expression_window` 仅做兼容切换和聚焦。
 3. 打包：`内容抽取.spec` 的 `datas=[('../组图 23 表情库.md', '.')]` 已加入表情库；代码同时查源码根目录、程序相邻目录和 `_MEIPASS`。
 
 必须覆盖的错误提示：
@@ -156,5 +156,5 @@ UI 改版已完成分析与规划但尚未执行，位置：
 2. 内容变化是否只需要改 `data/`？
 3. 是否会影响输入语法、抽取历史、按钮语义或输出格式？
 4. 若涉及人物表情抽取，是否仍遵守 Markdown 单一事实源、原文局部回填、占位符保留和不接入历史机制？
-5. 若涉及 UI 改版，是否遵守 `WFS-game-content-ui-redesign` 的双工作区计划，并保留现有实例属性名？
-6. 改完表情抽取逻辑或 UI 入口后，运行 `python -B '..\.workflow\active\WFS-game-content-expression-window\.process\verify_expression.py'` 做回归；UI 改版还要运行 `python -m py_compile '内容抽取.py'` 并手动检查双按钮切换。
+5. 若涉及 UI 改动，是否保留主窗口双工作区结构和现有实例属性名？
+6. 改完表情抽取逻辑或 UI 入口后，运行 `python -B '..\.workflow\active\WFS-game-content-expression-window\.process\verify_expression.py'` 做回归；UI 改动还要运行 `python -m py_compile '内容抽取.py'`，并在环境允许时手动检查双按钮切换。

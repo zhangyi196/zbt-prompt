@@ -10,10 +10,25 @@ from data.blind_boxes import BLIND_BOXES
 from data.item_states import ITEM_STATE_GROUPS, ITEM_STATE_GROUP_WEIGHTS
 
 class BlindBoxExtractor:
+    UI_COLORS = {
+        "app_bg": "#eef4f8",
+        "panel_bg": "#ffffff",
+        "surface_bg": "#f7fbff",
+        "line": "#d8e2ec",
+        "muted_text": "#6f7f90",
+        "text": "#1f2937",
+        "blue": "#1687d9",
+        "blue_hover": "#0f75bd",
+        "blue_soft": "#e7f1ff",
+        "field_bg": "#fbfdff",
+    }
+    UI_FONT = ("Microsoft YaHei UI", 10)
+    UI_FONT_BOLD = ("Microsoft YaHei UI", 10, "bold")
+
     def __init__(self, root):
         self.root = root
         self.root.title("游戏内容抽取软件")
-        self.root.geometry("560x760")
+        self.root.geometry("980x720")
         
         # Static content lives in data/ so this file can focus on logic.
         self.item_state_groups = ITEM_STATE_GROUPS
@@ -49,6 +64,9 @@ class BlindBoxExtractor:
         self.expression_output_text = None
         self.expression_template_mode_var = None
         self.expression_template_index_var = None
+        self.workspace_buttons = {}
+        self.workspace_frames = {}
+        self.current_workspace = None
         self.setup_ui()
 
     
@@ -213,34 +231,208 @@ class BlindBoxExtractor:
         self._show_output_message("全部抽取历史已重置")
 
     def setup_ui(self):
-        input_frame = ttk.Frame(self.root)
-        input_frame.pack(pady=(10, 4), padx=10, fill=tk.X)
-        ttk.Label(input_frame, text="盲盒数字/动物类型(逗号分隔):").pack(side=tk.LEFT, padx=5)
+        self._configure_styles()
+
+        self.app_shell = ttk.Frame(self.root, style="App.TFrame")
+        self.app_shell.pack(fill=tk.BOTH, expand=True)
+
+        self._build_workspace_switcher(self.app_shell)
+
+        self.workspace_host = ttk.Frame(
+            self.app_shell,
+            style="WorkspaceHost.TFrame",
+            padding=(18, 16),
+            borderwidth=1,
+            relief="solid",
+        )
+        self.workspace_host.pack(padx=24, pady=(0, 24), fill=tk.BOTH, expand=True)
+
+        self.blind_box_workspace = ttk.Frame(self.workspace_host, style="Workspace.TFrame")
+        self.expression_workspace = ttk.Frame(self.workspace_host, style="Workspace.TFrame")
+        self.workspace_frames = {
+            "blind_box": self.blind_box_workspace,
+            "expression": self.expression_workspace,
+        }
+
+        self._build_blind_box_workspace(self.blind_box_workspace)
+        self._build_expression_workspace(self.expression_workspace)
+        self._show_workspace("blind_box")
+
+    def _configure_styles(self):
+        colors = self.UI_COLORS
+        self.root.configure(bg=colors["app_bg"])
+        self.style = ttk.Style()
+        try:
+            self.style.theme_use("clam")
+        except tk.TclError:
+            pass
+
+        self.style.configure(".", font=self.UI_FONT)
+        self.style.configure("TFrame", background=colors["panel_bg"])
+        self.style.configure("TLabel", background=colors["panel_bg"], foreground=colors["text"])
+        self.style.configure("TCheckbutton", background=colors["panel_bg"], foreground=colors["text"])
+        self.style.configure("TRadiobutton", background=colors["panel_bg"], foreground=colors["text"])
+        self.style.configure("TEntry", fieldbackground=colors["field_bg"], foreground=colors["text"])
+        self.style.configure("TSpinbox", fieldbackground=colors["field_bg"], foreground=colors["text"])
+        self.style.configure(
+            "TLabelframe",
+            background=colors["panel_bg"],
+            bordercolor=colors["line"],
+            lightcolor=colors["line"],
+            darkcolor=colors["line"],
+            padding=(12, 10),
+        )
+        self.style.configure(
+            "TLabelframe.Label",
+            background=colors["panel_bg"],
+            foreground=colors["text"],
+            font=self.UI_FONT_BOLD,
+        )
+        self.style.configure("App.TFrame", background=colors["app_bg"])
+        self.style.configure("Header.TFrame", background=colors["app_bg"])
+        self.style.configure(
+            "SwitchBar.TFrame",
+            background=colors["panel_bg"],
+            bordercolor=colors["line"],
+            lightcolor=colors["line"],
+            darkcolor=colors["line"],
+        )
+        self.style.configure(
+            "WorkspaceHost.TFrame",
+            background=colors["panel_bg"],
+            bordercolor=colors["line"],
+            lightcolor=colors["line"],
+            darkcolor=colors["line"],
+        )
+        self.style.configure("Workspace.TFrame", background=colors["panel_bg"])
+        self.style.configure("Muted.TLabel", background=colors["panel_bg"], foreground=colors["muted_text"])
+        self.style.configure(
+            "Switcher.TButton",
+            padding=(18, 8),
+            background=colors["surface_bg"],
+            foreground=colors["text"],
+            bordercolor=colors["line"],
+            focusthickness=0,
+        )
+        self.style.configure(
+            "ActiveSwitcher.TButton",
+            padding=(18, 8),
+            background=colors["blue_soft"],
+            foreground=colors["blue"],
+            bordercolor=colors["blue_soft"],
+            font=self.UI_FONT_BOLD,
+            focusthickness=0,
+        )
+        self.style.configure(
+            "Primary.TButton",
+            padding=(16, 8),
+            background=colors["blue"],
+            foreground="#ffffff",
+            bordercolor=colors["blue"],
+            font=self.UI_FONT_BOLD,
+            focusthickness=0,
+        )
+        self.style.configure(
+            "Secondary.TButton",
+            padding=(14, 7),
+            background=colors["surface_bg"],
+            foreground=colors["text"],
+            bordercolor=colors["line"],
+            focusthickness=0,
+        )
+        self.style.map(
+            "Primary.TButton",
+            background=[("pressed", colors["blue_hover"]), ("active", colors["blue_hover"])],
+            foreground=[("pressed", "#ffffff"), ("active", "#ffffff")],
+        )
+        self.style.map(
+            "ActiveSwitcher.TButton",
+            background=[("pressed", colors["blue_soft"]), ("active", colors["blue_soft"])],
+            foreground=[("pressed", colors["blue"]), ("active", colors["blue"])],
+        )
+        self.style.map(
+            "Switcher.TButton",
+            background=[("pressed", colors["blue_soft"]), ("active", colors["blue_soft"])],
+            foreground=[("pressed", colors["blue"]), ("active", colors["blue"])],
+        )
+
+    def _build_workspace_switcher(self, parent):
+        header_frame = ttk.Frame(parent, style="Header.TFrame")
+        header_frame.pack(padx=24, pady=(22, 14), fill=tk.X)
+
+        switcher_frame = ttk.Frame(
+            header_frame,
+            style="SwitchBar.TFrame",
+            padding=6,
+            borderwidth=1,
+            relief="solid",
+        )
+        switcher_frame.pack(side=tk.LEFT)
+
+        self.workspace_buttons = {
+            "blind_box": ttk.Button(
+                switcher_frame,
+                text="盲盒物品/动物抽取",
+                style="Switcher.TButton",
+                command=lambda: self._show_workspace("blind_box"),
+            ),
+            "expression": ttk.Button(
+                switcher_frame,
+                text="人物表情抽取",
+                style="Switcher.TButton",
+                command=lambda: self._show_workspace("expression"),
+            ),
+        }
+        self.workspace_buttons["blind_box"].pack(side=tk.LEFT, padx=(0, 6))
+        self.workspace_buttons["expression"].pack(side=tk.LEFT)
+
+    def _show_workspace(self, name):
+        if name not in self.workspace_frames:
+            raise ValueError(f"未知工作区：{name}")
+
+        for workspace_name, frame in self.workspace_frames.items():
+            if workspace_name == name:
+                frame.pack(fill=tk.BOTH, expand=True)
+            else:
+                frame.pack_forget()
+
+        for workspace_name, button in self.workspace_buttons.items():
+            button.configure(
+                style="ActiveSwitcher.TButton" if workspace_name == name else "Switcher.TButton"
+            )
+
+        self.current_workspace = name
+
+    def _build_blind_box_workspace(self, parent):
+        input_frame = ttk.Frame(parent)
+        input_frame.pack(pady=(4, 8), fill=tk.X)
+        ttk.Label(input_frame, text="盲盒数字/动物类型(逗号分隔):").pack(side=tk.LEFT, padx=(0, 10))
         self.input_entry = ttk.Entry(input_frame, width=36)
-        self.input_entry.pack(side=tk.LEFT, padx=5, fill=tk.X, expand=True)
+        self.input_entry.pack(side=tk.LEFT, fill=tk.X, expand=True)
 
         ttk.Label(
-            self.root,
+            parent,
             text="示例：1,5,地面动物,无大型物品,中型物品+1",
-        ).pack(padx=15, anchor=tk.W)
+            style="Muted.TLabel",
+        ).pack(anchor=tk.W)
 
-        state_frame = ttk.Frame(self.root)
-        state_frame.pack(pady=5, padx=10, fill=tk.X)
+        state_frame = ttk.Frame(parent)
+        state_frame.pack(pady=(12, 8), fill=tk.X)
         self.state_var = tk.BooleanVar(value=False)
-        ttk.Checkbutton(state_frame, text="启用物品状态", variable=self.state_var).pack(side=tk.LEFT, padx=5)
+        ttk.Checkbutton(state_frame, text="启用物品状态", variable=self.state_var).pack(side=tk.LEFT)
 
-        category_frame = ttk.LabelFrame(self.root, text="物品类别与抽取数量")
-        category_frame.pack(pady=5, padx=10, fill=tk.X)
+        category_frame = ttk.LabelFrame(parent, text="物品类别与抽取数量")
+        category_frame.pack(pady=(4, 10), fill=tk.X)
 
         self.category_vars = {}
         self.category_spin_vars = {}
         for key, label in self.category_info:
             row_frame = ttk.Frame(category_frame)
-            row_frame.pack(fill=tk.X, padx=5, pady=2)
+            row_frame.pack(fill=tk.X, pady=4)
 
             var = tk.BooleanVar(value=True)
             self.category_vars[key] = var
-            ttk.Checkbutton(row_frame, text=label, variable=var).pack(side=tk.LEFT, padx=(0, 10))
+            ttk.Checkbutton(row_frame, text=label, variable=var).pack(side=tk.LEFT, padx=(0, 14))
 
             ttk.Label(row_frame, text="数量:").pack(side=tk.LEFT)
             default_count = 1 if key != "medium" else 2
@@ -253,21 +445,22 @@ class BlindBoxExtractor:
                 width=3,
                 textvariable=spin_var,
                 state="readonly",
-            ).pack(side=tk.LEFT, padx=5)
+                **self._spinbox_style_options(),
+            ).pack(side=tk.LEFT, padx=6)
 
-        animal_frame = ttk.LabelFrame(self.root, text="动物内容与抽取数量")
-        animal_frame.pack(pady=5, padx=10, fill=tk.X)
+        animal_frame = ttk.LabelFrame(parent, text="动物内容与抽取数量")
+        animal_frame.pack(pady=(0, 12), fill=tk.X)
 
         self.animal_vars = {}
         self.animal_spin_vars = {}
         for key, label in self.animal_info:
             row_frame = ttk.Frame(animal_frame)
-            row_frame.pack(fill=tk.X, padx=5, pady=2)
+            row_frame.pack(fill=tk.X, pady=4)
 
             default_selected = key == "动物本体"
             var = tk.BooleanVar(value=default_selected)
             self.animal_vars[key] = var
-            ttk.Checkbutton(row_frame, text=label, variable=var).pack(side=tk.LEFT, padx=(0, 10))
+            ttk.Checkbutton(row_frame, text=label, variable=var).pack(side=tk.LEFT, padx=(0, 14))
 
             ttk.Label(row_frame, text="数量:").pack(side=tk.LEFT)
             spin_var = tk.IntVar(value=1)
@@ -279,31 +472,107 @@ class BlindBoxExtractor:
                 width=3,
                 textvariable=spin_var,
                 state="readonly",
-            ).pack(side=tk.LEFT, padx=5)
+                **self._spinbox_style_options(),
+            ).pack(side=tk.LEFT, padx=6)
 
-        button_frame = ttk.Frame(self.root)
-        button_frame.pack(pady=10)
+        button_frame = ttk.Frame(parent)
+        button_frame.pack(pady=(2, 14))
 
-        ttk.Button(button_frame, text="开始抽取", command=self.extract).pack(side=tk.LEFT, padx=10)
+        ttk.Button(button_frame, text="开始抽取", command=self.extract, style="Primary.TButton").pack(side=tk.LEFT, padx=8)
 
         clear_frame = ttk.Frame(button_frame)
-        clear_frame.pack(side=tk.LEFT, padx=10)
-        ttk.Button(clear_frame, text="清空输入", command=self.clear_input).pack(side=tk.LEFT)
+        clear_frame.pack(side=tk.LEFT, padx=8)
+        ttk.Button(clear_frame, text="清空输入", command=self.clear_input, style="Secondary.TButton").pack(side=tk.LEFT)
         self.auto_paste_var = tk.BooleanVar(value=True)
-        ttk.Checkbutton(clear_frame, text="自动粘贴", variable=self.auto_paste_var).pack(side=tk.LEFT, padx=(5, 0))
+        ttk.Checkbutton(clear_frame, text="自动粘贴", variable=self.auto_paste_var).pack(side=tk.LEFT, padx=(8, 0))
 
-        ttk.Button(button_frame, text="复制结果", command=self.copy_to_clipboard).pack(side=tk.LEFT, padx=10)
-        ttk.Button(button_frame, text="人物表情抽取", command=self.open_expression_window).pack(side=tk.LEFT, padx=10)
+        ttk.Button(button_frame, text="复制结果", command=self.copy_to_clipboard, style="Secondary.TButton").pack(side=tk.LEFT, padx=8)
 
-        ttk.Label(self.root, text="提示词输出:").pack(padx=10, anchor=tk.W)
-        history_button_frame = ttk.Frame(self.root)
-        history_button_frame.pack(pady=(0, 10))
-        ttk.Button(history_button_frame, text="重置物品历史", command=self._reset_item_history).pack(side=tk.LEFT, padx=5)
-        ttk.Button(history_button_frame, text="重置动物历史", command=self._reset_animal_history).pack(side=tk.LEFT, padx=5)
-        ttk.Button(history_button_frame, text="重置全部历史", command=self._reset_all_history).pack(side=tk.LEFT, padx=5)
+        ttk.Label(parent, text="提示词输出:", font=self.UI_FONT_BOLD).pack(anchor=tk.W)
+        history_button_frame = ttk.Frame(parent)
+        history_button_frame.pack(pady=(8, 10))
+        ttk.Button(history_button_frame, text="重置物品历史", command=self._reset_item_history, style="Secondary.TButton").pack(side=tk.LEFT, padx=5)
+        ttk.Button(history_button_frame, text="重置动物历史", command=self._reset_animal_history, style="Secondary.TButton").pack(side=tk.LEFT, padx=5)
+        ttk.Button(history_button_frame, text="重置全部历史", command=self._reset_all_history, style="Secondary.TButton").pack(side=tk.LEFT, padx=5)
 
-        self.output_text = scrolledtext.ScrolledText(self.root, height=22, width=100)
-        self.output_text.pack(padx=10, pady=5, fill=tk.BOTH, expand=True)
+        self.output_text = scrolledtext.ScrolledText(parent, height=22, width=100)
+        self._style_text_widget(self.output_text)
+        self.output_text.pack(pady=(0, 2), fill=tk.BOTH, expand=True)
+
+    def _build_expression_workspace(self, parent):
+        ttk.Label(parent, text="表情组文本:", font=self.UI_FONT_BOLD).pack(pady=(4, 6), anchor=tk.W)
+        self.expression_input_text = scrolledtext.ScrolledText(parent, height=12, width=92)
+        self._style_text_widget(self.expression_input_text)
+        self.expression_input_text.pack(pady=(0, 12), fill=tk.BOTH, expand=True)
+
+        control_frame = ttk.Frame(parent)
+        control_frame.pack(pady=(0, 12), fill=tk.X)
+
+        self.expression_template_mode_var = tk.StringVar(value="specified")
+        ttk.Radiobutton(
+            control_frame,
+            text="指定模板编号",
+            variable=self.expression_template_mode_var,
+            value="specified",
+        ).pack(side=tk.LEFT, padx=(0, 8))
+        ttk.Radiobutton(
+            control_frame,
+            text="随机模板",
+            variable=self.expression_template_mode_var,
+            value="random",
+        ).pack(side=tk.LEFT, padx=(0, 12))
+
+        ttk.Label(control_frame, text="编号:").pack(side=tk.LEFT)
+        self.expression_template_index_var = tk.IntVar(value=4)
+        tk.Spinbox(
+            control_frame,
+            from_=1,
+            to=8,
+            width=4,
+            textvariable=self.expression_template_index_var,
+            state="readonly",
+            **self._spinbox_style_options(),
+        ).pack(side=tk.LEFT, padx=5)
+        ttk.Label(control_frame, text="单人 1-4，多人 5-8", style="Muted.TLabel").pack(side=tk.LEFT, padx=10)
+
+        button_frame = ttk.Frame(parent)
+        button_frame.pack(pady=(0, 14))
+        ttk.Button(button_frame, text="抽取表情", command=self.extract_expression_content, style="Primary.TButton").pack(side=tk.LEFT, padx=8)
+        ttk.Button(button_frame, text="清空", command=self.clear_expression_content, style="Secondary.TButton").pack(side=tk.LEFT, padx=8)
+        ttk.Button(button_frame, text="复制结果", command=self.copy_expression_result, style="Secondary.TButton").pack(side=tk.LEFT, padx=8)
+
+        ttk.Label(parent, text="增强后文本:", font=self.UI_FONT_BOLD).pack(pady=(0, 6), anchor=tk.W)
+        self.expression_output_text = scrolledtext.ScrolledText(parent, height=14, width=92)
+        self._style_text_widget(self.expression_output_text)
+        self.expression_output_text.pack(pady=(0, 2), fill=tk.BOTH, expand=True)
+
+    def _style_text_widget(self, widget):
+        colors = self.UI_COLORS
+        widget.configure(
+            bg=colors["field_bg"],
+            fg=colors["text"],
+            insertbackground=colors["blue"],
+            selectbackground=colors["blue_soft"],
+            selectforeground=colors["text"],
+            relief=tk.SOLID,
+            bd=1,
+            padx=10,
+            pady=8,
+            font=self.UI_FONT,
+            wrap=tk.WORD,
+        )
+
+    def _spinbox_style_options(self):
+        colors = self.UI_COLORS
+        return {
+            "bg": colors["field_bg"],
+            "buttonbackground": colors["surface_bg"],
+            "foreground": colors["text"],
+            "readonlybackground": colors["field_bg"],
+            "relief": tk.SOLID,
+            "bd": 1,
+            "font": self.UI_FONT,
+        }
 
     def _parse_input(self, input_str):
         normalized_input = (
@@ -476,68 +745,9 @@ class BlindBoxExtractor:
                 pass
 
     def open_expression_window(self):
-        if self.expression_window and self.expression_window.winfo_exists():
-            self.expression_window.lift()
-            self.expression_window.focus_force()
-            return
-
-        window = tk.Toplevel(self.root)
-        self.expression_window = window
-        window.title("人物表情抽取")
-        window.geometry("760x640")
-
-        def handle_close():
-            self.expression_window = None
-            self.expression_input_text = None
-            self.expression_output_text = None
-            self.expression_template_mode_var = None
-            self.expression_template_index_var = None
-            window.destroy()
-
-        window.protocol("WM_DELETE_WINDOW", handle_close)
-
-        ttk.Label(window, text="表情组文本:").pack(padx=10, pady=(10, 2), anchor=tk.W)
-        self.expression_input_text = scrolledtext.ScrolledText(window, height=12, width=92)
-        self.expression_input_text.pack(padx=10, pady=(0, 6), fill=tk.BOTH, expand=True)
-
-        control_frame = ttk.Frame(window)
-        control_frame.pack(padx=10, pady=4, fill=tk.X)
-
-        self.expression_template_mode_var = tk.StringVar(value="specified")
-        ttk.Radiobutton(
-            control_frame,
-            text="指定模板编号",
-            variable=self.expression_template_mode_var,
-            value="specified",
-        ).pack(side=tk.LEFT, padx=(0, 8))
-        ttk.Radiobutton(
-            control_frame,
-            text="随机模板",
-            variable=self.expression_template_mode_var,
-            value="random",
-        ).pack(side=tk.LEFT, padx=(0, 12))
-
-        ttk.Label(control_frame, text="编号:").pack(side=tk.LEFT)
-        self.expression_template_index_var = tk.IntVar(value=4)
-        tk.Spinbox(
-            control_frame,
-            from_=1,
-            to=8,
-            width=4,
-            textvariable=self.expression_template_index_var,
-            state="readonly",
-        ).pack(side=tk.LEFT, padx=5)
-        ttk.Label(control_frame, text="单人 1-4，多人 5-8").pack(side=tk.LEFT, padx=8)
-
-        button_frame = ttk.Frame(window)
-        button_frame.pack(pady=8)
-        ttk.Button(button_frame, text="抽取表情", command=self.extract_expression_content).pack(side=tk.LEFT, padx=8)
-        ttk.Button(button_frame, text="清空", command=self.clear_expression_content).pack(side=tk.LEFT, padx=8)
-        ttk.Button(button_frame, text="复制结果", command=self.copy_expression_result).pack(side=tk.LEFT, padx=8)
-
-        ttk.Label(window, text="增强后文本:").pack(padx=10, pady=(4, 2), anchor=tk.W)
-        self.expression_output_text = scrolledtext.ScrolledText(window, height=14, width=92)
-        self.expression_output_text.pack(padx=10, pady=(0, 10), fill=tk.BOTH, expand=True)
+        self._show_workspace("expression")
+        if self.expression_input_text:
+            self.root.after_idle(self.expression_input_text.focus_set)
 
     def extract_expression_content(self):
         if not self.expression_input_text or not self.expression_output_text:

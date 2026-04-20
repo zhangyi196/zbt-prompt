@@ -13,7 +13,7 @@
 - `.workflow/.spec/SPEC-2026-04-20-game-content-extraction-人物表情抽取窗口/`：人物表情抽取窗口规格包；实现前优先读 `spec-summary.md`、`requirements/_index.md`、`architecture/_index.md`、`epics/_index.md`。
 - `.workflow/active/WFS-game-content-expression-window/`：人物表情抽取窗口已执行 workflow；`TODO_LIST.md` 已完成，验证脚本在 `.process/verify_expression.py`，结果在 `results.csv`。
 - `.workflow/.analysis/ANL-2026-04-20-game-content-extraction-ui-redesign/`：`Game content extraction` UI 改版分析；目标是主窗口两个按钮切换盲盒物品/动物抽取与人物表情抽取，并参考 `UI风格参考.png` 做轻量 Tkinter 风格更新。
-- `.workflow/active/WFS-game-content-ui-redesign/`：UI 改版已规划 workflow；质量门为 `PROCEED_WITH_CAUTION`，按 `IMPL_PLAN.md` 和 `TODO_LIST.md` 顺序执行，不要与已完成的人物表情窗口 workflow 混淆。
+- `.workflow/active/WFS-game-content-ui-redesign/`：UI 改版 workflow；已落地主窗口双工作区，顶部切换 `盲盒物品/动物抽取` 与 `人物表情抽取`，质量门记录为 `PROCEED_WITH_CAUTION`。
 
 ## 通用不变量
 
@@ -40,9 +40,9 @@
 - 小型 `tkinter` 桌面工具；不要默认改成 Web、数据库、服务端或大型多模块工程。
 - 现有盲盒/动物抽取输入是逗号分隔单行语法；不得破坏多个盲盒编号、可选动物类型、`无某类`、`某类+N` / `某类-N`。
 - `draw_history.json` 只服务现有物品池和动物池历史；人物表情抽取窗口第一版不得接入该历史降权机制。
-- 人物表情抽取窗口已接入 `内容抽取.py`：主界面按钮 `人物表情抽取` 打开独立 `Toplevel`；读取 `组图 23 表情库.md`；按 `极性 + 具体表情 + 单人/多人` 查模板；1-4 单人，5-8 多人；支持指定模板编号和可选随机。
-- UI 改版已规划但尚未执行：目标是单主窗口双工作区，顶部两个按钮 `盲盒物品/动物抽取` 与 `人物表情抽取` 切换内容；执行前读 `.workflow/active/WFS-game-content-ui-redesign/IMPL_PLAN.md`、`TODO_LIST.md` 和 `.process/PLAN_VERIFICATION.md`。
-- UI 改版实现时应保留业务逻辑和实例属性名，优先迁移容器：`setup_ui` 建主壳，盲盒/动物控件进 `build_blind_box_workspace(parent)`，表情控件进 `build_expression_workspace(parent)`；`open_expression_window` 可作为兼容薄包装切到表情工作区，不再作为默认弹窗入口。
+- 人物表情抽取已接入 `内容抽取.py`：通过主窗口 `人物表情抽取` 工作区使用；读取 `组图 23 表情库.md`；按 `极性 + 具体表情 + 单人/多人` 查模板；1-4 单人，5-8 多人；支持指定模板编号和可选随机。
+- UI 改版已实现为单主窗口双工作区：顶部两个按钮 `盲盒物品/动物抽取` 与 `人物表情抽取` 切换内容；默认显示盲盒/动物工作区，不再默认弹出独立 `Toplevel`。
+- UI 改版保留业务逻辑和实例属性名：`setup_ui` 建主壳，盲盒/动物控件在 `_build_blind_box_workspace(parent)`，表情控件在 `_build_expression_workspace(parent)`；`open_expression_window` 仅作为兼容薄包装切到表情工作区。
 - `UI风格参考.png` 只做 Tkinter 轻量转译：浅灰蓝背景、白色内容区、蓝色主操作、胶囊式切换、宽松间距；不引入第三方 UI 依赖，不追求完整阴影或像素级复刻。
 - 表情抽取输出采用原文局部回填：只增强 `具体表情:` 字段，保留剧情、人物定位、表情功能、适配提示、禁用区域等原文内容。
 - 支持同一输入中的多组 `极性:` 逐组回填；重复增强不得堆叠多份 `眉/眼/嘴`，当前实现会替换同一 `具体表情:` 字段中已有模板。
@@ -50,7 +50,7 @@
 - 第一版保留 `[目标物]`、`[证据物]`、`[对方人物]`、`[剧情食物]`、`[剧情小物]`，不自动替换，避免脑补。
 - 验收样例：`极性=负向`、`具体表情=困惑`、`单人/多人=单人`、`模板编号=4` 应追加 `眉：一侧眉尾抬起，另一侧眉尾压平；眼：一侧眼撑开看着[目标物]，另一侧眼半垂；嘴：一侧嘴巴闭住下压，另一侧嘴角收紧。`
 - 回归验证：运行 `python -B '.workflow\active\WFS-game-content-expression-window\.process\verify_expression.py'`，覆盖固定样例、多组输入、重复增强、错误分支和旧 `_parse_input`。
-- UI 改版后还需运行 `python -m py_compile 'Game content extraction\内容抽取.py'`，并手动检查两个工作区切换、中文显示和主按钮状态。
+- 涉及 UI 改动后需运行 `python -m py_compile 'Game content extraction\内容抽取.py'`，并在环境允许时手动检查两个工作区切换、中文显示和主按钮状态。
 
 ## 修改检查
 
