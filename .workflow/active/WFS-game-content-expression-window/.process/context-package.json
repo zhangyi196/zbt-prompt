@@ -1,0 +1,66 @@
+{
+  "critical_files": [
+    "Game content extraction/内容抽取.py",
+    "Game content extraction/内容抽取.spec",
+    "Game content extraction/CLAUDE.md",
+    "Game content extraction/agents.md",
+    "组图 23 表情库.md",
+    ".workflow/.spec/SPEC-2026-04-20-game-content-extraction-人物表情抽取窗口/spec-summary.md",
+    ".workflow/.spec/SPEC-2026-04-20-game-content-extraction-人物表情抽取窗口/requirements/_index.md",
+    ".workflow/.spec/SPEC-2026-04-20-game-content-extraction-人物表情抽取窗口/architecture/_index.md",
+    ".workflow/.spec/SPEC-2026-04-20-game-content-extraction-人物表情抽取窗口/epics/_index.md"
+  ],
+  "patterns": [
+    "单类 tkinter 应用：BlindBoxExtractor 同时负责 UI、输入解析、抽取逻辑和复制行为。",
+    "错误处理以 ValueError 为主，直接把中文错误信息写入输出区。",
+    "持久状态集中在 draw_history.json，路径基于 __file__。",
+    "现有按钮命令直接绑定实例方法，例如 extract、clear_input、copy_to_clipboard。",
+    "数据源优先外置：盲盒/动物/物品状态放在 data/，表情库应继续以 Markdown 单一事实源读取。"
+  ],
+  "dependencies": [
+    "Python 标准库：json、os、random、re",
+    "tkinter：tk、ttk、scrolledtext",
+    "根目录 Markdown 文件：组图 23 表情库.md",
+    "PyInstaller spec：Game content extraction/内容抽取.spec"
+  ],
+  "integration_points": [
+    {
+      "module": "expression_core",
+      "file": "Game content extraction/内容抽取.py",
+      "details": "新增表情组字段解析、表情库 Markdown 解析、模板选择、原文局部回填等纯逻辑方法。"
+    },
+    {
+      "module": "expression_ui",
+      "file": "Game content extraction/内容抽取.py",
+      "details": "在主界面加入口按钮，打开独立 Toplevel，提供输入区、模板策略、抽取、清空、复制、输出区。"
+    },
+    {
+      "module": "packaging",
+      "file": "Game content extraction/内容抽取.spec",
+      "details": "确认打包后可读取根目录表情库 Markdown；必要时加入 datas。"
+    },
+    {
+      "module": "verification",
+      "file": "组图 23 表情库.md",
+      "details": "使用困惑/负向/单人/第 4 条作为固定验收样例。"
+    }
+  ],
+  "conflict_risk": "low",
+  "conflict_areas": [
+    "内容抽取.py 单类体积继续增长，需要保持方法边界清晰。",
+    "PyInstaller 单文件模式下相对路径读取 Markdown 可能失败。",
+    "中文字段可能出现在同一行或多行，解析需要兼容而不能破坏原文。"
+    ,
+    "同一输入可能包含多组 `极性:`，局部回填需要逐组定位。",
+    "重复抽取同一文本可能造成眉/眼/嘴模板堆叠。"
+  ],
+  "constraints": [
+    "不改主输入语法。",
+    "不接入 draw_history.json。",
+    "不复制表情库为第二份长期维护数据。",
+    "不自动替换占位符。",
+    "不堆叠重复的眉/眼/嘴模板。",
+    "不改人物姿态、头身朝向、四肢、衣领、头发、耳饰等提示词约束。",
+    "保持中文输出和中文错误提示。"
+  ]
+}

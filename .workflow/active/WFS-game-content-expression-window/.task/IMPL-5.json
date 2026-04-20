@@ -1,0 +1,28 @@
+{
+  "id": "IMPL-5",
+  "title": "验收样例、回归检查和轻量测试脚本",
+  "description": "补充最小可执行验证：用固定验收样例验证 `困惑/负向/单人/第 4 条`，验证错误提示分支，并回归主抽取 `_parse_input` 和历史文件行为。优先使用不启动完整 GUI 的方法测试纯逻辑；GUI 做人工 smoke 检查。",
+  "depends_on": [
+    "IMPL-2",
+    "IMPL-3",
+    "IMPL-4"
+  ],
+  "convergence": "给执行者明确的完成标准，降低改动单文件 tkinter 程序的回归风险。",
+  "acceptance": [
+    "固定验收样例输出与 `组图 23 表情库.md` 第 4 条一致。",
+    "多组 `极性:` 输入能逐组增强。",
+    "重复点击抽取不会堆叠多份眉/眼/嘴。",
+    "字段缺失、类别不存在、模板编号越界均有中文错误。",
+    "`_parse_input` 现有样例仍通过。",
+    "表情抽取不会新增或修改 `draw_history.json` 的表情相关字段。",
+    "人工打开窗口检查按钮可用、输出可复制。"
+  ],
+  "files": [
+    "Game content extraction/内容抽取.py",
+    "Game content extraction/内容抽取.spec"
+  ],
+  "meta": {
+    "type": "verification",
+    "agent": "worker"
+  }
+}

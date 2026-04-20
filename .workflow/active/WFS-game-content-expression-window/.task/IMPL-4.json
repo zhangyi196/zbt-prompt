@@ -1,0 +1,25 @@
+{
+  "id": "IMPL-4",
+  "title": "打包路径与 PyInstaller spec 更新",
+  "description": "确认源码运行和 PyInstaller 打包运行时都能读取 `组图 23 表情库.md`。必要时更新 `Game content extraction/内容抽取.spec` 的 `datas`，并在代码中兼容 `_MEIPASS` 或可执行文件相邻目录。",
+  "depends_on": [
+    "IMPL-1",
+    "IMPL-3"
+  ],
+  "convergence": "表情库读取路径在开发态和打包态都稳定。",
+  "acceptance": [
+    "`内容抽取.spec` 明确包含或说明表情库 Markdown 资源。",
+    "源码运行能找到根目录表情库。",
+    "打包运行时能找到随包或相邻目录中的表情库。",
+    "找不到表情库时显示中文错误，不静默失败。"
+  ],
+  "files": [
+    "Game content extraction/内容抽取.py",
+    "Game content extraction/内容抽取.spec",
+    "组图 23 表情库.md"
+  ],
+  "meta": {
+    "type": "packaging",
+    "agent": "worker"
+  }
+}

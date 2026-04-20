@@ -1,0 +1,28 @@
+{
+  "session_id": "WFS-game-content-expression-window",
+  "task_ids": [
+    "IMPL-1",
+    "IMPL-2",
+    "IMPL-3",
+    "IMPL-4",
+    "IMPL-5"
+  ],
+  "recommended_execution": "sequential",
+  "complexity": "medium",
+  "shared_context": {
+    "goal": "为 Game content extraction 新增独立人物表情内容抽取窗口",
+    "source_spec": ".workflow/.spec/SPEC-2026-04-20-game-content-extraction-人物表情抽取窗口",
+    "primary_code_file": "Game content extraction/内容抽取.py",
+    "expression_library": "组图 23 表情库.md",
+    "non_goals": [
+      "不自动替换占位符",
+      "不接入 draw_history.json",
+      "不改变主输入语法",
+      "不复制表情库为第二份长期维护数据"
+    ]
+  },
+  "quality_gate": {
+    "requires_manual_review": true,
+    "reason": "计划会改动 tkinter 主程序和 PyInstaller 配置，执行前应确认任务边界。"
+  }
+}

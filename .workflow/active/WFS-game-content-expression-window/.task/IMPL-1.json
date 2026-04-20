@@ -1,0 +1,22 @@
+{
+  "id": "IMPL-1",
+  "title": "表情库路径与 Markdown 解析核心",
+  "description": "在 `Game content extraction/内容抽取.py` 中新增表情库读取和解析方法。基于源码运行路径定位 `../组图 23 表情库.md`，解析正向/负向、具体表情类别和 1-8 条眉/眼/嘴模板，生成可查询结构，并对缺文件、空文件、结构异常给出中文错误。",
+  "depends_on": [],
+  "convergence": "提供稳定的 expression library 查询结构，供后续字段解析和 UI 调用。",
+  "acceptance": [
+    "能读取根目录 `组图 23 表情库.md`。",
+    "能按 `负向/困惑/单人` 返回 1-4 条模板。",
+    "能按 `负向/困惑/多人` 返回 5-8 条模板。",
+    "表情库缺失或结构不符合预期时抛出可展示的中文 ValueError。",
+    "不写入 `draw_history.json`。"
+  ],
+  "files": [
+    "Game content extraction/内容抽取.py",
+    "组图 23 表情库.md"
+  ],
+  "meta": {
+    "type": "core",
+    "agent": "worker"
+  }
+}
