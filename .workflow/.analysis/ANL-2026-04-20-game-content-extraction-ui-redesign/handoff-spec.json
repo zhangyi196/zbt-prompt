@@ -1,0 +1,60 @@
+{
+  "source": "analyze-with-file",
+  "session_id": "ANL-2026-04-20-game-content-extraction-ui-redesign",
+  "session_folder": ".workflow/.analysis/ANL-2026-04-20-game-content-extraction-ui-redesign",
+  "summary": "将 Game content extraction 改为参考图风格的单主窗口双工作区 UI，两个顶部按钮切换盲盒物品/动物抽取与人物表情抽取。",
+  "implementation_scope": [
+    {
+      "objective": "主窗口 Shell 与双按钮工作区切换",
+      "priority": "high",
+      "target_files": ["Game content extraction/内容抽取.py"],
+      "acceptance_criteria": [
+        "主窗口显示两个顶层切换按钮",
+        "点击按钮时同一窗口切换内容",
+        "默认进入盲盒物品/动物抽取"
+      ]
+    },
+    {
+      "objective": "迁移盲盒/动物抽取工作区",
+      "priority": "high",
+      "target_files": ["Game content extraction/内容抽取.py"],
+      "acceptance_criteria": [
+        "原有单行输入语法不变",
+        "抽取、复制、清空、自动粘贴、历史重置不变",
+        "draw_history.json 语义不变"
+      ]
+    },
+    {
+      "objective": "迁移人物表情抽取工作区",
+      "priority": "high",
+      "target_files": ["Game content extraction/内容抽取.py"],
+      "acceptance_criteria": [
+        "同一窗口内展示表情输入、模板策略和输出",
+        "不再默认打开人物表情 Toplevel",
+        "负向/困惑/单人/模板 4 样例输出不变"
+      ]
+    },
+    {
+      "objective": "参考图风格转译",
+      "priority": "medium",
+      "target_files": ["Game content extraction/内容抽取.py"],
+      "acceptance_criteria": [
+        "浅灰蓝背景",
+        "白色内容面板",
+        "蓝色选中与主操作按钮",
+        "胶囊式顶部切换按钮",
+        "控件间距较当前版本更宽松"
+      ]
+    },
+    {
+      "objective": "文档同步与验证",
+      "priority": "medium",
+      "target_files": ["Game content extraction/CLAUDE.md", "agents.md"],
+      "acceptance_criteria": [
+        "文档说明新 UI 入口",
+        "python -m py_compile 通过",
+        "人物表情 verify_expression.py 通过"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "session_id": "WFS-game-content-ui-redesign",
+  "status": "planned",
+  "created_at": "2026-04-20T00:00:00+08:00",
+  "task_description": "Game content extraction UI 改版：主窗口两个按钮切换盲盒物品/动物抽取与人物表情抽取，并参考 UI风格参考.png 做轻量 Tkinter 风格更新。",
+  "source_analysis": ".workflow/.analysis/ANL-2026-04-20-game-content-extraction-ui-redesign/handoff-spec.json",
+  "quality_gate": "PROCEED_WITH_CAUTION",
+  "task_count": 5
+}

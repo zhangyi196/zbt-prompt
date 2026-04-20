@@ -1,0 +1,19 @@
+{
+  "id": "IMPL-3",
+  "title": "Move expression UI into workspace",
+  "description": "Convert the existing expression Toplevel UI into the second main-window workspace, preserving expression commands and core enhancement logic.",
+  "depends_on": ["IMPL-1"],
+  "target_files": ["Game content extraction/内容抽取.py"],
+  "acceptance_criteria": [
+    "Expression extraction appears in the same main window.",
+    "No independent Toplevel opens for the default expression entry path.",
+    "The negative/confused/single/template-4 acceptance sample output remains unchanged.",
+    "Repeated enhancement and multi-group input still pass verification."
+  ],
+  "convergence": "Do not change enhance_expression_text or expression library parsing unless a migration bug requires a narrow fix.",
+  "meta": {
+    "type": "ui-migration",
+    "agent": "implementation"
+  }
+}
+

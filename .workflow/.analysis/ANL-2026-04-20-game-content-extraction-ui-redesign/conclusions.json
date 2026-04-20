@@ -1,0 +1,69 @@
+{
+  "session_id": "ANL-2026-04-20-game-content-extraction-ui-redesign",
+  "summary": "建议把 Game content extraction 改为单主窗口双工作区：顶部两个胶囊按钮切换盲盒物品/动物抽取与人物表情抽取，并按参考图做浅色、蓝色主操作、白色内容区的 Tkinter 风格转译。",
+  "recommendations": [
+    {
+      "priority": "high",
+      "action": "重构主窗口 UI 壳层",
+      "rationale": "满足两个 UI 按钮切换内容的核心需求，并为新视觉风格提供承载结构。",
+      "target_files": ["Game content extraction/内容抽取.py"],
+      "steps": [
+        "新增样式初始化和主窗口 Shell。",
+        "新增顶部双按钮导航与当前工作区状态。",
+        "新增内容容器并支持两个 Frame 切换。"
+      ]
+    },
+    {
+      "priority": "high",
+      "action": "迁移人物表情 UI 到主工作区",
+      "rationale": "当前人物表情是 Toplevel 弹窗，不符合切换内容需求；核心增强逻辑可以复用。",
+      "target_files": ["Game content extraction/内容抽取.py"],
+      "steps": [
+        "从 open_expression_window 提取表情输入、模板策略、按钮和输出控件。",
+        "放入 build_expression_workspace(parent)。",
+        "保留 extract_expression_content、clear_expression_content、copy_expression_result 的行为。"
+      ]
+    },
+    {
+      "priority": "medium",
+      "action": "迁移盲盒/动物 UI 到主工作区并统一样式",
+      "rationale": "保留现有功能同时使界面接近参考图。",
+      "target_files": ["Game content extraction/内容抽取.py"],
+      "steps": [
+        "把现有 setup_ui 内容迁入 build_blind_box_workspace(parent)。",
+        "保持 input_entry、state_var、category_vars、animal_vars、output_text 等实例属性名。",
+        "统一背景、面板、按钮、LabelFrame、文本区和间距。"
+      ]
+    },
+    {
+      "priority": "medium",
+      "action": "同步维护文档与验证",
+      "rationale": "改版会改变人物表情入口语义，CLAUDE.md 和 agents.md 应记录新入口。",
+      "target_files": ["Game content extraction/CLAUDE.md", "agents.md"],
+      "steps": [
+        "更新 UI 入口说明：两个主按钮切换工作区。",
+        "记录不再默认打开独立 Toplevel。",
+        "运行 py_compile 和 .workflow/active/WFS-game-content-expression-window/.process/verify_expression.py。"
+      ]
+    }
+  ],
+  "intent_coverage": [
+    {
+      "intent": "人物表情抽取和盲盒物品/动物抽取成为两个 UI 按钮",
+      "status": "addressed",
+      "where_addressed": "recommendations[0], recommendations[1], recommendations[2]"
+    },
+    {
+      "intent": "两个按钮能够切换内容",
+      "status": "addressed",
+      "where_addressed": "主窗口 Shell + 双工作区 Frame 方案"
+    },
+    {
+      "intent": "参考图像风格出 UI 方案",
+      "status": "addressed",
+      "where_addressed": "discussion.md 的视觉规则与验收标准"
+    }
+  ],
+  "next_step_recommendation": "进入 workflow-plan 或直接实现；推荐先 workflow-plan，因为这次涉及 UI 结构迁移和回归验证。"
+}
+

@@ -1,0 +1,45 @@
+{
+  "session_id": "ANL-2026-04-20-game-content-extraction-ui-redesign",
+  "timestamp": "2026-04-20T00:00:00+08:00",
+  "topic": "Game content extraction 双工作区切换与 UI 风格更新方案",
+  "dimensions": ["implementation", "architecture", "decision"],
+  "sources": [
+    {
+      "type": "code",
+      "file": "Game content extraction/内容抽取.py",
+      "summary": "现有主界面在 setup_ui 中线性创建；人物表情在 open_expression_window 中创建独立 Toplevel；核心增强逻辑在 enhance_expression_text。"
+    },
+    {
+      "type": "documentation",
+      "file": "Game content extraction/CLAUDE.md",
+      "summary": "约束要求保持 Tkinter、本地中文工具、盲盒/动物语法、历史机制和表情库链路。"
+    },
+    {
+      "type": "image",
+      "file": "UI风格参考.png",
+      "summary": "参考风格为浅灰蓝背景、白色圆角面板、顶部胶囊导航、蓝色主操作、低对比边框与宽松留白。"
+    }
+  ],
+  "key_findings": [
+    "需求应实现为同一主窗口内两个工作区切换，而不是继续使用人物表情弹窗。",
+    "业务逻辑可保留，主要变更集中在 setup_ui 与 open_expression_window 的 UI 创建方式。",
+    "原生 ttk 足够完成第一版风格转译；引入 CustomTkinter 不符合当前小型工具和打包保守性。"
+  ],
+  "recommended_solution": {
+    "name": "Tkinter shell with two switchable workspaces",
+    "files": ["Game content extraction/内容抽取.py"],
+    "optional_docs": ["Game content extraction/CLAUDE.md", "agents.md"],
+    "steps": [
+      "新增 setup_styles、setup_shell、switch_workspace 等 UI 壳层方法。",
+      "将现有盲盒/动物控件迁入 build_blind_box_workspace(parent)。",
+      "将人物表情弹窗控件迁入 build_expression_workspace(parent)。",
+      "更新按钮样式、窗口尺寸、背景色、内容区间距。",
+      "运行 py_compile 和人物表情回归脚本。"
+    ]
+  },
+  "open_questions": [
+    "是否保留旧 open_expression_window 作为备用兼容入口？推荐主界面不暴露。",
+    "是否接受窗口默认尺寸扩大到约 980x720？推荐扩大。"
+  ]
+}
+
