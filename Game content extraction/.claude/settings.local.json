@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c \"import data.blind_boxes; import data.animals; print\\('Syntax OK'\\)\")",
+      "Bash(python 内容抽取.py)"
+    ]
+  }
+}
