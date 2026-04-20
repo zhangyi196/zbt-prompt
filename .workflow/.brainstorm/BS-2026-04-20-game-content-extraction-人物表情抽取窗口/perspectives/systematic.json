@@ -1,0 +1,53 @@
+{
+  "perspective": "systematic",
+  "ideas": [
+    {
+      "title": "三层处理管线",
+      "description": "分成 `parse_expression_blocks`、`lookup_expression_template`、`apply_expression_template` 三步：先从输入找表情组，再查库，再回填文本。",
+      "novelty": 1,
+      "feasibility": 5,
+      "rationale": "职责清晰，容易给每个公共函数补测试。"
+    },
+    {
+      "title": "字段块模型",
+      "description": "把每一组表情建模为 `{start, end, polarity, audience, expression, expression_value_span}`，支持单组和多组，并只替换具体表情字段值。",
+      "novelty": 2,
+      "feasibility": 4,
+      "rationale": "能保护原文其他字段，避免重排中文提示词。"
+    },
+    {
+      "title": "极性一致性校验",
+      "description": "表情库解析时记录正向/负向区间；输入的极性和具体表情必须属于同一极性，否则报错，例如“极性为负向，但表情‘得意’属于正向”。",
+      "novelty": 1,
+      "feasibility": 5,
+      "rationale": "可防止后续 `组图 23` 链路收到错配内容。"
+    },
+    {
+      "title": "选择策略接口",
+      "description": "模板选择函数接受 `mode`、`strategy` 和可选 `template_index`。MVP 可实现 fixed/index/first/random，后续再扩展关键词评分。",
+      "novelty": 2,
+      "feasibility": 4,
+      "rationale": "把产品争议点隔离在一个函数里，不影响解析和回填。"
+    }
+  ],
+  "key_findings": [
+    "最稳的实现不是生成全新输出，而是原文局部替换。",
+    "单人/多人不仅决定编号范围，也决定占位符合法性：单人看 `[证据物]`/`[目标物]`，多人看 `[对方人物]`。",
+    "字段解析需要处理中文冒号 `：` 和英文冒号 `:`。"
+  ],
+  "challenged_assumptions": [
+    {
+      "assumption": "只会输入一组表情。",
+      "challenge": "`组图 23 表情前置.md` 默认输出负向和正向两组。",
+      "result": "解析器应天然支持多组，单组只是特例。"
+    }
+  ],
+  "open_questions": [
+    "输入中“具体表情”后如果已经追加过眉眼嘴，重复点击时是覆盖旧模板还是提示已存在？",
+    "是否需要为解析器新增单元测试文件，还是先用内置 doctest/简单函数测试？"
+  ],
+  "_metadata": {
+    "perspective": "systematic",
+    "timestamp": "2026-04-20T00:00:00+08:00"
+  }
+}

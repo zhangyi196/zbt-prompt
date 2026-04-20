@@ -1,0 +1,156 @@
+{
+  "session_id": "BS-2026-04-20-game-content-extraction-人物表情抽取窗口",
+  "topic": "为 Game content extraction 新增人物表情内容抽取窗口",
+  "completed": "2026-04-20T00:00:00+08:00",
+  "total_rounds": 1,
+  "top_ideas": [
+    {
+      "title": "独立人物表情抽取窗口",
+      "description": "在主窗口新增按钮打开人物表情抽取 Toplevel，输入和输出都使用 ScrolledText，保留现有盲盒/动物抽取主流程。",
+      "score": 9,
+      "novelty": 2,
+      "feasibility": 5,
+      "key_strengths": ["不破坏现有输入语法", "符合用户“新增窗口”要求", "实现范围清晰"],
+      "main_challenges": ["窗口尺寸和主窗口布局需要保持简洁"],
+      "next_steps": ["在 setup_ui 按钮区增加入口按钮", "新增 _open_expression_window 方法", "新增窗口内按钮回调"],
+      "review_status": "accepted"
+    },
+    {
+      "title": "原文局部回填",
+      "description": "解析输入表情组后，只在每组“具体表情”字段后追加模板，其余字段、顺序和文本保持原样。",
+      "score": 9,
+      "novelty": 2,
+      "feasibility": 5,
+      "key_strengths": ["完全匹配用户示例", "降低格式漂移风险", "下游可直接复制"],
+      "main_challenges": ["需要稳健识别字段边界，兼容单行和多行"],
+      "next_steps": ["实现字段 span 解析", "替换具体表情字段值", "处理已追加模板的重复执行"],
+      "review_status": "accepted"
+    },
+    {
+      "title": "Markdown 表情库解析器",
+      "description": "读取 `组图 23 表情库.md`，构建正向/负向、表情类别、单人/多人、编号模板索引。",
+      "score": 8,
+      "novelty": 2,
+      "feasibility": 4,
+      "key_strengths": ["避免双份维护", "与提示词仓库职责一致"],
+      "main_challenges": ["PyInstaller 打包时需要把 md 文件路径纳入考虑", "Markdown 结构变化时解析器需报清楚错误"],
+      "next_steps": ["实现 _load_expression_library", "实现结构校验", "补解析测试"],
+      "review_status": "accepted"
+    },
+    {
+      "title": "模板编号可控策略",
+      "description": "提供自动/随机/指定编号策略；为用户当前示例，可指定单人第 4 条，从而稳定返回选中的困惑模板。",
+      "score": 8,
+      "novelty": 3,
+      "feasibility": 4,
+      "key_strengths": ["测试稳定", "保留多样性扩展", "把争议点隔离"],
+      "main_challenges": ["默认策略需要产品取舍"],
+      "next_steps": ["新增策略 Combobox 或 Spinbox", "实现 choose_expression_template", "用示例验证第 4 条输出"],
+      "review_status": "accepted"
+    },
+    {
+      "title": "多组批量增强",
+      "description": "一次输入包含负向和正向两组时，分别查库并回填。",
+      "score": 7,
+      "novelty": 3,
+      "feasibility": 4,
+      "key_strengths": ["贴合前置文档默认输出", "减少重复操作"],
+      "main_challenges": ["字段边界解析要更严格"],
+      "next_steps": ["按“极性:”出现位置切块", "逐块识别三元条件", "合并替换结果"],
+      "review_status": "accepted"
+    }
+  ],
+  "parked_ideas": [
+    {
+      "title": "关键词评分自动选模板",
+      "reason": "可以根据适配提示中的“看向目标物/发愣/心虚/食物”等匹配更合适模板，但第一版容易过度复杂。"
+    },
+    {
+      "title": "表情模板历史轮转",
+      "reason": "可减少连续重复，但会引入新历史状态；用户当前只要求按条件抽取并回填。"
+    },
+    {
+      "title": "自动替换占位符为具体物体",
+      "reason": "有价值，但需要更强的剧情实体抽取，容易脑补。第一版建议保留 `[目标物]` 等占位符。"
+    }
+  ],
+  "key_insights": [
+    "该功能本质是上游表情组文本到表情库模板的确定性增强器。",
+    "三元条件 `极性 + 具体表情 + 单人/多人` 是核心查找键。",
+    "用户示例的具体模板对应 `困惑` 单人第 4 条，因此实现必须支持稳定选择该编号。",
+    "不要改现有盲盒抽取输入和历史机制。"
+  ],
+  "recommendations": {
+    "primary": "实现独立 Toplevel 人物表情抽取窗口，读取 Markdown 表情库，支持指定模板编号，默认保持占位符，输出原文局部回填。",
+    "alternatives": [
+      "如果后续打包 exe 时外部 Markdown 路径不稳定，再把解析后的表情库生成到 `data/expressions.py`。",
+      "如果用户更重视多样性，可把默认策略从指定编号改为随机，但测试应显式指定编号。"
+    ]
+  },
+  "handoff_scope": {
+    "files_likely_touched": [
+      "Game content extraction/内容抽取.py",
+      "Game content extraction/内容抽取.spec",
+      "possibly Game content extraction/data/expressions.py only if Markdown runtime loading is rejected"
+    ],
+    "new_functions": [
+      "_open_expression_window",
+      "_extract_expression_content",
+      "_parse_expression_blocks",
+      "_load_expression_library",
+      "_choose_expression_template",
+      "_apply_expression_templates"
+    ],
+    "acceptance_examples": [
+      {
+        "input_key": "极性=负向, 具体表情=困惑, 单人/多人=单人, template_index=4",
+        "expected_append": "眉：一侧眉尾抬起，另一侧眉尾压平；眼：一侧眼撑开看着[目标物]，另一侧眼半垂；嘴：一侧嘴巴闭住下压，另一侧嘴角收紧。"
+      }
+    ],
+    "tests": [
+      "解析单行连续字段输入",
+      "解析多行前置文档格式输入",
+      "负向困惑单人第 4 条回填",
+      "多人模式只选择 5-8 范围",
+      "极性与表情类别错配时报错",
+      "缺少具体表情/单人多人时报错",
+      "重复回填时不叠加两份眉眼嘴"
+    ]
+  },
+  "follow_up": [
+    {
+      "type": "implement",
+      "summary": "按 handoff_scope 开发窗口和解析器。"
+    },
+    {
+      "type": "validate",
+      "summary": "用用户给出的困惑示例验证输出完全一致。"
+    }
+  ],
+  "decision_trail": [
+    {
+      "round": 1,
+      "decision": "独立窗口",
+      "context": "新输入是字段文本，现有主输入是盲盒逗号语法。",
+      "chosen": "Toplevel 人物表情抽取窗口",
+      "reason": "隔离功能，不破坏旧流程。",
+      "impact": "新增 UI 入口和独立回调。"
+    },
+    {
+      "round": 1,
+      "decision": "Markdown 为单一事实源",
+      "context": "表情库已维护在 md 文件。",
+      "chosen": "运行时解析 md",
+      "reason": "减少双份维护。",
+      "impact": "实现库解析和结构校验。"
+    },
+    {
+      "round": 1,
+      "decision": "模板选择可控",
+      "context": "同类单人有 4 条，用户示例要求第 4 条。",
+      "chosen": "支持指定编号",
+      "reason": "稳定复现验收样例。",
+      "impact": "新增选择策略控件和函数。"
+    }
+  ]
+}

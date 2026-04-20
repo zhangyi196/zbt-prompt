@@ -1,0 +1,53 @@
+{
+  "perspective": "pragmatic",
+  "ideas": [
+    {
+      "title": "Markdown 解析器而非手写映射表",
+      "description": "运行时读取 `../组图 23 表情库.md`，用标题、单人/多人段落、编号行解析成 `{极性, 表情名, mode, index, template}`。这样表情库更新时不必同步改 Python 常量。",
+      "novelty": 2,
+      "feasibility": 4,
+      "rationale": "仓库内表情库是单一事实源，解析结构也足够稳定。"
+    },
+    {
+      "title": "字段解析支持同一行与多行",
+      "description": "解析输入时识别 `极性:`、`单人/多人:`、`具体表情:` 等字段，字段之间可以换行，也可以像用户示例一样同一行连续出现。",
+      "novelty": 1,
+      "feasibility": 4,
+      "rationale": "用户案例是单行连续字段，前置文档格式则是多行字段，二者都要兼容。"
+    },
+    {
+      "title": "最小 UI：输入区、策略、按钮、输出区",
+      "description": "Toplevel 里不引入复杂表格。上方 ScrolledText 粘贴原文，中间一行策略控件和按钮，下方 ScrolledText 输出增强后的原文。",
+      "novelty": 1,
+      "feasibility": 5,
+      "rationale": "符合现有工具简单直接的设计。"
+    },
+    {
+      "title": "错误信息写在窗口输出区",
+      "description": "缺少极性/具体表情/单人多人、表情库找不到类别、类别极性不匹配、模板段落缺失时，直接输出中文错误说明和可选类别提示。",
+      "novelty": 1,
+      "feasibility": 5,
+      "rationale": "复用现有 ValueError -> 输出区的用户体验。"
+    }
+  ],
+  "key_findings": [
+    "`内容抽取.py` 已有 `re`、`os`，新增解析无需新依赖。",
+    "`ScrolledText` 已在主输出区使用，表情窗口可以直接复用。",
+    "不应把表情抽取写入 `draw_history.json`，除非后续明确要求模板轮转记忆。"
+  ],
+  "challenged_assumptions": [
+    {
+      "assumption": "表情库应该转成 Python data 文件。",
+      "challenge": "这样会产生双份表情数据，维护时容易不一致。",
+      "result": "第一版优先解析 Markdown；若打包 exe 路径麻烦，再考虑 data/expressions.py。"
+    }
+  ],
+  "open_questions": [
+    "PyInstaller 打包时是否要把 `组图 23 表情库.md` 加入 datas，或改用内置 data 文件？",
+    "是否需要在表情窗口内显示已识别的极性/表情/单人多人以方便用户检查？"
+  ],
+  "_metadata": {
+    "perspective": "pragmatic",
+    "timestamp": "2026-04-20T00:00:00+08:00"
+  }
+}
