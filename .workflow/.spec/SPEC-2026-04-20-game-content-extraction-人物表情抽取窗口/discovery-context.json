@@ -1,0 +1,60 @@
+{
+  "relevant_files": [
+    {
+      "path": "Game content extraction/内容抽取.py",
+      "relevance": "high",
+      "rationale": "现有 tkinter 桌面工具入口，包含主窗口、按钮、输入解析、抽取逻辑和复制结果。"
+    },
+    {
+      "path": "组图 23 表情库.md",
+      "relevance": "high",
+      "rationale": "新增窗口的表情模板资料源，正向 25 类、负向 25 类，每类 1-4 单人、5-8 多人。"
+    },
+    {
+      "path": "组图 23 表情前置.md",
+      "relevance": "high",
+      "rationale": "定义上游输入字段格式，输出极性、剧情、单人/多人、具体表情等字段。"
+    },
+    {
+      "path": "组图 23.md",
+      "relevance": "medium",
+      "rationale": "定义下游对眉/眼/嘴三段式表情和人物互斥规则的要求。"
+    },
+    {
+      "path": "Game content extraction/内容抽取.spec",
+      "relevance": "medium",
+      "rationale": "PyInstaller 打包配置，若运行时读取 Markdown 表情库，可能需要加入 datas。"
+    }
+  ],
+  "existing_patterns": [
+    "单文件 tkinter GUI，主类为 BlindBoxExtractor。",
+    "UI 使用 ttk.Frame、ttk.Button、ttk.LabelFrame 和 scrolledtext.ScrolledText。",
+    "输入解析函数抛出 ValueError，按钮回调捕获后把中文错误写入输出区。",
+    "静态抽取内容已拆到 data/，UI 和行为逻辑保留在 内容抽取.py。",
+    "复制结果通过 root.clipboard_clear/append/update 完成。"
+  ],
+  "architecture_constraints": [
+    "新增表情窗口必须独立于现有盲盒/动物抽取流程。",
+    "不得修改 draw_history.json 语义；表情抽取第一版不使用历史降权。",
+    "应支持中文冒号和英文冒号。",
+    "应支持同一行连续字段和多行字段。",
+    "应检测极性和表情类别错配。"
+  ],
+  "integration_points": [
+    "在 setup_ui 的按钮区新增“人物表情抽取”按钮。",
+    "新增 _open_expression_window 创建 Toplevel。",
+    "新增 _parse_expression_blocks、_load_expression_library、_choose_expression_template、_apply_expression_templates。",
+    "可复用现有 scrolledtext 和剪贴板复制模式。"
+  ],
+  "tech_stack": {
+    "languages": ["Python"],
+    "frameworks": ["tkinter", "ttk"],
+    "packaging": ["PyInstaller spec"],
+    "databases": []
+  },
+  "_metadata": {
+    "exploration_type": "spec-discovery",
+    "timestamp": "2026-04-20T14:40:00+08:00",
+    "source": "prior brainstorm plus local code scan"
+  }
+}

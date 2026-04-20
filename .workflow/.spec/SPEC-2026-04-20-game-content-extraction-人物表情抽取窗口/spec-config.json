@@ -1,0 +1,108 @@
+{
+  "session_id": "SPEC-2026-04-20-game-content-extraction-人物表情抽取窗口",
+  "seed_input": "为 Game content extraction 新增人物表情内容抽取窗口：粘贴包含极性、剧情、单人/多人、具体表情等字段的文本后，工具根据极性 + 具体表情 + 单人/多人，从 `组图 23 表情库.md` 抽取眉/眼/嘴模板，并追加到具体表情字段后返回原文增强结果。",
+  "input_type": "text",
+  "timestamp": "2026-04-20T14:40:00+08:00",
+  "mode": "interactive-fallback-inline",
+  "complexity": "moderate",
+  "depth": "standard",
+  "focus_areas": [
+    "本地 tkinter 新窗口",
+    "中文字段解析",
+    "Markdown 表情库查找",
+    "模板选择策略",
+    "原文局部回填",
+    "错误提示与测试"
+  ],
+  "spec_type": "platform",
+  "iteration_count": 0,
+  "iteration_history": [],
+  "seed_analysis": {
+    "problem_statement": "现有 Game content extraction 只支持盲盒/动物内容抽取，无法把 `组图 23 表情前置.md` 输出的表情类别自动扩展为 `组图 23.md` 需要的眉/眼/嘴三段式表情描述，导致用户需要手动查表情库并复制模板。",
+    "target_users": [
+      "中文提示词维护者",
+      "找不同游戏内容设计者",
+      "使用 Game content extraction 桌面工具批量准备素材描述的操作者"
+    ],
+    "domain": "本地中文内容抽取工具 / 游戏提示词生产链路",
+    "constraints": [
+      "不得破坏现有盲盒数字/动物类型单行输入语法",
+      "不得改造为 Web、数据库或大型工程",
+      "表情抽取必须尊重 `组图 23 表情库.md` 的正负向和单人/多人编号规则",
+      "输出应保持原文字段结构，只增强具体表情字段",
+      "第一版不自动替换 `[目标物]`、`[证据物]`、`[对方人物]` 占位符"
+    ],
+    "dimensions": [
+      "UI 入口与窗口交互",
+      "字段解析和文本边界",
+      "表情库数据源与匹配",
+      "模板选择和验收稳定性",
+      "错误处理、打包和测试"
+    ]
+  },
+  "has_codebase": true,
+  "refined_requirements_file": "refined-requirements.json",
+  "phasesCompleted": [
+    {
+      "phase": 1,
+      "name": "discovery",
+      "output_file": "spec-config.json",
+      "completed_at": "2026-04-20T14:40:00+08:00"
+    },
+    {
+      "phase": 1.5,
+      "name": "requirement-clarification",
+      "output_file": "refined-requirements.json",
+      "discussion_rounds": 0,
+      "completed_at": "2026-04-20T14:41:00+08:00"
+    },
+    {
+      "phase": 2,
+      "name": "product-brief",
+      "output_file": "product-brief.md",
+      "completed_at": "2026-04-20T14:42:00+08:00"
+    },
+    {
+      "phase": 3,
+      "name": "requirements",
+      "output_dir": "requirements/",
+      "output_index": "requirements/_index.md",
+      "file_count": 9,
+      "completed_at": "2026-04-20T14:43:00+08:00"
+    },
+    {
+      "phase": 4,
+      "name": "architecture",
+      "output_dir": "architecture/",
+      "output_index": "architecture/_index.md",
+      "file_count": 4,
+      "completed_at": "2026-04-20T14:44:00+08:00"
+    },
+    {
+      "phase": 5,
+      "name": "epics",
+      "output_dir": "epics/",
+      "output_index": "epics/_index.md",
+      "file_count": 5,
+      "completed_at": "2026-04-20T14:45:00+08:00"
+    },
+    {
+      "phase": 6,
+      "name": "readiness-check",
+      "output_file": "readiness-report.md",
+      "completed_at": "2026-04-20T14:46:00+08:00"
+    },
+    {
+      "phase": 7,
+      "name": "issue-export",
+      "output_file": "issue-export-report.md",
+      "completed_at": "2026-04-20T14:47:00+08:00"
+    }
+  ],
+  "issue_ids": [],
+  "issues_created": 0,
+  "execution_notes": [
+    "doc-generator.toml was not present in C:/Users/Administrator/.codex/agents, so Phases 2-5 were generated inline as a fallback.",
+    "Prior brainstorm artifacts were used as source context."
+  ]
+}
