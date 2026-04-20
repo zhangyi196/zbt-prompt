@@ -136,20 +136,20 @@ draw_history.json
 右上角 `检查更新` 按钮会后台访问：
 
 ```text
-https://api.github.com/repos/zhangyi196/--1----/releases/latest
+https://api.github.com/repos/zhangyi196/zbt-prompt/releases/latest
 ```
 
-当前程序版本写在 `内容抽取.py` 的 `APP_VERSION` 常量中。检查逻辑只读取 GitHub 最新 Release、比较版本并打开发布页，不会自动下载、覆盖或重启程序。
+当前程序版本写在 `内容抽取.py` 的 `APP_VERSION` 常量中，本次发布版本为 `0.1.1`。检查逻辑只读取 GitHub 最新 Release、比较版本并打开发布页，不会自动下载、覆盖或重启程序。
 
 当前仓库如果还没有 GitHub Release，程序会提示“当前 GitHub Releases 还没有发布文件”，并可打开发布页：
 
 ```text
-https://github.com/zhangyi196/--1----/releases
+https://github.com/zhangyi196/zbt-prompt/releases
 ```
 
 发布新版时建议：
 
-- 在 GitHub Releases 创建新版本，tag 使用 `v0.1.1` 或 `0.1.1` 这类数字版本。
+- 在 GitHub Releases 创建新版本，tag 使用 `v0.1.2` 或 `0.1.2` 这类高于当前版本的数字版本。
 - 上传打包好的新版文件。
 - 下一次发版前同步更新 `APP_VERSION`。
 

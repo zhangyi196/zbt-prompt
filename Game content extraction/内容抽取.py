@@ -13,9 +13,9 @@ from data.animals import ANIMALS
 from data.blind_boxes import BLIND_BOXES
 from data.item_states import ITEM_STATE_GROUPS, ITEM_STATE_GROUP_WEIGHTS
 
-APP_VERSION = "0.1.0"
-UPDATE_API_URL = "https://api.github.com/repos/zhangyi196/--1----/releases/latest"
-UPDATE_RELEASES_URL = "https://github.com/zhangyi196/--1----/releases"
+APP_VERSION = "0.1.1"
+UPDATE_API_URL = "https://api.github.com/repos/zhangyi196/zbt-prompt/releases/latest"
+UPDATE_RELEASES_URL = "https://github.com/zhangyi196/zbt-prompt/releases"
 UPDATE_REQUEST_TIMEOUT_SECONDS = 8
 
 
@@ -67,7 +67,12 @@ class BlindBoxExtractor:
         
         self.blind_boxes = BLIND_BOXES
         self.animals = ANIMALS
-        self.history_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "draw_history.json")
+        runtime_dir = (
+            os.path.dirname(sys.executable)
+            if getattr(sys, "frozen", False)
+            else os.path.dirname(os.path.abspath(__file__))
+        )
+        self.history_file = os.path.join(runtime_dir, "draw_history.json")
         self.draw_history = self._load_draw_history()
         self.expression_window = None
         self.expression_input_text = None

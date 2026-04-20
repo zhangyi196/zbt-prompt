@@ -32,13 +32,13 @@
 
 - 小型中文 `tkinter` 桌面工具；不要改成 Web、数据库、服务端或大型工程。
 - 主 UI 已实现双工作区：`盲盒物品/动物抽取`、`人物表情抽取`；默认盲盒/动物工作区，不再默认弹出独立 `Toplevel`。
-- 主窗口右上角有 `检查更新`；读取 GitHub Releases：`zhangyi196/--1----`，当前 `APP_VERSION = "0.1.0"`。
+- 主窗口右上角有 `检查更新`；读取 GitHub Releases：`zhangyi196/zbt-prompt`，当前 `APP_VERSION = "0.1.1"`。
 - 盲盒/动物输入保持逗号分隔单行语法：多个编号、可选动物类型、`无某类`、`某类+N` / `某类-N` 都不得破坏。
 - `draw_history.json` 只服务物品池和动物池；人物表情不得接入历史降权。
-- 检查更新使用 `https://api.github.com/repos/zhangyi196/--1----/releases/latest`；发布页为 `https://github.com/zhangyi196/--1----/releases`。
+- 检查更新使用 `https://api.github.com/repos/zhangyi196/zbt-prompt/releases/latest`；发布页为 `https://github.com/zhangyi196/zbt-prompt/releases`。
 - 检查更新不得写入 `draw_history.json`，不得阻塞 UI；当前仓库没有 Release 时应中文提示“当前 GitHub Releases 还没有发布文件”并允许打开发布页。
 - 检查更新只打开 GitHub Releases，不自动下载、不自动替换 exe；未来若做自动更新，必须有独立 updater/helper、文件校验和失败回滚。
-- 发新版时先更新 `APP_VERSION`，再创建高于当前版本的 Release tag，例如 `v0.1.1` 或 `v1.0.0`。
+- 发新版时先更新 `APP_VERSION`，再创建高于当前版本的 Release tag，例如 `v0.1.2` 或 `v1.0.0`。
 - 表情抽取读取 `组图 23 表情库.md`，按每个 `极性 + 具体表情 + 单人/多人` 人物块查模板；1-4 单人，5-8 多人；默认随机模板，可切换为指定编号。
 - 表情输出只回填 `具体表情:` 字段，保留其他字段、占位符和原文顺序；重复增强必须替换旧眉/眼/嘴，不得堆叠。
 - UI 风格按 `UI风格参考.png` 轻量转译：浅灰蓝背景、白色内容区、蓝色主操作、胶囊切换、宽松间距；不引入第三方 UI 依赖。
