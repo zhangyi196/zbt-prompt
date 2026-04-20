@@ -508,7 +508,7 @@ class BlindBoxExtractor:
         control_frame = ttk.Frame(parent)
         control_frame.pack(pady=(0, 12), fill=tk.X)
 
-        self.expression_template_mode_var = tk.StringVar(value="specified")
+        self.expression_template_mode_var = tk.StringVar(value="random")
         ttk.Radiobutton(
             control_frame,
             text="指定模板编号",
