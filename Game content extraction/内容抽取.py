@@ -1,13 +1,23 @@
 import tkinter as tk
-from tkinter import ttk, scrolledtext
+from tkinter import messagebox, ttk, scrolledtext
 import json
 import os
 import random
 import re
 import sys
+import threading
+import urllib.error
+import urllib.request
+import webbrowser
 from data.animals import ANIMALS
 from data.blind_boxes import BLIND_BOXES
 from data.item_states import ITEM_STATE_GROUPS, ITEM_STATE_GROUP_WEIGHTS
+
+APP_VERSION = "0.1.0"
+UPDATE_API_URL = "https://api.github.com/repos/zhangyi196/--1----/releases/latest"
+UPDATE_RELEASES_URL = "https://github.com/zhangyi196/--1----/releases"
+UPDATE_REQUEST_TIMEOUT_SECONDS = 8
+
 
 class BlindBoxExtractor:
     UI_COLORS = {
@@ -67,6 +77,7 @@ class BlindBoxExtractor:
         self.workspace_buttons = {}
         self.workspace_frames = {}
         self.current_workspace = None
+        self.update_button = None
         self.setup_ui()
 
     
@@ -386,6 +397,14 @@ class BlindBoxExtractor:
         self.workspace_buttons["blind_box"].pack(side=tk.LEFT, padx=(0, 6))
         self.workspace_buttons["expression"].pack(side=tk.LEFT)
 
+        self.update_button = ttk.Button(
+            header_frame,
+            text="检查更新",
+            command=self.check_for_updates,
+            style="Secondary.TButton",
+        )
+        self.update_button.pack(side=tk.RIGHT)
+
     def _show_workspace(self, name):
         if name not in self.workspace_frames:
             raise ValueError(f"未知工作区：{name}")
@@ -402,6 +421,159 @@ class BlindBoxExtractor:
             )
 
         self.current_workspace = name
+
+    def check_for_updates(self):
+        if self.update_button:
+            self.update_button.configure(text="检查中...", state=tk.DISABLED)
+
+        thread = threading.Thread(target=self._run_update_check, daemon=True)
+        thread.start()
+
+    def _run_update_check(self):
+        try:
+            result = self._fetch_latest_release()
+        except Exception as exc:  # noqa: BLE001 - surface unexpected update failures to the user.
+            result = {
+                "status": "error",
+                "message": f"检查更新失败：{exc}",
+            }
+
+        try:
+            self.root.after(0, lambda: self._handle_update_result(result))
+        except tk.TclError:
+            pass
+
+    def _fetch_latest_release(self):
+        request = urllib.request.Request(
+            UPDATE_API_URL,
+            headers={
+                "Accept": "application/vnd.github+json",
+                "User-Agent": f"GameContentExtractor/{APP_VERSION}",
+            },
+        )
+
+        try:
+            with urllib.request.urlopen(request, timeout=UPDATE_REQUEST_TIMEOUT_SECONDS) as response:
+                payload = json.loads(response.read().decode("utf-8"))
+        except urllib.error.HTTPError as exc:
+            if exc.code == 404:
+                return {
+                    "status": "no_release",
+                    "message": "当前 GitHub Releases 还没有发布文件。",
+                    "url": UPDATE_RELEASES_URL,
+                }
+            raise ValueError(f"GitHub 返回 HTTP {exc.code}") from exc
+        except urllib.error.URLError as exc:
+            raise ValueError(f"无法连接 GitHub：{exc.reason}") from exc
+        except json.JSONDecodeError as exc:
+            raise ValueError("GitHub 返回内容不是有效 JSON") from exc
+
+        if not isinstance(payload, dict):
+            raise ValueError("GitHub 返回格式不符合预期")
+
+        latest_tag = str(payload.get("tag_name", "")).strip()
+        latest_version = self._normalize_version_tag(latest_tag)
+        if not latest_version:
+            raise ValueError("GitHub Release 缺少有效版本号")
+
+        release_url = str(payload.get("html_url") or UPDATE_RELEASES_URL).strip()
+        release_notes = str(payload.get("body") or "").strip()
+        compare_result = self._compare_versions(APP_VERSION, latest_version)
+
+        if compare_result < 0:
+            return {
+                "status": "update_available",
+                "current_version": APP_VERSION,
+                "latest_version": latest_version,
+                "latest_tag": latest_tag,
+                "notes": release_notes,
+                "url": release_url,
+            }
+
+        return {
+            "status": "up_to_date",
+            "current_version": APP_VERSION,
+            "latest_version": latest_version,
+        }
+
+    def _handle_update_result(self, result):
+        if self.update_button:
+            self.update_button.configure(text="检查更新", state=tk.NORMAL)
+
+        status = result.get("status")
+        if status == "update_available":
+            notes = self._summarize_release_notes(result.get("notes", ""))
+            message = (
+                f"发现新版本：{result['latest_version']}\n"
+                f"当前版本：{result['current_version']}\n\n"
+                f"{notes}\n\n是否打开 GitHub Releases 页面？"
+            )
+            if messagebox.askyesno("检查更新", message):
+                self._open_update_page(result.get("url"))
+            return
+
+        if status == "up_to_date":
+            messagebox.showinfo("检查更新", f"当前已是最新版本：{result['current_version']}")
+            return
+
+        if status == "no_release":
+            message = (
+                f"{result.get('message', '当前没有可用发布版本')}\n\n"
+                "是否打开 GitHub Releases 页面？"
+            )
+            if messagebox.askyesno("检查更新", message):
+                self._open_update_page(result.get("url"))
+            return
+
+        messagebox.showwarning("检查更新", result.get("message", "检查更新失败"))
+
+    def _open_update_page(self, url=None):
+        webbrowser.open(url or UPDATE_RELEASES_URL)
+
+    def _summarize_release_notes(self, notes):
+        cleaned_notes = notes.strip()
+        if not cleaned_notes:
+            return "该版本未填写更新说明。"
+
+        max_length = 300
+        if len(cleaned_notes) <= max_length:
+            return cleaned_notes
+        return f"{cleaned_notes[:max_length].rstrip()}..."
+
+    def _normalize_version_tag(self, tag):
+        normalized = str(tag).strip()
+        if normalized.lower().startswith("v"):
+            normalized = normalized[1:]
+
+        version_match = re.search(r"\d+(?:[.\-_+]\d+)*", normalized)
+        if version_match:
+            return version_match.group(0).strip()
+        return normalized.strip()
+
+    def _compare_versions(self, current_version, latest_version):
+        current_parts = self._version_sort_key(current_version)
+        latest_parts = self._version_sort_key(latest_version)
+        max_length = max(len(current_parts), len(latest_parts))
+        current_parts.extend([0] * (max_length - len(current_parts)))
+        latest_parts.extend([0] * (max_length - len(latest_parts)))
+
+        if current_parts < latest_parts:
+            return -1
+        if current_parts > latest_parts:
+            return 1
+        return 0
+
+    def _version_sort_key(self, version):
+        normalized = self._normalize_version_tag(version)
+        parts = []
+        for piece in re.split(r"[.\-_+]", normalized):
+            match = re.match(r"^(\d+)", piece)
+            if match:
+                parts.append(int(match.group(1)))
+            elif piece:
+                parts.append(0)
+
+        return parts or [0]
 
     def _build_blind_box_workspace(self, parent):
         input_frame = ttk.Frame(parent)
