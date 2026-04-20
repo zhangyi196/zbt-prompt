@@ -4,6 +4,7 @@ import json
 import os
 import random
 import re
+import sys
 from data.animals import ANIMALS
 from data.blind_boxes import BLIND_BOXES
 from data.item_states import ITEM_STATE_GROUPS, ITEM_STATE_GROUP_WEIGHTS
@@ -43,6 +44,11 @@ class BlindBoxExtractor:
         self.animals = ANIMALS
         self.history_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "draw_history.json")
         self.draw_history = self._load_draw_history()
+        self.expression_window = None
+        self.expression_input_text = None
+        self.expression_output_text = None
+        self.expression_template_mode_var = None
+        self.expression_template_index_var = None
         self.setup_ui()
 
     
@@ -287,6 +293,7 @@ class BlindBoxExtractor:
         ttk.Checkbutton(clear_frame, text="自动粘贴", variable=self.auto_paste_var).pack(side=tk.LEFT, padx=(5, 0))
 
         ttk.Button(button_frame, text="复制结果", command=self.copy_to_clipboard).pack(side=tk.LEFT, padx=10)
+        ttk.Button(button_frame, text="人物表情抽取", command=self.open_expression_window).pack(side=tk.LEFT, padx=10)
 
         ttk.Label(self.root, text="提示词输出:").pack(padx=10, anchor=tk.W)
         history_button_frame = ttk.Frame(self.root)
@@ -468,12 +475,357 @@ class BlindBoxExtractor:
             except tk.TclError:
                 pass
 
+    def open_expression_window(self):
+        if self.expression_window and self.expression_window.winfo_exists():
+            self.expression_window.lift()
+            self.expression_window.focus_force()
+            return
+
+        window = tk.Toplevel(self.root)
+        self.expression_window = window
+        window.title("人物表情抽取")
+        window.geometry("760x640")
+
+        def handle_close():
+            self.expression_window = None
+            self.expression_input_text = None
+            self.expression_output_text = None
+            self.expression_template_mode_var = None
+            self.expression_template_index_var = None
+            window.destroy()
+
+        window.protocol("WM_DELETE_WINDOW", handle_close)
+
+        ttk.Label(window, text="表情组文本:").pack(padx=10, pady=(10, 2), anchor=tk.W)
+        self.expression_input_text = scrolledtext.ScrolledText(window, height=12, width=92)
+        self.expression_input_text.pack(padx=10, pady=(0, 6), fill=tk.BOTH, expand=True)
+
+        control_frame = ttk.Frame(window)
+        control_frame.pack(padx=10, pady=4, fill=tk.X)
+
+        self.expression_template_mode_var = tk.StringVar(value="specified")
+        ttk.Radiobutton(
+            control_frame,
+            text="指定模板编号",
+            variable=self.expression_template_mode_var,
+            value="specified",
+        ).pack(side=tk.LEFT, padx=(0, 8))
+        ttk.Radiobutton(
+            control_frame,
+            text="随机模板",
+            variable=self.expression_template_mode_var,
+            value="random",
+        ).pack(side=tk.LEFT, padx=(0, 12))
+
+        ttk.Label(control_frame, text="编号:").pack(side=tk.LEFT)
+        self.expression_template_index_var = tk.IntVar(value=4)
+        tk.Spinbox(
+            control_frame,
+            from_=1,
+            to=8,
+            width=4,
+            textvariable=self.expression_template_index_var,
+            state="readonly",
+        ).pack(side=tk.LEFT, padx=5)
+        ttk.Label(control_frame, text="单人 1-4，多人 5-8").pack(side=tk.LEFT, padx=8)
+
+        button_frame = ttk.Frame(window)
+        button_frame.pack(pady=8)
+        ttk.Button(button_frame, text="抽取表情", command=self.extract_expression_content).pack(side=tk.LEFT, padx=8)
+        ttk.Button(button_frame, text="清空", command=self.clear_expression_content).pack(side=tk.LEFT, padx=8)
+        ttk.Button(button_frame, text="复制结果", command=self.copy_expression_result).pack(side=tk.LEFT, padx=8)
+
+        ttk.Label(window, text="增强后文本:").pack(padx=10, pady=(4, 2), anchor=tk.W)
+        self.expression_output_text = scrolledtext.ScrolledText(window, height=14, width=92)
+        self.expression_output_text.pack(padx=10, pady=(0, 10), fill=tk.BOTH, expand=True)
+
+    def extract_expression_content(self):
+        if not self.expression_input_text or not self.expression_output_text:
+            return
+
+        try:
+            input_text = self.expression_input_text.get(1.0, tk.END).strip()
+            random_template = self.expression_template_mode_var.get() == "random"
+            template_index = None if random_template else self.expression_template_index_var.get()
+            result = self.enhance_expression_text(
+                input_text,
+                template_index=template_index,
+                random_template=random_template,
+            )
+            self.expression_output_text.delete(1.0, tk.END)
+            self.expression_output_text.insert(tk.END, result)
+        except ValueError as exc:
+            self.expression_output_text.delete(1.0, tk.END)
+            self.expression_output_text.insert(tk.END, str(exc))
+
+    def clear_expression_content(self):
+        if self.expression_input_text:
+            self.expression_input_text.delete(1.0, tk.END)
+        if self.expression_output_text:
+            self.expression_output_text.delete(1.0, tk.END)
+
+    def copy_expression_result(self):
+        if not self.expression_output_text:
+            return
+
+        content = self.expression_output_text.get(1.0, tk.END).strip()
+        if content:
+            self.root.clipboard_clear()
+            self.root.clipboard_append(content)
+            self.root.update()
+
     def copy_to_clipboard(self):
         content = self.output_text.get(1.0, tk.END).strip()
         if content:
             self.root.clipboard_clear()
             self.root.clipboard_append(content)
             self.root.update()
+
+    def _get_expression_library_candidates(self):
+        app_dir = os.path.dirname(os.path.abspath(__file__))
+        project_root = os.path.dirname(app_dir)
+        candidates = [
+            os.path.join(project_root, "组图 23 表情库.md"),
+            os.path.join(app_dir, "组图 23 表情库.md"),
+        ]
+
+        if getattr(sys, "frozen", False):
+            exe_dir = os.path.dirname(os.path.abspath(sys.executable))
+            candidates.append(os.path.join(exe_dir, "组图 23 表情库.md"))
+
+        meipass_dir = getattr(sys, "_MEIPASS", None)
+        if meipass_dir:
+            candidates.append(os.path.join(meipass_dir, "组图 23 表情库.md"))
+
+        return list(dict.fromkeys(candidates))
+
+    def _get_expression_library_path(self):
+        candidates = self._get_expression_library_candidates()
+        for path in candidates:
+            if os.path.exists(path):
+                return path
+
+        candidate_text = "；".join(candidates)
+        raise ValueError(f"表情库文件缺失，请确认可读取：{candidate_text}")
+
+    def _load_expression_library(self):
+        library_path = self._get_expression_library_path()
+        try:
+            with open(library_path, "r", encoding="utf-8") as file:
+                content = file.read()
+        except OSError as exc:
+            raise ValueError(f"表情库文件读取失败：{exc}") from exc
+
+        if not content.strip():
+            raise ValueError("表情库文件为空")
+
+        library = {"正向": {}, "负向": {}}
+        current_polarity = None
+        current_expression = None
+        current_audience = None
+
+        for raw_line in content.splitlines():
+            line = raw_line.strip()
+            if not line:
+                continue
+
+            if re.match(r"^##\s+.*正向表情", line):
+                current_polarity = "正向"
+                current_expression = None
+                current_audience = None
+                continue
+
+            if re.match(r"^##\s+.*负向表情", line):
+                current_polarity = "负向"
+                current_expression = None
+                current_audience = None
+                continue
+
+            heading_match = re.match(r"^###\s*\d+\.\s*(.+)$", line)
+            if heading_match and current_polarity:
+                current_expression = heading_match.group(1).strip()
+                library[current_polarity].setdefault(
+                    current_expression,
+                    {"单人": {}, "多人": {}},
+                )
+                current_audience = None
+                continue
+
+            if "单人" in line and line.startswith("**"):
+                current_audience = "单人"
+                continue
+
+            if "多人" in line and line.startswith("**"):
+                current_audience = "多人"
+                continue
+
+            template_match = re.match(r"^([1-8])\.\s*(眉：.+)$", line)
+            if template_match and current_polarity and current_expression and current_audience:
+                template_index = int(template_match.group(1))
+                library[current_polarity][current_expression][current_audience][template_index] = (
+                    template_match.group(2).strip()
+                )
+
+        if not library["正向"] or not library["负向"]:
+            raise ValueError("表情库结构不符合预期：缺少正向或负向表情区")
+
+        for polarity, expressions in library.items():
+            for expression_name, audience_map in expressions.items():
+                single_indexes = set(audience_map["单人"])
+                multi_indexes = set(audience_map["多人"])
+                if single_indexes != {1, 2, 3, 4} or multi_indexes != {5, 6, 7, 8}:
+                    raise ValueError(
+                        f"表情库结构不符合预期：{polarity}/{expression_name} 必须包含单人 1-4 和多人 5-8"
+                    )
+
+        return library
+
+    def _normalize_expression_polarity(self, value):
+        if "正向" in value:
+            return "正向"
+        if "负向" in value:
+            return "负向"
+        raise ValueError("极性只能填写正向或负向")
+
+    def _normalize_expression_audience(self, value):
+        if "多人" in value:
+            return "多人"
+        if "单人" in value:
+            return "单人"
+        raise ValueError("单人/多人只能填写单人或多人")
+
+    def _strip_existing_expression_template(self, value):
+        stripped_value = value.strip()
+        match = re.match(r"(?s)^(.*?)\s*[，,]\s*眉：.*?；眼：.*?；嘴：.*$", stripped_value)
+        if match:
+            return match.group(1).strip()
+        return stripped_value
+
+    def _get_field_matches(self, text, start=0, end=None):
+        field_names = [
+            "极性",
+            "剧情",
+            "单人/多人",
+            "具体表情",
+            "人物定位",
+            "表情功能",
+            "适配提示",
+            "禁用区域",
+        ]
+        pattern = re.compile(rf"({'|'.join(re.escape(name) for name in field_names)})\s*[:：]")
+        if end is None:
+            return [match for match in pattern.finditer(text, start)]
+        return [match for match in pattern.finditer(text, start, end)]
+
+    def _parse_expression_blocks(self, text):
+        if not text.strip():
+            raise ValueError("请先粘贴表情组文本")
+
+        all_matches = self._get_field_matches(text)
+        if not all_matches:
+            raise ValueError("未找到表情组字段，请确认包含极性、单人/多人和具体表情")
+
+        group_starts = [match.start() for match in all_matches if match.group(1) == "极性"]
+        if not group_starts:
+            raise ValueError("缺少极性字段")
+
+        group_starts.append(len(text))
+        blocks = []
+        for index in range(len(group_starts) - 1):
+            group_start = group_starts[index]
+            group_end = group_starts[index + 1]
+            group_matches = self._get_field_matches(text, group_start, group_end)
+            fields = {}
+
+            for match_index, match in enumerate(group_matches):
+                label = match.group(1)
+                value_start = match.end()
+                value_end = (
+                    group_matches[match_index + 1].start()
+                    if match_index + 1 < len(group_matches)
+                    else group_end
+                )
+                raw_value = text[value_start:value_end]
+                left_trimmed = raw_value.lstrip()
+                right_trimmed = raw_value.rstrip()
+                trimmed_start = value_start + len(raw_value) - len(left_trimmed)
+                trimmed_end = value_start + len(right_trimmed)
+                fields[label] = {
+                    "value": text[trimmed_start:trimmed_end],
+                    "trimmed_start": trimmed_start,
+                    "trimmed_end": trimmed_end,
+                }
+
+            missing_fields = [name for name in ("极性", "单人/多人", "具体表情") if name not in fields]
+            if missing_fields:
+                raise ValueError(f"缺少字段：{'、'.join(missing_fields)}")
+
+            blocks.append({
+                "fields": fields,
+                "group_start": group_start,
+                "group_end": group_end,
+            })
+
+        return blocks
+
+    def _select_expression_template(self, library, polarity, expression_name, audience, template_index=None, random_template=False):
+        polarity_map = library.get(polarity, {})
+        if expression_name not in polarity_map:
+            other_polarity = "负向" if polarity == "正向" else "正向"
+            if expression_name in library.get(other_polarity, {}):
+                raise ValueError(f"极性与表情类别错配：{expression_name} 属于{other_polarity}")
+            raise ValueError(f"表情类别不存在：{expression_name}")
+
+        valid_indexes = [1, 2, 3, 4] if audience == "单人" else [5, 6, 7, 8]
+        if random_template:
+            selected_index = random.choice(valid_indexes)
+        else:
+            if template_index is None:
+                raise ValueError("请填写模板编号，或切换为随机模板")
+            try:
+                selected_index = int(template_index)
+            except (TypeError, ValueError) as exc:
+                raise ValueError("模板编号必须是数字") from exc
+
+            if selected_index not in valid_indexes:
+                range_text = "1-4" if audience == "单人" else "5-8"
+                raise ValueError(f"{audience}模板编号必须在 {range_text} 范围内")
+
+        return polarity_map[expression_name][audience][selected_index]
+
+    def enhance_expression_text(self, text, template_index=None, random_template=False):
+        library = self._load_expression_library()
+        blocks = self._parse_expression_blocks(text)
+        replacements = []
+
+        for block in blocks:
+            fields = block["fields"]
+            polarity = self._normalize_expression_polarity(fields["极性"]["value"])
+            audience = self._normalize_expression_audience(fields["单人/多人"]["value"])
+            expression_name = self._strip_existing_expression_template(fields["具体表情"]["value"])
+            if not expression_name:
+                raise ValueError("具体表情不能为空")
+
+            template = self._select_expression_template(
+                library,
+                polarity,
+                expression_name,
+                audience,
+                template_index=template_index,
+                random_template=random_template,
+            )
+            replacement = f"{expression_name}，{template}"
+            replacements.append((
+                fields["具体表情"]["trimmed_start"],
+                fields["具体表情"]["trimmed_end"],
+                replacement,
+            ))
+
+        enhanced_text = text
+        for start, end, replacement in sorted(replacements, reverse=True):
+            enhanced_text = f"{enhanced_text[:start]}{replacement}{enhanced_text[end:]}"
+
+        return enhanced_text
 if __name__ == "__main__":
     root = tk.Tk()
     app = BlindBoxExtractor(root)

@@ -1,0 +1,5 @@
+{"ts":"2026-04-20T15:20:39+08:00","worker":"IMPL-1","type":"integration_point","data":{"file":"Game content extraction/内容抽取.py","description":"表情库读取兼容源码根目录、可执行文件相邻目录和 PyInstaller _MEIPASS。"}}
+{"ts":"2026-04-20T15:20:39+08:00","worker":"IMPL-2","type":"code_pattern","data":{"file":"Game content extraction/内容抽取.py","description":"表情增强通过字段 span 局部替换具体表情字段，重复增强时先剥离已有眉/眼/嘴模板。"}}
+{"ts":"2026-04-20T15:20:39+08:00","worker":"IMPL-3","type":"integration_point","data":{"file":"Game content extraction/内容抽取.py","description":"主界面新增人物表情抽取按钮，独立 Toplevel 管理自己的输入、输出和复制按钮。"}}
+{"ts":"2026-04-20T15:20:39+08:00","worker":"IMPL-4","type":"convention","data":{"file":"Game content extraction/内容抽取.spec","description":"PyInstaller datas 将 ../组图 23 表情库.md 放到包根目录。"}}
+{"ts":"2026-04-20T15:20:39+08:00","worker":"IMPL-5","type":"verification","data":{"commands":["python -m py_compile 'Game content extraction\\\\内容抽取.py'","python '.workflow\\\\active\\\\WFS-game-content-expression-window\\\\.process\\\\verify_expression.py'"],"result":"passed"}}

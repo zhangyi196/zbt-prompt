@@ -5,7 +5,7 @@ a = Analysis(
     ['内容抽取.py'],
     pathex=[],
     binaries=[],
-    datas=[],
+    datas=[('../组图 23 表情库.md', '.')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},

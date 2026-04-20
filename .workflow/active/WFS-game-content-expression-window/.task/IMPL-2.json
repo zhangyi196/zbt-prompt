@@ -21,5 +21,13 @@
   "meta": {
     "type": "core",
     "agent": "worker"
-  }
+  },
+  "status": "completed",
+  "status_history": [
+    {
+      "from": "pending",
+      "to": "completed",
+      "changed_at": "2026-04-20T15:20:39+08:00"
+    }
+  ]
 }

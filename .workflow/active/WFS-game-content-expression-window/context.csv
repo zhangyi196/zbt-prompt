@@ -1,0 +1,5 @@
+"key","type","value","source"
+"tech_stack","array","Python;tkinter;PyInstaller","plan.json"
+"context_package_path","path",".process/context-package.json","session"
+"verification_script","path",".process/verify_expression.py","session"
+"expression_library","path","组图 23 表情库.md","plan.json"

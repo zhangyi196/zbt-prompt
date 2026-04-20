@@ -2,16 +2,17 @@
 
 这是一个基于 `tkinter` 的中文桌面工具，用来快速生成“主图内容/场景内容”抽取结果。核心目标是：按盲盒编号抽取物品，按动物类型抽取动物内容，输出可直接复制的中文提示词，并通过历史机制降低重复。
 
-人物表情抽取窗口已完成规格化，位置：
+人物表情抽取窗口已完成规格化与实现，位置：
 
 - `../.workflow/.spec/SPEC-2026-04-20-game-content-extraction-人物表情抽取窗口/`
 - `../.workflow/active/WFS-game-content-expression-window/`
 
-实现前优先读规格包的 `spec-summary.md`、`requirements/_index.md`、`architecture/_index.md`、`epics/_index.md`，再读 workflow 计划的 `IMPL_PLAN.md`、`TODO_LIST.md`、`.task/IMPL-*.json` 和 `.process/PLAN_VERIFICATION.md`。
+维护前优先读规格包的 `spec-summary.md`、`requirements/_index.md`、`architecture/_index.md`、`epics/_index.md`，再读 workflow 的 `IMPL_PLAN.md`、`TODO_LIST.md`、`.task/IMPL-*.json`、`.process/PLAN_VERIFICATION.md` 和 `.process/verify_expression.py`。
 
 ## 当前功能
 
 - 图形界面输入盲盒编号和动物类型。
+- 主界面按钮 `人物表情抽取` 可打开独立表情抽取窗口。
 - 支持多个盲盒编号，程序随机选中一个盲盒。
 - 支持物品类别、动物内容类别开关和数量设置。
 - 支持“物品状态词 + 物品名”组合输出。
@@ -30,13 +31,14 @@
 
 ## 关键文件
 
-- `内容抽取.py`：界面、输入解析、抽取逻辑、历史读写、按钮行为。
+- `内容抽取.py`：界面、输入解析、抽取逻辑、历史读写、按钮行为；人物表情窗口入口、`Toplevel` 和 `enhance_expression_text` 也在此文件。
 - `data/blind_boxes.py`：盲盒物品数据常量 `BLIND_BOXES`。
 - `data/animals.py`：动物数据常量 `ANIMALS`。
 - `data/item_states.py`：物品状态词 `ITEM_STATE_GROUPS` 和权重 `ITEM_STATE_GROUP_WEIGHTS`。
 - `draw_history.json`：物品池和动物池历史状态。
 - `../组图 23 表情库.md`：人物表情抽取窗口的模板资料源。
-- `内容抽取.spec`：PyInstaller 打包配置。
+- `内容抽取.spec`：PyInstaller 打包配置，`datas` 已包含 `../组图 23 表情库.md`。
+- `../.workflow/active/WFS-game-content-expression-window/.process/verify_expression.py`：人物表情抽取轻量回归验证脚本。
 
 ## 输入格式
 
@@ -82,14 +84,14 @@
 4. 工具只把模板追加到 `具体表情:` 字段后，其他字段和顺序尽量保持原样。
 5. 用户复制增强后的文本交给 `组图 23.md`。
 
-规划约束：
+已实现行为与约束：
 
 - 使用独立 `Toplevel`，不复用现有盲盒/动物单行输入框。
 - `组图 23 表情库.md` 是单一事实源；每类 1-4 为单人模板，5-8 为多人模板。
-- 支持指定模板编号；随机只能作为可选策略。
+- 支持指定模板编号；随机只作为可选策略。
 - UI 默认策略优先“指定模板编号”；验收样例必须能稳定选择模板编号 4。
 - 支持同一输入中的多组 `极性:` 逐组回填。
-- 重复增强不得堆叠多份 `眉/眼/嘴`；执行时优先替换同一 `具体表情:` 字段中已有模板。
+- 重复增强不得堆叠多份 `眉/眼/嘴`；当前实现会替换同一 `具体表情:` 字段中已有模板。
 - 第一版保留 `[目标物]`、`[证据物]`、`[对方人物]`、`[剧情食物]`、`[剧情小物]`，不自动替换。
 - 不接入 `draw_history.json`，不影响物品和动物抽取历史。
 - 只补全眉 / 眼 / 嘴文字，不修改人物姿态、头身朝向、四肢动作、衣领、头发或耳饰等提示词约束。
@@ -99,11 +101,11 @@
 - 输入识别结果：`极性=负向`、`具体表情=困惑`、`单人/多人=单人`、`模板编号=4`
 - 应追加：`眉：一侧眉尾抬起，另一侧眉尾压平；眼：一侧眼撑开看着[目标物]，另一侧眼半垂；嘴：一侧嘴巴闭住下压，另一侧嘴角收紧。`
 
-实现顺序：
+维护入口：
 
-1. 纯逻辑：字段解析、表情库解析、模板编号选择、原文局部回填。
-2. UI：独立 `Toplevel`，输入区、策略控件、抽取、清空、复制、输出区。
-3. 打包：确认 `../组图 23 表情库.md` 能被源码运行和打包运行读取；必须在 `内容抽取.spec` 的 `datas` 或相邻外部 Markdown 路径中选择一个可运行方案并验证。
+1. 纯逻辑：`enhance_expression_text` 及其辅助方法负责字段解析、表情库解析、模板编号选择、原文局部回填。
+2. UI：`open_expression_window`、`extract_expression_content`、`clear_expression_content`、`copy_expression_result` 负责独立窗口行为。
+3. 打包：`内容抽取.spec` 的 `datas=[('../组图 23 表情库.md', '.')]` 已加入表情库；代码同时查源码根目录、程序相邻目录和 `_MEIPASS`。
 
 必须覆盖的错误提示：
 
@@ -129,3 +131,4 @@
 2. 内容变化是否只需要改 `data/`？
 3. 是否会影响输入语法、抽取历史、按钮语义或输出格式？
 4. 若涉及人物表情抽取窗口，是否仍遵守独立窗口、Markdown 单一事实源、原文局部回填和占位符保留？
+5. 改完表情抽取逻辑后，运行 `python -B '..\.workflow\active\WFS-game-content-expression-window\.process\verify_expression.py'` 做回归。

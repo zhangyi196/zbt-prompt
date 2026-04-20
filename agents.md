@@ -11,7 +11,7 @@
 - `组图 23.md`：Ref-A / Ref-B / Target 差异迁移；绑定 Ref 真实可见变化，固定六板块；List 1 / List 2 各 16 条；维护时不得削弱 Ref 绑定、冷区避让、人物互斥、禁改规则和固定输出接口。
 - `Game content extraction/`：本地中文抽取工具；主程序 `内容抽取.py`，静态内容在 `data/`，历史在 `draw_history.json`；保持现有盲盒/动物输入语法、历史机制和中文输出风格。
 - `.workflow/.spec/SPEC-2026-04-20-game-content-extraction-人物表情抽取窗口/`：人物表情抽取窗口规格包；实现前优先读 `spec-summary.md`、`requirements/_index.md`、`architecture/_index.md`、`epics/_index.md`。
-- `.workflow/active/WFS-game-content-expression-window/`：人物表情抽取窗口执行计划；实现前读 `IMPL_PLAN.md`、`TODO_LIST.md`、`.task/IMPL-*.json` 和 `.process/PLAN_VERIFICATION.md`。
+- `.workflow/active/WFS-game-content-expression-window/`：人物表情抽取窗口已执行 workflow；`TODO_LIST.md` 已完成，验证脚本在 `.process/verify_expression.py`，结果在 `results.csv`。
 
 ## 通用不变量
 
@@ -38,12 +38,13 @@
 - 小型 `tkinter` 桌面工具；不要默认改成 Web、数据库、服务端或大型多模块工程。
 - 现有盲盒/动物抽取输入是逗号分隔单行语法；不得破坏多个盲盒编号、可选动物类型、`无某类`、`某类+N` / `某类-N`。
 - `draw_history.json` 只服务现有物品池和动物池历史；人物表情抽取窗口第一版不得接入该历史降权机制。
-- 人物表情抽取窗口规划：独立 `Toplevel`；读取 `组图 23 表情库.md`；按 `极性 + 具体表情 + 单人/多人` 查模板；1-4 单人，5-8 多人；支持指定模板编号。
+- 人物表情抽取窗口已接入 `内容抽取.py`：主界面按钮 `人物表情抽取` 打开独立 `Toplevel`；读取 `组图 23 表情库.md`；按 `极性 + 具体表情 + 单人/多人` 查模板；1-4 单人，5-8 多人；支持指定模板编号和可选随机。
 - 表情抽取输出采用原文局部回填：只增强 `具体表情:` 字段，保留剧情、人物定位、表情功能、适配提示、禁用区域等原文内容。
-- 支持同一输入中的多组 `极性:` 逐组回填；重复增强不得堆叠多份 `眉/眼/嘴`，执行时优先替换同一 `具体表情:` 字段中已有模板。
-- UI 默认策略优先“指定模板编号”，随机仅作可选；打包必须实际解决 `组图 23 表情库.md` 的读取路径，不能只写说明。
+- 支持同一输入中的多组 `极性:` 逐组回填；重复增强不得堆叠多份 `眉/眼/嘴`，当前实现会替换同一 `具体表情:` 字段中已有模板。
+- UI 默认“指定模板编号”；打包已在 `内容抽取.spec` 的 `datas` 中加入 `../组图 23 表情库.md`，代码同时兼容源码路径、exe 相邻路径和 `_MEIPASS`。
 - 第一版保留 `[目标物]`、`[证据物]`、`[对方人物]`、`[剧情食物]`、`[剧情小物]`，不自动替换，避免脑补。
 - 验收样例：`极性=负向`、`具体表情=困惑`、`单人/多人=单人`、`模板编号=4` 应追加 `眉：一侧眉尾抬起，另一侧眉尾压平；眼：一侧眼撑开看着[目标物]，另一侧眼半垂；嘴：一侧嘴巴闭住下压，另一侧嘴角收紧。`
+- 回归验证：运行 `python -B '.workflow\active\WFS-game-content-expression-window\.process\verify_expression.py'`，覆盖固定样例、多组输入、重复增强、错误分支和旧 `_parse_input`。
 
 ## 修改检查
 
