@@ -5,7 +5,7 @@
 - `盲盒物品/动物抽取`：按盲盒编号抽取物品，并可按动物类型抽取动物内容。
 - `人物表情抽取`：把表情组文本中的 `具体表情` 自动补全为眉 / 眼 / 嘴描述。
 
-核心抽取功能不依赖 Web、数据库或服务端；核心数据保存在本目录和上级提示词文件中。右上角 `检查更新` 会联网读取 GitHub Releases。
+核心抽取功能不依赖 Web、数据库或服务端；核心数据保存在本目录和上级提示词文件中。程序启动后会静默联网读取 GitHub Releases，只有发现新版本时才显示右上角更新按钮。
 
 ## 运行
 
@@ -28,7 +28,7 @@ python '内容抽取.py'
 - `盲盒物品/动物抽取`：默认显示。
 - `人物表情抽取`：在同一主窗口内切换显示，不再默认弹出独立窗口。
 
-主窗口右上角有 `检查更新` 按钮，用于检查 GitHub Releases 是否有新版。
+主窗口右上角的更新按钮默认隐藏；程序发现高于当前版本的 GitHub Release 后才显示。
 
 UI 使用浅灰蓝背景、白色内容区、蓝色主按钮和胶囊式切换按钮。第一版使用原生 `tkinter/ttk` 做轻量风格转译，不引入第三方 UI 依赖。
 
@@ -133,15 +133,21 @@ draw_history.json
 
 ## 检查更新
 
-右上角 `检查更新` 按钮会后台访问：
+程序启动后会静默后台访问：
 
 ```text
 https://api.github.com/repos/zhangyi196/zbt-prompt/releases/latest
 ```
 
-当前程序版本写在 `内容抽取.py` 的 `APP_VERSION` 常量中，本次发布版本为 `0.1.1`。检查逻辑只读取 GitHub 最新 Release、比较版本并打开发布页，不会自动下载、覆盖或重启程序。
+如果 latest 接口返回 404，程序会再读取 releases 列表作为回退：
 
-当前仓库如果还没有 GitHub Release，程序会提示“当前 GitHub Releases 还没有发布文件”，并可打开发布页：
+```text
+https://api.github.com/repos/zhangyi196/zbt-prompt/releases?per_page=20
+```
+
+当前程序版本写在 `内容抽取.py` 的 `APP_VERSION` 常量中，本次发布版本为 `0.1.1`。检查逻辑只读取 GitHub Release、比较版本并打开发布页，不会自动下载、覆盖或重启程序。
+
+当没有高于当前版本的 Release，或仓库暂时没有可用发布版本时，更新按钮保持隐藏，不弹出提示。只有检测到新版本时，右上角才显示 `发现新版本` 按钮；点击后可选择打开发布页：
 
 ```text
 https://github.com/zhangyi196/zbt-prompt/releases

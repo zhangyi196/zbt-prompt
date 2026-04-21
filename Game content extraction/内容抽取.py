@@ -15,6 +15,7 @@ from data.item_states import ITEM_STATE_GROUPS, ITEM_STATE_GROUP_WEIGHTS
 
 APP_VERSION = "0.1.1"
 UPDATE_API_URL = "https://api.github.com/repos/zhangyi196/zbt-prompt/releases/latest"
+UPDATE_RELEASES_LIST_API_URL = "https://api.github.com/repos/zhangyi196/zbt-prompt/releases?per_page=20"
 UPDATE_RELEASES_URL = "https://github.com/zhangyi196/zbt-prompt/releases"
 UPDATE_REQUEST_TIMEOUT_SECONDS = 8
 
@@ -83,7 +84,11 @@ class BlindBoxExtractor:
         self.workspace_frames = {}
         self.current_workspace = None
         self.update_button = None
+        self.update_button_visible = False
+        self.update_check_in_progress = False
+        self.latest_update_result = None
         self.setup_ui()
+        self._schedule_initial_update_check()
 
     
     def _create_empty_draw_history(self):
@@ -404,11 +409,10 @@ class BlindBoxExtractor:
 
         self.update_button = ttk.Button(
             header_frame,
-            text="检查更新",
-            command=self.check_for_updates,
+            text="发现新版本",
+            command=self._on_update_button_click,
             style="Secondary.TButton",
         )
-        self.update_button.pack(side=tk.RIGHT)
 
     def _show_workspace(self, name):
         if name not in self.workspace_frames:
@@ -427,14 +431,48 @@ class BlindBoxExtractor:
 
         self.current_workspace = name
 
-    def check_for_updates(self):
-        if self.update_button:
+    def _schedule_initial_update_check(self):
+        try:
+            self.root.after(500, lambda: self.check_for_updates(silent=True))
+        except tk.TclError:
+            pass
+
+    def _show_update_button(self):
+        if not self.update_button:
+            return
+
+        self.update_button.configure(text="发现新版本", state=tk.NORMAL)
+        if not self.update_button_visible:
+            self.update_button.pack(side=tk.RIGHT)
+            self.update_button_visible = True
+
+    def _hide_update_button(self):
+        if not self.update_button:
+            return
+
+        if self.update_button_visible:
+            self.update_button.pack_forget()
+            self.update_button_visible = False
+
+    def _on_update_button_click(self):
+        if self.latest_update_result and self.latest_update_result.get("status") == "update_available":
+            self._show_update_available_dialog(self.latest_update_result)
+            return
+
+        self.check_for_updates(silent=False)
+
+    def check_for_updates(self, silent=False):
+        if self.update_check_in_progress:
+            return
+
+        self.update_check_in_progress = True
+        if self.update_button and self.update_button_visible:
             self.update_button.configure(text="检查中...", state=tk.DISABLED)
 
-        thread = threading.Thread(target=self._run_update_check, daemon=True)
+        thread = threading.Thread(target=lambda: self._run_update_check(silent), daemon=True)
         thread.start()
 
-    def _run_update_check(self):
+    def _run_update_check(self, silent=False):
         try:
             result = self._fetch_latest_release()
         except Exception as exc:  # noqa: BLE001 - surface unexpected update failures to the user.
@@ -444,13 +482,13 @@ class BlindBoxExtractor:
             }
 
         try:
-            self.root.after(0, lambda: self._handle_update_result(result))
+            self.root.after(0, lambda: self._handle_update_result(result, silent=silent))
         except tk.TclError:
             pass
 
-    def _fetch_latest_release(self):
+    def _fetch_github_json(self, url):
         request = urllib.request.Request(
-            UPDATE_API_URL,
+            url,
             headers={
                 "Accept": "application/vnd.github+json",
                 "User-Agent": f"GameContentExtractor/{APP_VERSION}",
@@ -459,20 +497,56 @@ class BlindBoxExtractor:
 
         try:
             with urllib.request.urlopen(request, timeout=UPDATE_REQUEST_TIMEOUT_SECONDS) as response:
-                payload = json.loads(response.read().decode("utf-8"))
-        except urllib.error.HTTPError as exc:
-            if exc.code == 404:
-                return {
-                    "status": "no_release",
-                    "message": "当前 GitHub Releases 还没有发布文件。",
-                    "url": UPDATE_RELEASES_URL,
-                }
-            raise ValueError(f"GitHub 返回 HTTP {exc.code}") from exc
+                return json.loads(response.read().decode("utf-8"))
+        except urllib.error.HTTPError:
+            raise
         except urllib.error.URLError as exc:
             raise ValueError(f"无法连接 GitHub：{exc.reason}") from exc
         except json.JSONDecodeError as exc:
             raise ValueError("GitHub 返回内容不是有效 JSON") from exc
 
+    def _fetch_latest_release(self):
+        try:
+            payload = self._fetch_github_json(UPDATE_API_URL)
+        except urllib.error.HTTPError as exc:
+            if exc.code != 404:
+                raise ValueError(f"GitHub 返回 HTTP {exc.code}") from exc
+
+            payload = self._fetch_latest_release_from_list()
+            if payload is None:
+                return {
+                    "status": "no_release",
+                    "message": "当前没有可用发布版本。",
+                    "url": UPDATE_RELEASES_URL,
+                }
+
+        return self._build_update_result(payload)
+
+    def _fetch_latest_release_from_list(self):
+        try:
+            payload = self._fetch_github_json(UPDATE_RELEASES_LIST_API_URL)
+        except urllib.error.HTTPError as exc:
+            raise ValueError(f"GitHub 返回 HTTP {exc.code}") from exc
+
+        if not isinstance(payload, list):
+            raise ValueError("GitHub Releases 列表格式不符合预期")
+
+        candidates = []
+        for release in payload:
+            if not isinstance(release, dict) or release.get("draft"):
+                continue
+
+            version = self._normalize_version_tag(str(release.get("tag_name", "")).strip())
+            if version:
+                candidates.append((self._version_sort_key(version), release))
+
+        if not candidates:
+            return None
+
+        candidates.sort(key=lambda item: item[0], reverse=True)
+        return candidates[0][1]
+
+    def _build_update_result(self, payload):
         if not isinstance(payload, dict):
             raise ValueError("GitHub 返回格式不符合预期")
 
@@ -501,36 +575,32 @@ class BlindBoxExtractor:
             "latest_version": latest_version,
         }
 
-    def _handle_update_result(self, result):
-        if self.update_button:
-            self.update_button.configure(text="检查更新", state=tk.NORMAL)
-
+    def _handle_update_result(self, result, silent=False):
+        self.update_check_in_progress = False
         status = result.get("status")
         if status == "update_available":
-            notes = self._summarize_release_notes(result.get("notes", ""))
-            message = (
-                f"发现新版本：{result['latest_version']}\n"
-                f"当前版本：{result['current_version']}\n\n"
-                f"{notes}\n\n是否打开 GitHub Releases 页面？"
-            )
-            if messagebox.askyesno("检查更新", message):
-                self._open_update_page(result.get("url"))
+            self.latest_update_result = result
+            self._show_update_button()
+            if not silent:
+                self._show_update_available_dialog(result)
             return
 
-        if status == "up_to_date":
-            messagebox.showinfo("检查更新", f"当前已是最新版本：{result['current_version']}")
-            return
-
-        if status == "no_release":
-            message = (
-                f"{result.get('message', '当前没有可用发布版本')}\n\n"
-                "是否打开 GitHub Releases 页面？"
-            )
-            if messagebox.askyesno("检查更新", message):
-                self._open_update_page(result.get("url"))
+        self.latest_update_result = None
+        self._hide_update_button()
+        if silent or status in {"up_to_date", "no_release"}:
             return
 
         messagebox.showwarning("检查更新", result.get("message", "检查更新失败"))
+
+    def _show_update_available_dialog(self, result):
+        notes = self._summarize_release_notes(result.get("notes", ""))
+        message = (
+            f"发现新版本：{result['latest_version']}\n"
+            f"当前版本：{result['current_version']}\n\n"
+            f"{notes}\n\n是否打开 GitHub Releases 页面？"
+        )
+        if messagebox.askyesno("检查更新", message):
+            self._open_update_page(result.get("url"))
 
     def _open_update_page(self, url=None):
         webbrowser.open(url or UPDATE_RELEASES_URL)
