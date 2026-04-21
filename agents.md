@@ -1,6 +1,6 @@
 # Agents Guide
 
-本仓库主要维护中文提示词规则；`Game content extraction/` 是配套本地 `tkinter` 抽取工具。优先局部修改，保持中文风格、固定输出、数量配额、自检项和既有链路。
+本仓库主要维护中文提示词规则；`Game content extraction/` 是配套本地 `tkinter` 小工具目录。优先局部修改，保持中文风格、固定输出、数量配额、自检项和既有链路。
 
 ## 文件职责
 
@@ -9,7 +9,7 @@
 - `组图 23 表情前置.md`：只产出负向、正向、正负向剧情表情类别和摘要；具体表情只写类别名；多人每组 2-3 人，正负向组允许人物块极性混合。
 - `组图 23 表情库.md`：正向 25、负向 25；每类 8 条眉/眼/嘴模板，1-4 单人、5-8 多人；只写面部。
 - `组图 23.md`：Ref-A/B 到 Target 差异迁移；固定六板块，List 1 / List 2 各 16 条；不得削弱 Ref 绑定、冷区避让、人物互斥和禁改规则。
-- `Game content extraction/`：本地抽取工具；详见同目录 `CLAUDE.md` 和 `README.md`。
+- `Game content extraction/`：本地 `tkinter` 小工具目录；主工具、图像奇数抓取和文件批量重命名详见同目录 `CLAUDE.md` 和 `README.md`。
 
 ## 通用不变量
 
@@ -30,20 +30,24 @@
 
 ## `Game content extraction`
 
-- 小型中文 `tkinter` 桌面工具；不要改成 Web、数据库、服务端或大型工程。
+- 小型中文 `tkinter` 桌面工具集合；不要改成 Web、数据库、服务端或大型工程，不引入第三方 UI 依赖。
 - 主 UI 已实现双工作区：`盲盒物品/动物抽取`、`人物表情抽取`；默认盲盒/动物工作区，不再默认弹出独立 `Toplevel`。
 - 盲盒/动物输入保持逗号分隔单行语法：多个编号、可选动物类型、`无某类`、`某类+N` / `某类-N` 都不得破坏。
 - `draw_history.json` 只服务物品池和动物池；人物表情不得接入历史降权。
-- 当前版本 `APP_VERSION = "0.1.1"`；右上角 `检查更新` 读取 `zhangyi196/zbt-prompt` latest Release，只提示并打开发布页，不自动下载/替换 exe，不写 `draw_history.json`，不阻塞 UI。
+- 当前版本 `APP_VERSION = "0.1.1"`；启动后静默检查 `zhangyi196/zbt-prompt` GitHub Releases，只有发现更高版本才显示 `发现新版本` 按钮；只提示并打开发布页，不自动下载/替换 exe，不写 `draw_history.json`，不阻塞 UI。
 - 发新版先更新 `APP_VERSION`，再发布更高 tag；当前安装包为 `Game content extraction/release/GameContentExtraction-Setup-v0.1.1.exe`，Inno Setup 脚本为 `Game content extraction/installer.iss`。
 - 表情抽取读取 `组图 23 表情库.md`，按每个 `极性 + 具体表情 + 单人/多人` 人物块查模板；1-4 单人，5-8 多人；默认随机模板，可切换为指定编号。
 - 表情输出只回填 `具体表情:` 字段，保留其他字段、占位符和原文顺序；重复增强必须替换旧眉/眼/嘴，不得堆叠。
 - UI 风格按 `UI风格参考.png` 轻量转译：浅灰蓝背景、白色内容区、蓝色主操作、胶囊切换、宽松间距；不引入第三方 UI 依赖。
+- `image_fetcher_ui.py` 是独立图像奇数抓取工具：文件夹1只作参考名单，按过滤隐藏文件后的奇数位置文件名取样；从文件夹2复制同名文件到桌面 `图像抓取/`，不移动、不改名、不删除源文件。
+- `file_batch_renamer.py` 是独立文件批量重命名工具：读取 / 写入同目录 `config.json` 保存参数；文档按 `.txt` 文件名括号内数字自然排序重命名为 `[前缀][编号].txt`；图像按文件名数字排序，按组输出 `[前缀][组编号]_([组内序号]).扩展名`，每组数量为 1 时省略组内序号。
+- 批量重命名前必须保留目标文件存在时跳过的保护逻辑；不得静默覆盖、跨目录递归处理或删除用户文件。
 
 验证：
 
 ```powershell
 python -B -m py_compile 'Game content extraction\内容抽取.py'
+python -B -m py_compile 'Game content extraction\image_fetcher_ui.py' 'Game content extraction\file_batch_renamer.py'
 python -B '.workflow\active\WFS-game-content-expression-window\.process\verify_expression.py'
 ```
 
