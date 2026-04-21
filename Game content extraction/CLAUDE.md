@@ -1,100 +1,71 @@
 # 项目说明
 
-这是一个本地中文 `tkinter` 小工具目录。主工具用于生成主图 / 场景抽取结果：按盲盒编号抽物品，按动物类型抽动物内容，并把人物表情类别补全为眉 / 眼 / 嘴描述；目录内还包含图像奇数抓取和文件批量重命名两个独立小工具。使用说明见 `README.md`。
-
-## 当前功能
-
-- 主窗口双工作区：`盲盒物品/动物抽取`、`人物表情抽取`。
-- 默认显示盲盒/动物；人物表情在同一主窗口切换，不再默认弹出独立 `Toplevel`。
-- 程序启动后静默读取 GitHub Releases；只有发现高于当前版本的新版本时，右上角才显示更新按钮。
-- 支持多个盲盒编号随机选中、物品/动物类别开关、数量设置、物品状态词、复制、清空、自动粘贴。
-- 支持输入指令禁用某类或调整某类数量。
-- `image_fetcher_ui.py` 独立抓取奇数位置图像：按参考目录文件名列表取奇数位，从目标图库复制同名文件到桌面 `图像抓取/`。
-- `file_batch_renamer.py` 独立批量重命名：支持 `.txt` 文档和常见图像格式，参数保存到同目录 `config.json`。
+本目录是本地中文 `tkinter` 小工具集合。主入口 `内容抽取.py` 采用单窗口四工作区：`盲盒物品/动物抽取`、`人物表情抽取`、`图像抓取`、`批量重命名`。使用说明见 `README.md`。
 
 ## 关键文件
 
-- `内容抽取.py`：UI、输入解析、抽取逻辑、历史读写、双工作区、表情增强。
-- `image_fetcher_ui.py`：图像奇数抓取 UI；文件夹1作为参考名单，文件夹2作为目标图库，输出到桌面 `图像抓取/`。
-- `file_batch_renamer.py`：文件批量重命名 UI；文档和图像分 Tab 处理，配置写入同目录 `config.json`。
-- `data/blind_boxes.py`：盲盒物品数据。
-- `data/animals.py`：动物内容数据。
-- `data/item_states.py`：物品状态词与权重。
-- `draw_history.json`：物品池和动物池历史。
-- `config.json`：`file_batch_renamer.py` 的本地参数配置；不是主抽取工具历史。
+- `内容抽取.py`：主 UI、抽取逻辑、历史读写、表情增强、图像抓取、批量重命名、更新检查。
+- `image_fetcher_ui.py`：图像奇数抓取规则来源；主窗口已内置同等功能。
+- `file_batch_renamer.py`：批量重命名规则来源；主窗口已内置同等功能。
+- `data/*.py`：盲盒、动物、物品状态词数据。
+- `draw_history.json`：物品池和动物池历史；不要混入表情或重命名配置。
+- `config.json`：批量重命名参数配置；不是抽取历史。
 - `../组图 23 表情库.md`：人物表情模板单一事实源。
-- `内容抽取.spec`：PyInstaller 配置，已包含 `../组图 23 表情库.md`。
-- `installer.iss`：Inno Setup 安装包脚本，当前输出 `release/GameContentExtraction-Setup-v0.1.1.exe`。
+- `内容抽取.spec` / `installer.iss`：PyInstaller 与 Inno Setup 打包配置。
 
-参考文档 / 工作流：
+## 主 UI
 
-- `README.md`：用户说明。
-- `../.workflow/active/WFS-game-content-expression-window/.process/verify_expression.py`：表情回归脚本。
-- `../.workflow/active/WFS-game-content-ui-redesign/`：双工作区 UI 改版计划与记录。
+`setup_ui()` 创建主壳、切换栏和工作区容器；各工作区由 `_build_blind_box_workspace()`、`_build_expression_workspace()`、`_build_image_fetcher_workspace()`、`_build_renamer_workspace()` 构建。`open_expression_window()` 仅兼容旧调用，切到表情工作区并聚焦输入框。
 
-## 输入格式
+维护时保留主要实例属性：`input_entry`、`output_text`、`category_vars`、`animal_vars`、`expression_input_text`、`expression_output_text`、`image_fetcher_folder1_var`、`image_fetcher_folder2_var`、`renamer_work_dir_var`、`txt_*_var`、`img_*_var`。
 
-盲盒/动物输入必须保持单行逗号语法：
+UI 只用原生 `tkinter/ttk`，保持浅灰蓝背景、白色内容区、蓝色主操作、胶囊切换和宽松间距；不要引入第三方 UI 依赖。
+
+## 盲盒 / 动物抽取
+
+输入保持单行逗号语法：
 
 `盲盒编号[,盲盒编号2...][,动物类型][,子类指令1][,子类指令2...]`
 
-规则：至少一个数字编号；动物类型最多一个：`无动物`、`地面动物`、`空中动物`、`水中动物`；未填默认 `无动物`。禁用类目写 `无大型物品`、`无动物用品`；数量调整写 `中型物品+1`、`动物本体-1`。输入覆盖只影响本次抽取，不改默认值，不清空历史。
+规则：至少一个数字编号；动物类型最多一个：`无动物`、`地面动物`、`空中动物`、`水中动物`；禁用类目写 `无大型物品`、`无动物用品`；数量调整写 `中型物品+1`、`动物本体-1`。输入覆盖只影响本次抽取，不改默认值，不清空历史。
 
-## 历史机制
-
-历史文件是 `draw_history.json`。物品池 key 为 `box:{box_id}:{category_key}`，动物池 key 为 `animal:{animal_type}:{category_key}`。抽中过的内容临时降权，一轮基本跑完后进入下一轮。只有界面重置按钮清空历史：`重置物品历史`、`重置动物历史`、`重置全部历史` 语义不得改变。人物表情抽取不得写入历史。
-
-## 双工作区 UI
-
-`setup_ui()` 建主壳、样式、顶部切换按钮和工作区容器；`_build_blind_box_workspace(parent)` 建盲盒/动物控件；`_build_expression_workspace(parent)` 建表情控件；`open_expression_window()` 仅兼容旧调用，切换到表情工作区并聚焦输入框。
-
-维护时保留实例属性名：`input_entry`、`state_var`、`category_vars`、`category_spin_vars`、`animal_vars`、`animal_spin_vars`、`auto_paste_var`、`output_text`、`expression_input_text`、`expression_output_text`、`expression_template_mode_var`、`expression_template_index_var`。
-
-UI 风格只做原生 `tkinter/ttk` 轻量转译：浅灰蓝背景、白色内容区、蓝色主操作、胶囊切换、宽松间距；不要引入第三方 UI 依赖。
-
-## 图像奇数抓取
-
-`image_fetcher_ui.py` 是独立脚本，不接入 `内容抽取.py` 主窗口。界面提供两个目录：文件夹1为参考名单，文件夹2为目标图库。程序读取文件夹1中非隐藏文件并保持排序，取奇数位置文件名（Python 切片 `valid_files[::2]`），再到文件夹2查找同名文件，存在则 `copy2` 到桌面 `图像抓取/`。
-
-维护约束：只复制文件，不移动、不重命名、不删除源文件；输出目录固定为当前用户桌面 `图像抓取/`；保留成功 / 未找到统计和日志反馈；不要把它改成递归扫描或自动覆盖主抽取工具流程。
-
-## 文件批量重命名
-
-`file_batch_renamer.py` 是独立脚本，不接入 `内容抽取.py` 主窗口。它使用 `FileRenamerApp` 类管理窗口、配置、日志和两个 Tab：`文档命名 (Txt)` 与 `图像命名 (Images)`。
-
-配置文件为脚本 / exe 同目录 `config.json`，保存工作目录、起始编号、前缀、编号位数、图像每组数量等参数。维护时不要把该配置混入 `draw_history.json`。
-
-重命名规则：`.txt` 文件按文件名括号内数字优先排序，找不到括号数字时取文件名中第一个数字，输出 `[前缀][编号].txt`。图像支持 `.png`、`.jpg`、`.jpeg`、`.webp`、`.bmp`、`.gif`，按文件名数字排序；每组数量大于 1 时输出 `[前缀][组编号]_([组内序号]).扩展名`，每组数量为 1 时输出 `[前缀][编号].扩展名`。
-
-安全约束：目标文件已存在且不是当前文件时必须跳过并记录日志；不得静默覆盖、删除文件、递归处理子目录或改写不支持的扩展名。输入校验保留非负起始编号、1-10 位编号位数和每组数量大于 0。
-
-## 检查更新与发布
-
-`内容抽取.py` 顶部维护版本和发布地址：`APP_VERSION = "0.1.1"`，`UPDATE_API_URL = "https://api.github.com/repos/zhangyi196/zbt-prompt/releases/latest"`，`UPDATE_RELEASES_LIST_API_URL = "https://api.github.com/repos/zhangyi196/zbt-prompt/releases?per_page=20"`，`UPDATE_RELEASES_URL = "https://github.com/zhangyi196/zbt-prompt/releases"`。
-
-启动后后台静默访问 latest release API，若 latest API 返回 404，则回退读取 releases 列表；比较 tag 数字版本，只有发现高于当前版本的新版本才显示右上角 `发现新版本` 按钮。点击按钮后只弹窗提示并打开 Releases 页面；不得自动下载、覆盖 exe、重启程序、写入 `draw_history.json` 或阻塞 UI。没有新版本、没有可用发布版本或静默检查失败时，更新按钮保持隐藏且不打扰用户。
-
-发新版时先更新 `APP_VERSION`，再创建更高 Release tag；当前安装包由 `installer.iss` 生成，已发布 `v0.1.1` 资产 `GameContentExtraction-Setup-v0.1.1.exe`。未来若做自动更新，必须新增独立 updater/helper、文件校验和失败回滚。
+`draw_history.json` 中物品池 key 为 `box:{box_id}:{category_key}`，动物池 key 为 `animal:{animal_type}:{category_key}`。只有界面重置按钮清空历史；人物表情不得写入历史。
 
 ## 人物表情抽取
 
-目标：把 `组图 23 表情前置.md` 输出的表情组文本补全为 `组图 23.md` 可用描述。当前前置文档为 v1.2.5，默认输出负向组、正向组、正负向组三类预案。
+流程：逐个人物块读取 `极性`、`具体表情`、`单人/多人` -> 从 `../组图 23 表情库.md` 查模板 -> 只增强 `具体表情:` 字段。每类模板 8 条：1-4 单人，5-8 多人；默认随机，可指定编号。
 
-流程：逐个人物块读取 `极性`、`具体表情`、`单人/多人` -> 从 `../组图 23 表情库.md` 查模板 -> 只增强 `具体表情:` 字段。每类模板 8 条：1-4 单人，5-8 多人；默认随机模板，可切换为指定编号。支持多组 `极性:`，包括正负向组内正向/负向混排的人物块；重复增强必须替换旧眉/眼/嘴，不得堆叠。
-
-约束：每个人物块的 `极性` 必须匹配 `具体表情` 类别；多人块的 `单人/多人` 写“多人”以使用 5-8 模板。保留 `[目标物]`、`[证据物]`、`[对方人物]`、`[剧情食物]`、`[剧情小物]`，不自动替换；只补眉 / 眼 / 嘴，不改人物姿态、头身朝向、四肢、衣领、头发、耳饰；不接入 `draw_history.json`。
+约束：`极性` 必须匹配 `具体表情` 类别；多人块写“多人”以使用 5-8 模板。保留 `[目标物]`、`[证据物]`、`[对方人物]`、`[剧情食物]`、`[剧情小物]`；只补眉 / 眼 / 嘴，不改人物姿态、头身朝向、四肢、衣领、头发、耳饰；重复增强必须替换旧眉/眼/嘴，不得堆叠。
 
 验收样例：`极性=负向`、`具体表情=困惑`、`单人/多人=单人`、`模板编号=4` 应追加：
 
 `眉：一侧眉尾抬起，另一侧眉尾压平；眼：一侧眼撑开看着[目标物]，另一侧眼半垂；嘴：一侧嘴巴闭住下压，另一侧嘴角收紧。`
 
+## 图像抓取
+
+`图像抓取` 工作区提供文件夹1（参考名单）和文件夹2（目标图库）。程序读取文件夹1中非隐藏文件并排序，取奇数位置文件名（`valid_files[::2]`），再从文件夹2复制同名文件到桌面 `图像抓取/`。
+
+维护约束：只复制，不移动、不重命名、不删除源文件；保留成功 / 未找到统计和日志；不要改成递归扫描或自动覆盖主流程。
+
+## 批量重命名
+
+`批量重命名` 工作区含 `文档命名 (Txt)`、`图像命名 (Images)` 两个 Tab。参数保存到脚本 / exe 同目录 `config.json`，不得混入 `draw_history.json`。
+
+规则：`.txt` 文件按括号内数字优先排序，找不到则取文件名第一个数字，输出 `[前缀][编号].txt`。图像支持 `.png`、`.jpg`、`.jpeg`、`.webp`、`.bmp`、`.gif`，按文件名数字排序；每组数量大于 1 输出 `[前缀][组编号]_([组内序号]).扩展名`，等于 1 输出 `[前缀][编号].扩展名`。
+
+安全约束：目标文件已存在且不是当前文件时必须跳过并记录日志；不得静默覆盖、删除文件、递归处理子目录或改写不支持的扩展名。保留输入校验：起始编号非负、编号位数 1-10、每组数量大于 0。
+
+## 检查更新与发布
+
+`APP_VERSION = "0.1.1"`；`UPDATE_API_URL` 读 latest release，404 时回退 `UPDATE_RELEASES_LIST_API_URL`。只有发现高于当前版本的 Release 才显示右上角 `发现新版本` 按钮；点击后只提示并打开 Releases 页面。不得自动下载、覆盖 exe、重启程序、写入 `draw_history.json` 或阻塞 UI。
+
+发新版：先更新 `APP_VERSION`，再创建更高 tag。当前安装包由 `installer.iss` 生成，已发布 `v0.1.1` 资产 `GameContentExtraction-Setup-v0.1.1.exe`。若未来做自动更新，必须新增独立 updater/helper、校验和失败回滚。
+
 ## 修改原则
 
 - 保持中文界面、中文输出和复制即用风格。
 - 不改成 Web、数据库、服务端或大型工程。
-- 不删除盲盒/动物数据；内容变更优先改 `data/`。
 - 不破坏输入语法、历史语义、重置按钮语义、表情库单一事实源和占位符保留。
-- 不把检查更新改成自动替换 exe；自动更新必须另做 updater/helper、校验和回滚。
 - `data/` 不加入 UI、抽样逻辑或历史保存逻辑。
 
 验证：
@@ -105,4 +76,4 @@ python -B -m py_compile 'image_fetcher_ui.py' 'file_batch_renamer.py'
 python -B '..\.workflow\active\WFS-game-content-expression-window\.process\verify_expression.py'
 ```
 
-环境允许时，手动打开窗口检查两个工作区切换、中文显示和主按钮状态。
+环境允许时，手动打开窗口检查四个工作区切换、中文显示和主按钮状态。
