@@ -11,6 +11,7 @@ AppVersion={#MyAppVersion}
 AppPublisher={#MyAppPublisher}
 DefaultDirName={localappdata}\Programs\Game Content Extraction
 DefaultGroupName={#MyAppName}
+DisableDirPage=no
 DisableProgramGroupPage=yes
 OutputDir=release
 OutputBaseFilename={#MyOutputName}

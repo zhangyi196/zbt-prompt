@@ -59,7 +59,7 @@ UI 只用原生 `tkinter/ttk`，保持浅灰蓝背景、白色内容区、蓝色
 
 `APP_VERSION = "0.1.2"`；`UPDATE_API_URL` 读 latest release，404 时回退 `UPDATE_RELEASES_LIST_API_URL`。只有发现高于当前版本的 Release 才显示右上角 `发现新版本` 按钮；点击后只提示并打开 Releases 页面。不得自动下载、覆盖 exe、重启程序、写入 `draw_history.json` 或阻塞 UI。
 
-已发布：`v0.1.2` -> <https://github.com/zhangyi196/zbt-prompt/releases/tag/v0.1.2>；资产 `GameContentExtraction-Setup-v0.1.2.exe`，大小 `14,031,055` bytes，SHA256 `1f7c59abe9519d1d6a4efeff579619df454084036e72526f5a2e78a3670f28fc`。该资产已替换早先缺失 `tkinter` 运行时的坏包。
+已发布：`v0.1.2` -> <https://github.com/zhangyi196/zbt-prompt/releases/tag/v0.1.2>；资产 `GameContentExtraction-Setup-v0.1.2.exe`，大小 `14,031,056` bytes，SHA256 `1b6a32dc6947a554a7aa2dc8b0cf6293271740c4118e0df613c74dcf02f0d875`。该资产已替换早先缺失 `tkinter` 运行时的坏包，并显示安装路径选择页。
 
 发新版：先更新 `APP_VERSION` 和 `installer.iss` 的 `MyAppVersion` / `MyOutputName`，再构建 exe、生成安装包、检查 PyInstaller 归档包含 `pyi_rth__tkinter`、`_tkinter.pyd`、`tcl86t.dll`、`tk86t.dll`，做启动与静默安装烟测，最后创建更高 tag。若未来做自动更新，必须新增独立 updater/helper、校验和失败回滚。
 
