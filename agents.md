@@ -34,9 +34,11 @@
 - 不改成 Web、数据库、服务端或大型工程；不引入第三方 UI 依赖。
 - `draw_history.json` 只服务物品池和动物池；表情和重命名配置不得接入。
 - `config.json` 只服务批量重命名。
-- 更新检查只提示并打开 Releases 页面，不自动下载/替换 exe，不写历史。
+- 当前版本 `APP_VERSION = "0.1.2"`；GitHub Release `v0.1.2` 已上传 `GameContentExtraction-Setup-v0.1.2.exe`。
+- 更新检查只提示并打开 Releases 页面，不自动下载/替换 exe，不写历史；没有更高 Release 时隐藏更新按钮。
 - 图像抓取只复制同名文件到桌面 `图像抓取/`，不移动、不改名、不删除源文件。
 - 批量重命名必须保留目标文件存在时跳过的保护逻辑。
+- 发新版先更新 `APP_VERSION` 和 `installer.iss` 输出名，再构建 exe、生成安装包、做启动/静默安装烟测，最后创建更高 tag。
 
 验证：
 
@@ -44,6 +46,7 @@
 python -B -m py_compile 'Game content extraction\内容抽取.py'
 python -B -m py_compile 'Game content extraction\image_fetcher_ui.py' 'Game content extraction\file_batch_renamer.py'
 python -B '.workflow\active\WFS-game-content-expression-window\.process\verify_expression.py'
+python -B -m unittest discover -s 'Game content extraction' -p 'test_*.py'
 ```
 
 ## 修改检查

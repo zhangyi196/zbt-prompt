@@ -59,7 +59,9 @@ UI 只用原生 `tkinter/ttk`，保持浅灰蓝背景、白色内容区、蓝色
 
 `APP_VERSION = "0.1.2"`；`UPDATE_API_URL` 读 latest release，404 时回退 `UPDATE_RELEASES_LIST_API_URL`。只有发现高于当前版本的 Release 才显示右上角 `发现新版本` 按钮；点击后只提示并打开 Releases 页面。不得自动下载、覆盖 exe、重启程序、写入 `draw_history.json` 或阻塞 UI。
 
-发新版：先更新 `APP_VERSION`，再创建更高 tag。当前安装包由 `installer.iss` 生成，已发布 `v0.1.2` 资产 `GameContentExtraction-Setup-v0.1.2.exe`。若未来做自动更新，必须新增独立 updater/helper、校验和失败回滚。
+已发布：`v0.1.2` -> <https://github.com/zhangyi196/zbt-prompt/releases/tag/v0.1.2>；资产 `GameContentExtraction-Setup-v0.1.2.exe`，SHA256 `8199ce9ca46c0c5d44b3487e67b5392288c0ff2d51c32ad392737df4b149232c`。
+
+发新版：先更新 `APP_VERSION` 和 `installer.iss` 的 `MyAppVersion` / `MyOutputName`，再构建 exe、生成安装包、做启动与静默安装烟测，最后创建更高 tag。若未来做自动更新，必须新增独立 updater/helper、校验和失败回滚。
 
 ## 修改原则
 
@@ -74,6 +76,14 @@ UI 只用原生 `tkinter/ttk`，保持浅灰蓝背景、白色内容区、蓝色
 python -B -m py_compile '内容抽取.py'
 python -B -m py_compile 'image_fetcher_ui.py' 'file_batch_renamer.py'
 python -B '..\.workflow\active\WFS-game-content-expression-window\.process\verify_expression.py'
+python -B -m unittest discover -s . -p 'test_*.py'
 ```
 
-环境允许时，手动打开窗口检查四个工作区切换、中文显示和主按钮状态。
+打包：
+
+```powershell
+pyinstaller --clean --noconfirm '内容抽取.spec'
+& "$env:LOCALAPPDATA\Programs\Inno Setup 6\ISCC.exe" 'installer.iss'
+```
+
+环境允许时，手动打开窗口检查四个工作区切换、中文显示和主按钮状态；发 Release 前还要启动 `dist\内容抽取.exe`，并静默安装 `release\GameContentExtraction-Setup-v*.exe` 后启动安装目录中的 exe。

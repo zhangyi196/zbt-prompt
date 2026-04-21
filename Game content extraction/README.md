@@ -9,6 +9,14 @@
 
 核心功能不依赖 Web、数据库或服务端。更新检查启动后静默执行，只有发现新版时才显示右上角 `发现新版本` 按钮。
 
+## 下载
+
+当前发布版：`v0.1.2`
+
+- Release 页面：<https://github.com/zhangyi196/zbt-prompt/releases/tag/v0.1.2>
+- 安装包：`GameContentExtraction-Setup-v0.1.2.exe`
+- SHA256：`8199ce9ca46c0c5d44b3487e67b5392288c0ff2d51c32ad392737df4b149232c`
+
 ## 运行
 
 ```powershell
@@ -101,6 +109,7 @@ python '内容抽取.py'
 - `config.json`：批量重命名参数。
 - `../组图 23 表情库.md`：表情模板源。
 - `内容抽取.spec`：PyInstaller 打包配置。
+- `installer.iss`：Inno Setup 安装包配置。
 
 ## 检查更新
 
@@ -118,13 +127,15 @@ https://api.github.com/repos/zhangyi196/zbt-prompt/releases?per_page=20
 
 当前版本写在 `内容抽取.py` 的 `APP_VERSION`。检查更新只比较 GitHub Release 版本并打开发布页，不自动下载、覆盖或重启。没有高于当前版本的 Release 时，更新按钮保持隐藏。
 
-发布新版时：更新 `APP_VERSION` -> 创建更高 tag（如 `v0.1.2`）-> 上传打包文件。
+发布新版时：更新 `APP_VERSION` 和 `installer.iss` 输出名 -> 构建 exe -> 生成安装包 -> 做启动/静默安装烟测 -> 创建更高 tag（如 `v0.1.3`）并上传安装包。
 
 ## 验证
 
 ```powershell
 python -B -m py_compile 'Game content extraction\内容抽取.py'
+python -B -m py_compile 'Game content extraction\image_fetcher_ui.py' 'Game content extraction\file_batch_renamer.py'
 python -B '.workflow\active\WFS-game-content-expression-window\.process\verify_expression.py'
+python -B -m unittest discover -s 'Game content extraction' -p 'test_*.py'
 ```
 
 预期输出：
@@ -138,10 +149,11 @@ expression acceptance checks passed
 在 `Game content extraction` 目录运行：
 
 ```powershell
-pyinstaller '内容抽取.spec'
+pyinstaller --clean --noconfirm '内容抽取.spec'
+& "$env:LOCALAPPDATA\Programs\Inno Setup 6\ISCC.exe" 'installer.iss'
 ```
 
-打包配置已包含 `../组图 23 表情库.md`，程序会按源码目录、程序相邻目录和 `_MEIPASS` 查找表情库。
+打包配置已包含 `../组图 23 表情库.md`，程序会按源码目录、程序相邻目录和 `_MEIPASS` 查找表情库。发布前至少确认 `dist\内容抽取.exe` 可启动，并静默安装 `release\GameContentExtraction-Setup-v*.exe` 后启动安装目录中的 exe。
 
 ## 维护注意
 
