@@ -56,8 +56,8 @@ class UpdateCheckTests(unittest.TestCase):
                         "draft": False,
                     },
                     {
-                        "tag_name": "v0.1.2",
-                        "html_url": "https://example.test/releases/v0.1.2",
+                        "tag_name": "v0.1.3",
+                        "html_url": "https://example.test/releases/v0.1.3",
                         "body": "next",
                         "draft": False,
                     },
@@ -69,8 +69,8 @@ class UpdateCheckTests(unittest.TestCase):
         result = self.make_extractor()._fetch_latest_release()
 
         self.assertEqual(result["status"], "update_available")
-        self.assertEqual(result["latest_version"], "0.1.2")
-        self.assertEqual(result["url"], "https://example.test/releases/v0.1.2")
+        self.assertEqual(result["latest_version"], "0.1.3")
+        self.assertEqual(result["url"], "https://example.test/releases/v0.1.3")
 
     def test_latest_404_with_empty_releases_list_returns_no_release(self):
         def fake_urlopen(request, timeout):

@@ -57,9 +57,9 @@ UI 只用原生 `tkinter/ttk`，保持浅灰蓝背景、白色内容区、蓝色
 
 ## 检查更新与发布
 
-`APP_VERSION = "0.1.1"`；`UPDATE_API_URL` 读 latest release，404 时回退 `UPDATE_RELEASES_LIST_API_URL`。只有发现高于当前版本的 Release 才显示右上角 `发现新版本` 按钮；点击后只提示并打开 Releases 页面。不得自动下载、覆盖 exe、重启程序、写入 `draw_history.json` 或阻塞 UI。
+`APP_VERSION = "0.1.2"`；`UPDATE_API_URL` 读 latest release，404 时回退 `UPDATE_RELEASES_LIST_API_URL`。只有发现高于当前版本的 Release 才显示右上角 `发现新版本` 按钮；点击后只提示并打开 Releases 页面。不得自动下载、覆盖 exe、重启程序、写入 `draw_history.json` 或阻塞 UI。
 
-发新版：先更新 `APP_VERSION`，再创建更高 tag。当前安装包由 `installer.iss` 生成，已发布 `v0.1.1` 资产 `GameContentExtraction-Setup-v0.1.1.exe`。若未来做自动更新，必须新增独立 updater/helper、校验和失败回滚。
+发新版：先更新 `APP_VERSION`，再创建更高 tag。当前安装包由 `installer.iss` 生成，已发布 `v0.1.2` 资产 `GameContentExtraction-Setup-v0.1.2.exe`。若未来做自动更新，必须新增独立 updater/helper、校验和失败回滚。
 
 ## 修改原则
 
