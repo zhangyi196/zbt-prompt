@@ -15,7 +15,8 @@
 
 - Release 页面：<https://github.com/zhangyi196/zbt-prompt/releases/tag/v0.1.2>
 - 安装包：`GameContentExtraction-Setup-v0.1.2.exe`
-- SHA256：`8199ce9ca46c0c5d44b3487e67b5392288c0ff2d51c32ad392737df4b149232c`
+- 大小：`14,031,055` bytes
+- SHA256：`1f7c59abe9519d1d6a4efeff579619df454084036e72526f5a2e78a3670f28fc`
 
 ## 运行
 
@@ -127,7 +128,7 @@ https://api.github.com/repos/zhangyi196/zbt-prompt/releases?per_page=20
 
 当前版本写在 `内容抽取.py` 的 `APP_VERSION`。检查更新只比较 GitHub Release 版本并打开发布页，不自动下载、覆盖或重启。没有高于当前版本的 Release 时，更新按钮保持隐藏。
 
-发布新版时：更新 `APP_VERSION` 和 `installer.iss` 输出名 -> 构建 exe -> 生成安装包 -> 做启动/静默安装烟测 -> 创建更高 tag（如 `v0.1.3`）并上传安装包。
+发布新版时：更新 `APP_VERSION` 和 `installer.iss` 输出名 -> 构建 exe -> 检查 exe 归档包含 `tkinter` / `_tkinter` / Tcl / Tk -> 生成安装包 -> 做启动/静默安装烟测 -> 创建更高 tag（如 `v0.1.3`）并上传安装包。
 
 ## 验证
 
@@ -151,9 +152,10 @@ expression acceptance checks passed
 ```powershell
 pyinstaller --clean --noconfirm '内容抽取.spec'
 & "$env:LOCALAPPDATA\Programs\Inno Setup 6\ISCC.exe" 'installer.iss'
+pyi-archive_viewer 'dist\内容抽取.exe' --list | Select-String -Pattern 'tkinter|_tkinter|tcl86t|tk86t'
 ```
 
-打包配置已包含 `../组图 23 表情库.md`，程序会按源码目录、程序相邻目录和 `_MEIPASS` 查找表情库。发布前至少确认 `dist\内容抽取.exe` 可启动，并静默安装 `release\GameContentExtraction-Setup-v*.exe` 后启动安装目录中的 exe。
+打包配置已包含 `../组图 23 表情库.md`，并显式声明 `tkinter` 相关 hidden imports。程序会按源码目录、程序相邻目录和 `_MEIPASS` 查找表情库。发布前至少确认 `dist\内容抽取.exe` 可启动，并静默安装 `release\GameContentExtraction-Setup-v*.exe` 后启动安装目录中的 exe。若构建时出现 `tkinter installation is broken`，通常是受限环境无法读取 Python 的 Tcl/Tk 目录，应在可访问该目录的环境中重新构建。
 
 ## 维护注意
 

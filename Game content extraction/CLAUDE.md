@@ -59,9 +59,9 @@ UI 只用原生 `tkinter/ttk`，保持浅灰蓝背景、白色内容区、蓝色
 
 `APP_VERSION = "0.1.2"`；`UPDATE_API_URL` 读 latest release，404 时回退 `UPDATE_RELEASES_LIST_API_URL`。只有发现高于当前版本的 Release 才显示右上角 `发现新版本` 按钮；点击后只提示并打开 Releases 页面。不得自动下载、覆盖 exe、重启程序、写入 `draw_history.json` 或阻塞 UI。
 
-已发布：`v0.1.2` -> <https://github.com/zhangyi196/zbt-prompt/releases/tag/v0.1.2>；资产 `GameContentExtraction-Setup-v0.1.2.exe`，SHA256 `8199ce9ca46c0c5d44b3487e67b5392288c0ff2d51c32ad392737df4b149232c`。
+已发布：`v0.1.2` -> <https://github.com/zhangyi196/zbt-prompt/releases/tag/v0.1.2>；资产 `GameContentExtraction-Setup-v0.1.2.exe`，大小 `14,031,055` bytes，SHA256 `1f7c59abe9519d1d6a4efeff579619df454084036e72526f5a2e78a3670f28fc`。该资产已替换早先缺失 `tkinter` 运行时的坏包。
 
-发新版：先更新 `APP_VERSION` 和 `installer.iss` 的 `MyAppVersion` / `MyOutputName`，再构建 exe、生成安装包、做启动与静默安装烟测，最后创建更高 tag。若未来做自动更新，必须新增独立 updater/helper、校验和失败回滚。
+发新版：先更新 `APP_VERSION` 和 `installer.iss` 的 `MyAppVersion` / `MyOutputName`，再构建 exe、生成安装包、检查 PyInstaller 归档包含 `pyi_rth__tkinter`、`_tkinter.pyd`、`tcl86t.dll`、`tk86t.dll`，做启动与静默安装烟测，最后创建更高 tag。若未来做自动更新，必须新增独立 updater/helper、校验和失败回滚。
 
 ## 修改原则
 
@@ -84,6 +84,7 @@ python -B -m unittest discover -s . -p 'test_*.py'
 ```powershell
 pyinstaller --clean --noconfirm '内容抽取.spec'
 & "$env:LOCALAPPDATA\Programs\Inno Setup 6\ISCC.exe" 'installer.iss'
+pyi-archive_viewer 'dist\内容抽取.exe' --list | Select-String -Pattern 'tkinter|_tkinter|tcl86t|tk86t'
 ```
 
-环境允许时，手动打开窗口检查四个工作区切换、中文显示和主按钮状态；发 Release 前还要启动 `dist\内容抽取.exe`，并静默安装 `release\GameContentExtraction-Setup-v*.exe` 后启动安装目录中的 exe。
+环境允许时，手动打开窗口检查四个工作区切换、中文显示和主按钮状态；发 Release 前还要启动 `dist\内容抽取.exe`，并静默安装 `release\GameContentExtraction-Setup-v*.exe` 后启动安装目录中的 exe。若沙箱内构建误报 `tkinter installation is broken` 或生成缺 Tk 的 exe，改用可读取本机 Python Tcl/Tk 目录的提权环境，并在命令前设置 UTF-8 控制台。
