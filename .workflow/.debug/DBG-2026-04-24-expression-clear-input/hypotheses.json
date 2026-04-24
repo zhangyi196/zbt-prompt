@@ -1,0 +1,18 @@
+{
+  "iteration": 1,
+  "timestamp": "2026-04-24T00:00:00+08:00",
+  "hypotheses": [
+    {
+      "id": "H1",
+      "description": "表情区清空输入没有复用盲盒区的自动粘贴逻辑，导致只清空不回填",
+      "testable_condition": "对比 clear_input 和 clear_expression_input 的实现",
+      "logging_point": "Game content extraction/内容抽取.py",
+      "evidence_criteria": {
+        "confirm": "clear_input 读取剪贴板而 clear_expression_input 没有",
+        "reject": "两者都走同一辅助逻辑但问题仍存在"
+      },
+      "likelihood": 1,
+      "status": "confirmed"
+    }
+  ]
+}

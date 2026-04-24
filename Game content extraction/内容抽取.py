@@ -884,7 +884,7 @@ class BlindBoxExtractor:
         button_frame = ttk.Frame(parent)
         button_frame.pack(pady=(0, 14))
         ttk.Button(button_frame, text="抽取表情", command=self.extract_expression_content, style="Primary.TButton").pack(side=tk.LEFT, padx=8)
-        ttk.Button(button_frame, text="清空", command=self.clear_expression_content, style="Secondary.TButton").pack(side=tk.LEFT, padx=8)
+        ttk.Button(button_frame, text="清空输入", command=self.clear_expression_input, style="Secondary.TButton").pack(side=tk.LEFT, padx=8)
         ttk.Button(button_frame, text="复制结果", command=self.copy_expression_result, style="Secondary.TButton").pack(side=tk.LEFT, padx=8)
 
         ttk.Label(parent, text="增强后文本:", font=self.UI_FONT_BOLD).pack(pady=(0, 6), anchor=tk.W)
@@ -1252,13 +1252,27 @@ class BlindBoxExtractor:
         return item
 
     def clear_input(self):
-        self.input_entry.delete(0, tk.END)
-        if self.auto_paste_var.get():
-            try:
-                clipboard_content = self.root.clipboard_get()
-                self.input_entry.insert(0, clipboard_content)
-            except tk.TclError:
-                pass
+        self._clear_and_optionally_paste(self.input_entry)
+
+    def _clear_and_optionally_paste(self, widget, is_text_widget=False):
+        if is_text_widget:
+            widget.delete(1.0, tk.END)
+        else:
+            widget.delete(0, tk.END)
+
+        auto_paste_var = getattr(self, "auto_paste_var", None)
+        if not auto_paste_var or not auto_paste_var.get():
+            return
+
+        try:
+            clipboard_content = self.root.clipboard_get()
+        except tk.TclError:
+            return
+
+        if is_text_widget:
+            widget.insert(1.0, clipboard_content)
+        else:
+            widget.insert(0, clipboard_content)
 
     def open_expression_window(self):
         self._show_workspace("expression")
@@ -1284,11 +1298,9 @@ class BlindBoxExtractor:
             self.expression_output_text.delete(1.0, tk.END)
             self.expression_output_text.insert(tk.END, str(exc))
 
-    def clear_expression_content(self):
+    def clear_expression_input(self):
         if self.expression_input_text:
-            self.expression_input_text.delete(1.0, tk.END)
-        if self.expression_output_text:
-            self.expression_output_text.delete(1.0, tk.END)
+            self._clear_and_optionally_paste(self.expression_input_text, is_text_widget=True)
 
     def copy_expression_result(self):
         if not self.expression_output_text:

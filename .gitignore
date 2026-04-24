@@ -13,6 +13,7 @@ env/
 
 # IDE and OS files
 # Keep local desktop-tool clutter out of the repo by default.
+# Keep workflow/debug artifacts tracked unless we explicitly decide they are local-only.
 .vscode/
 .idea/
 .DS_Store
@@ -21,3 +22,6 @@ Desktop.ini
 
 # Logs
 *.log
+
+# Desktop app build/release artifacts are intentionally tracked in this repo.
+# Keep ignore changes scoped to untracked local clutter only.
