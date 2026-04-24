@@ -1,3 +1,6 @@
+每次完成执行任务后，都要同步更新 `agents.md`、`CLAUDE.md`、`README.md`、`.gitignore` 文件。
+若 `.gitignore` 命中已跟踪的缓存文件或构建缓存，必须同步执行取消跟踪清理，避免再次提交到仓库。
+
 # Agents Guide
 
 本仓库主要维护中文提示词规则；`Game content extraction/` 是配套本地 `tkinter` 小工具目录。优先局部修改，保持中文风格、固定输出、数量配额、自检项和既有链路。
