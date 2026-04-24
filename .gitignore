@@ -23,5 +23,8 @@ Desktop.ini
 # Logs
 *.log
 
+# Local release packaging artifacts
+.release-assets/
+
 # Desktop app build/release artifacts are intentionally tracked in this repo.
 # Keep ignore changes scoped to untracked local clutter only.

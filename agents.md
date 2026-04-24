@@ -57,3 +57,10 @@ python -B -m unittest discover -s 'Game content extraction' -p 'test_*.py'
 ## 修改检查
 
 修改前读目标文件的角色、输入、输出和核心约束；修改中只动相关段落；修改后检查数量、格式、禁区、承载关系、固定输出和自检是否一致。涉及表情链路时，同步检查 `组图 23 表情库.md`、`组图 23 表情前置.md`、`组图 23.md` 与 App 接入关系。
+
+## 仓库源码打包发布
+
+- 仓库源码打包到 GitHub Release 时，使用保留目录结构的 zip 资产，不直接上传文件夹。
+- 推荐 source-bundle tag：`v0.1.2-source-YYYYMMDD`；该命名规范化后仍为 `0.1.2`，不会误触发 App 更新提示。
+- 推荐 source-bundle 资产名：`zbt-prompt-v0.1.2-source-YYYYMMDD.zip`。
+- 仅当发布桌面工具新版本时，才提升 `APP_VERSION`、安装包名和正式 `v0.1.x` tag。
