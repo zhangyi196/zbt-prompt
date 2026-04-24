@@ -26,5 +26,7 @@ Desktop.ini
 # Local release packaging artifacts
 .release-assets/
 
+# Prompt polishing follows tracked markdown files; keep ignore rules focused on local clutter only.
+
 # Desktop app build/release artifacts are intentionally tracked in this repo.
 # Keep ignore changes scoped to untracked local clutter only.
