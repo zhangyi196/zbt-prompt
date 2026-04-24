@@ -735,24 +735,39 @@ class BlindBoxExtractor:
         return parts or [0]
 
     def _build_blind_box_workspace(self, parent):
-        input_frame = ttk.Frame(parent)
+        layout_frame = ttk.Frame(parent, style="Workspace.TFrame")
+        layout_frame.pack(fill=tk.BOTH, expand=True)
+        layout_frame.columnconfigure(0, weight=0)
+        layout_frame.columnconfigure(1, weight=1)
+        layout_frame.rowconfigure(0, weight=1)
+
+        left_panel = ttk.Frame(layout_frame, style="Workspace.TFrame", width=380)
+        left_panel.grid(row=0, column=0, sticky="nsw", padx=(0, 18))
+        left_panel.grid_propagate(False)
+
+        right_panel = ttk.Frame(layout_frame, style="Workspace.TFrame")
+        right_panel.grid(row=0, column=1, sticky="nsew")
+        right_panel.columnconfigure(0, weight=1)
+        right_panel.rowconfigure(1, weight=1)
+
+        input_frame = ttk.Frame(left_panel)
         input_frame.pack(pady=(4, 8), fill=tk.X)
         ttk.Label(input_frame, text="盲盒数字/动物类型(逗号分隔):").pack(side=tk.LEFT, padx=(0, 10))
         self.input_entry = ttk.Entry(input_frame, width=36)
         self.input_entry.pack(side=tk.LEFT, fill=tk.X, expand=True)
 
         ttk.Label(
-            parent,
+            left_panel,
             text="示例：1,5,地面动物,无大型物品,中型物品+1",
             style="Muted.TLabel",
         ).pack(anchor=tk.W)
 
-        state_frame = ttk.Frame(parent)
+        state_frame = ttk.Frame(left_panel)
         state_frame.pack(pady=(12, 8), fill=tk.X)
         self.state_var = tk.BooleanVar(value=False)
         ttk.Checkbutton(state_frame, text="启用物品状态", variable=self.state_var).pack(side=tk.LEFT)
 
-        category_frame = ttk.LabelFrame(parent, text="物品类别与抽取数量")
+        category_frame = ttk.LabelFrame(left_panel, text="物品类别与抽取数量")
         category_frame.pack(pady=(4, 10), fill=tk.X)
 
         self.category_vars = {}
@@ -779,7 +794,7 @@ class BlindBoxExtractor:
                 **self._spinbox_style_options(),
             ).pack(side=tk.LEFT, padx=6)
 
-        animal_frame = ttk.LabelFrame(parent, text="动物内容与抽取数量")
+        animal_frame = ttk.LabelFrame(left_panel, text="动物内容与抽取数量")
         animal_frame.pack(pady=(0, 12), fill=tk.X)
 
         self.animal_vars = {}
@@ -806,10 +821,10 @@ class BlindBoxExtractor:
                 **self._spinbox_style_options(),
             ).pack(side=tk.LEFT, padx=6)
 
-        button_frame = ttk.Frame(parent)
-        button_frame.pack(pady=(2, 14))
+        button_frame = ttk.Frame(left_panel)
+        button_frame.pack(pady=(2, 14), fill=tk.X)
 
-        ttk.Button(button_frame, text="开始抽取", command=self.extract, style="Primary.TButton").pack(side=tk.LEFT, padx=8)
+        ttk.Button(button_frame, text="开始抽取", command=self.extract, style="Primary.TButton").pack(side=tk.LEFT, padx=(0, 8))
 
         clear_frame = ttk.Frame(button_frame)
         clear_frame.pack(side=tk.LEFT, padx=8)
@@ -819,16 +834,16 @@ class BlindBoxExtractor:
 
         ttk.Button(button_frame, text="复制结果", command=self.copy_to_clipboard, style="Secondary.TButton").pack(side=tk.LEFT, padx=8)
 
-        ttk.Label(parent, text="提示词输出:", font=self.UI_FONT_BOLD).pack(anchor=tk.W)
-        history_button_frame = ttk.Frame(parent)
-        history_button_frame.pack(pady=(8, 10))
+        history_button_frame = ttk.Frame(left_panel)
+        history_button_frame.pack(pady=(8, 0), fill=tk.X)
         ttk.Button(history_button_frame, text="重置物品历史", command=self._reset_item_history, style="Secondary.TButton").pack(side=tk.LEFT, padx=5)
         ttk.Button(history_button_frame, text="重置动物历史", command=self._reset_animal_history, style="Secondary.TButton").pack(side=tk.LEFT, padx=5)
         ttk.Button(history_button_frame, text="重置全部历史", command=self._reset_all_history, style="Secondary.TButton").pack(side=tk.LEFT, padx=5)
 
-        self.output_text = scrolledtext.ScrolledText(parent, height=22, width=100)
+        ttk.Label(right_panel, text="提示词输出:", font=self.UI_FONT_BOLD).grid(row=0, column=0, sticky="w")
+        self.output_text = scrolledtext.ScrolledText(right_panel, height=22, width=72)
         self._style_text_widget(self.output_text)
-        self.output_text.pack(pady=(0, 2), fill=tk.BOTH, expand=True)
+        self.output_text.grid(row=1, column=0, pady=(8, 2), sticky="nsew")
 
     def _build_expression_workspace(self, parent):
         ttk.Label(parent, text="表情组文本:", font=self.UI_FONT_BOLD).pack(pady=(4, 6), anchor=tk.W)

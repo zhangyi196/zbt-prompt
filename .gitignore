@@ -12,6 +12,7 @@ venv/
 env/
 
 # IDE and OS files
+# Keep local desktop-tool clutter out of the repo by default.
 .vscode/
 .idea/
 .DS_Store

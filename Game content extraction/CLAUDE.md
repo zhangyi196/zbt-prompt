@@ -23,6 +23,7 @@
 维护时保留主要实例属性：`input_entry`、`output_text`、`category_vars`、`animal_vars`、`expression_input_text`、`expression_output_text`、`image_fetcher_folder1_var`、`image_fetcher_folder2_var`、`renamer_work_dir_var`、`txt_*_var`、`img_*_var`。
 
 UI 只用原生 `tkinter/ttk`，保持浅灰蓝背景、白色内容区、蓝色主操作、胶囊切换和宽松间距；不要引入第三方 UI 依赖。
+`盲盒物品/动物抽取` 工作区保持左侧配置、右侧结果的双栏结构；优先让输出框常驻可见，不要再改回单列后把结果区压到底部。
 
 ## 盲盒 / 动物抽取
 
