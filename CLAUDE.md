@@ -6,9 +6,9 @@
 
 - 桌面工具正式发布继续沿用 `v0.1.x` 语义版本和安装包资产。
 - 仓库源码打包到 GitHub Release 时，使用 source-bundle 命名，避免误导应用更新检查。
-- 推荐 source-bundle tag：`v0.1.2-source-YYYYMMDD`
-- 推荐 source-bundle 资产名：`zbt-prompt-v0.1.2-source-YYYYMMDD.zip`
-- 不要为仅含仓库快照的 release 提升到 `v0.1.3` 或更高版本，否则应用会把它识别成可更新版本。
+- 推荐 source-bundle tag：`v0.1.3-source-YYYYMMDD`
+- 推荐 source-bundle 资产名：`zbt-prompt-v0.1.3-source-YYYYMMDD.zip`
+- 不要为仅含仓库快照的 release 提升到高于当前正式桌面版本的 semver，否则应用会把它识别成可更新版本。
 
 ## 打包约定
 

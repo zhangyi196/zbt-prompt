@@ -16,12 +16,12 @@
 
 ## 下载
 
-当前发布版：`v0.1.2`
+当前发布版：`v0.1.3`
 
-- Release 页面：<https://github.com/zhangyi196/zbt-prompt/releases/tag/v0.1.2>
-- 安装包：`GameContentExtraction-Setup-v0.1.2.exe`
-- 大小：`14,031,056` bytes
-- SHA256：`1b6a32dc6947a554a7aa2dc8b0cf6293271740c4118e0df613c74dcf02f0d875`
+- Release 页面：<https://github.com/zhangyi196/zbt-prompt/releases/tag/v0.1.3>
+- 安装包：`GameContentExtraction-Setup-v0.1.3.exe`
+- 大小：`14,031,310` bytes
+- SHA256：`58a9a2ac27be4553c33caa247f59994dd9dca4bde55fe1d1864e7da388ce9ad4`
 - 安装器会显示安装路径选择页，可修改默认安装目录。
 
 ## 运行

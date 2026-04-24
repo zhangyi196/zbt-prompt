@@ -39,7 +39,7 @@
 - 不改成 Web、数据库、服务端或大型工程；不引入第三方 UI 依赖。
 - `draw_history.json` 只服务物品池和动物池；表情和重命名配置不得接入。
 - `config.json` 只服务批量重命名。
-- 当前版本 `APP_VERSION = "0.1.2"`；GitHub Release `v0.1.2` 已上传 `GameContentExtraction-Setup-v0.1.2.exe`，大小 `14,031,056` bytes，SHA256 `1b6a32dc6947a554a7aa2dc8b0cf6293271740c4118e0df613c74dcf02f0d875`；安装器会显示安装路径选择页。
+- 当前版本 `APP_VERSION = "0.1.3"`；GitHub Release `v0.1.3` 已上传 `GameContentExtraction-Setup-v0.1.3.exe`，大小 `14,031,310` bytes，SHA256 `58a9a2ac27be4553c33caa247f59994dd9dca4bde55fe1d1864e7da388ce9ad4`；安装器会显示安装路径选择页。
 - 更新检查只提示并打开 Releases 页面，不自动下载/替换 exe，不写历史；没有更高 Release 时隐藏更新按钮。
 - 图像抓取只复制同名文件到桌面 `图像抓取/`，不移动、不改名、不删除源文件。
 - 批量重命名必须保留目标文件存在时跳过的保护逻辑。
@@ -61,6 +61,6 @@ python -B -m unittest discover -s 'Game content extraction' -p 'test_*.py'
 ## 仓库源码打包发布
 
 - 仓库源码打包到 GitHub Release 时，使用保留目录结构的 zip 资产，不直接上传文件夹。
-- 推荐 source-bundle tag：`v0.1.2-source-YYYYMMDD`；该命名规范化后仍为 `0.1.2`，不会误触发 App 更新提示。
-- 推荐 source-bundle 资产名：`zbt-prompt-v0.1.2-source-YYYYMMDD.zip`。
+- 推荐 source-bundle tag：`v0.1.3-source-YYYYMMDD`；该命名规范化后仍为当前正式桌面版本，不会误触发 App 更新提示。
+- 推荐 source-bundle 资产名：`zbt-prompt-v0.1.3-source-YYYYMMDD.zip`。
 - 仅当发布桌面工具新版本时，才提升 `APP_VERSION`、安装包名和正式 `v0.1.x` tag。
