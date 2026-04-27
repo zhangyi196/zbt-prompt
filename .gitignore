@@ -23,7 +23,7 @@ Desktop.ini
 # Logs
 *.log
 
-# Local prompt/reference images
+# Local prompt/reference images and temporary visual inputs
 ComfyUI_*.png
 ComfyUI_*.jpg
 ComfyUI_*.jpeg
