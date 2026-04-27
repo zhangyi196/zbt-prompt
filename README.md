@@ -8,8 +8,13 @@
 - `组图 4.md`：找不同润色规则。
 - `组图 23 表情前置.md`：剧情表情类别前置规则。
 - `组图 23 表情库.md`：人物表情模板库。
-- `组图 23.md`：Ref-A / Ref-B 到 Target 的差异迁移规则。
+- `组图 23.md`：Ref-A / Ref-B 到 Target 的差异迁移规则，包含 List 2 冷区与新增物体空间可放置性约束。
 - `Game content extraction/`：本地 `tkinter` 小工具，详细说明见 [Game content extraction/README.md](Game%20content%20extraction/README.md)。
+
+## 提示词维护要点
+
+- `组图 23.md` 的 List 2 可以追求边角和边缘覆盖，但不得为了填点新增无法容纳的物体。
+- 新增、异物植入或替换为更大物体前，必须确认 Target 中有完整可见、未被占用且不会挤压原主体的空间；否则改用已有独立小物体的局部替换、消失、翻转、破损、图案替换或长距离平移。
 
 ## 仓库打包发布
 

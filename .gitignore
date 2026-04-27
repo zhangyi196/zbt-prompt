@@ -23,6 +23,9 @@ Desktop.ini
 # Logs
 *.log
 
+# Local prompt/reference images
+ComfyUI_*.png
+
 # Local release packaging artifacts
 .release-assets/
 
