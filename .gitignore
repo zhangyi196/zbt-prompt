@@ -25,6 +25,9 @@ Desktop.ini
 
 # Local prompt/reference images
 ComfyUI_*.png
+ComfyUI_*.jpg
+ComfyUI_*.jpeg
+ComfyUI_*.webp
 
 # Local release packaging artifacts
 .release-assets/
