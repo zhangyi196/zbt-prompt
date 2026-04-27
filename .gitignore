@@ -29,6 +29,7 @@ ComfyUI_*.jpg
 ComfyUI_*.jpeg
 ComfyUI_*.webp
 ComfyUI_*.gif
+ComfyUI_*.bmp
 
 # Local release packaging artifacts
 .release-assets/
