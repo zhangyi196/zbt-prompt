@@ -40,6 +40,16 @@ assert "具体表情: 困惑，" + EXPECTED in result
 assert "人物定位: 画面中央穿粉色裙子的女士" in result
 assert "[目标物]" in result
 
+multi_candidate_sample = sample.replace("具体表情: 困惑 ", "具体表情: 困惑、委屈|失落 / 尴尬 ")
+original_random_choice = module.random.choice
+module.random.choice = lambda options: "委屈" if "委屈" in options else options[0]
+try:
+    multi_candidate = app.enhance_expression_text(multi_candidate_sample, template_index=4)
+finally:
+    module.random.choice = original_random_choice
+assert "具体表情: 委屈，" in multi_candidate
+assert "具体表情: 困惑、委屈|不安 / 迟疑" not in multi_candidate
+
 second = app.enhance_expression_text(result, template_index=4)
 assert second.count("眉：") == 1
 assert second == result

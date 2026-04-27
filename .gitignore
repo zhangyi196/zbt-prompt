@@ -35,6 +35,7 @@ ComfyUI_*.bmp
 .release-assets/
 
 # Prompt polishing follows tracked markdown files; expression field candidate changes do not add ignore rules.
+# Multi-candidate expression regression uses tracked tests and workflow scripts, so no extra local ignores are needed.
 
 # Desktop app build/release artifacts are intentionally tracked in this repo.
 # Keep ignore changes scoped to untracked local clutter only.

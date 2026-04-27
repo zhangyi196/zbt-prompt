@@ -1737,6 +1737,16 @@ class BlindBoxExtractor:
             return match.group(1).strip()
         return stripped_value
 
+    def _split_expression_candidates(self, value):
+        candidates = [
+            candidate.strip()
+            for candidate in re.split(r"\s*[、，,\/|]\s*", value.strip())
+            if candidate.strip()
+        ]
+        if not candidates:
+            raise ValueError("具体表情不能为空")
+        return candidates
+
     def _get_field_matches(self, text, start=0, end=None):
         field_names = [
             "极性",
@@ -1804,13 +1814,27 @@ class BlindBoxExtractor:
 
         return blocks
 
-    def _select_expression_template(self, library, polarity, expression_name, audience, template_index=None, random_template=False):
+    def _validate_expression_name(self, library, polarity, expression_name):
         polarity_map = library.get(polarity, {})
         if expression_name not in polarity_map:
             other_polarity = "负向" if polarity == "正向" else "正向"
             if expression_name in library.get(other_polarity, {}):
                 raise ValueError(f"极性与表情类别错配：{expression_name} 属于{other_polarity}")
             raise ValueError(f"表情类别不存在：{expression_name}")
+
+    def _choose_expression_name(self, library, polarity, value):
+        expression_candidates = self._split_expression_candidates(
+            self._strip_existing_expression_template(value)
+        )
+        for expression_name in expression_candidates:
+            self._validate_expression_name(library, polarity, expression_name)
+        if len(expression_candidates) == 1:
+            return expression_candidates[0]
+        return random.choice(expression_candidates)
+
+    def _select_expression_template(self, library, polarity, expression_name, audience, template_index=None, random_template=False):
+        self._validate_expression_name(library, polarity, expression_name)
+        polarity_map = library.get(polarity, {})
 
         valid_indexes = [1, 2, 3, 4] if audience == "单人" else [5, 6, 7, 8]
         if random_template:
@@ -1838,9 +1862,11 @@ class BlindBoxExtractor:
             fields = block["fields"]
             polarity = self._normalize_expression_polarity(fields["极性"]["value"])
             audience = self._normalize_expression_audience(fields["单人/多人"]["value"])
-            expression_name = self._strip_existing_expression_template(fields["具体表情"]["value"])
-            if not expression_name:
-                raise ValueError("具体表情不能为空")
+            expression_name = self._choose_expression_name(
+                library,
+                polarity,
+                fields["具体表情"]["value"],
+            )
 
             template = self._select_expression_template(
                 library,
