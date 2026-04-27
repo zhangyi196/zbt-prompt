@@ -34,7 +34,7 @@ ComfyUI_*.bmp
 # Local release packaging artifacts
 .release-assets/
 
-# Prompt polishing follows tracked markdown files; keep ignore rules focused on local clutter only.
+# Prompt polishing follows tracked markdown files; expression field candidate changes do not add ignore rules.
 
 # Desktop app build/release artifacts are intentionally tracked in this repo.
 # Keep ignore changes scoped to untracked local clutter only.
