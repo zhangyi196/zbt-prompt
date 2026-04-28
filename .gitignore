@@ -23,7 +23,7 @@ Desktop.ini
 # Logs
 *.log
 
-# Local prompt/reference images and temporary visual inputs
+# Local prompt/reference images and temporary visual inputs; keep prompt compression/test screenshots out.
 测试图/
 ComfyUI_*.png
 ComfyUI_*.jpg

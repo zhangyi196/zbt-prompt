@@ -1,10 +1,6 @@
 ﻿{
     "coreModules":  [
-                        "Game content extraction",
-                        "agents.md",
-                        "README.md",
-                        ".gitignore",
-                        ".workflow"
+
                     ],
     "activeFiles":  [
 
@@ -18,5 +14,5 @@
                            "documents":  14
                        },
     "isGitRepo":  true,
-    "timestamp":  "2026-04-28T11:13:13.1901045+08:00"
+    "timestamp":  "2026-04-28T16:10:33.8881248Z"
 }

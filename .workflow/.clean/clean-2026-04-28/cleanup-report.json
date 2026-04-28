@@ -1,51 +1,56 @@
 ﻿{
-    "timestamp":  "2026-04-28T11:19:56.7904007+08:00",
+    "timestamp":  "2026-04-28T16:16:27.9960563Z",
     "selection":  "全部候选",
     "results":  {
+                    "staged":  [
+                                   {
+                                       "path":  ".workflow\\.team\\TLV4-20260428-zt23-compress",
+                                       "trashPath":  "F:\\vscode projects\\zbt prompt\\.workflow\\.clean\\clean-2026-04-28\\.trash\\.workflow_.team_TLV4-20260428-zt23-compress"
+                                   },
+                                   {
+                                       "path":  ".workflow\\.pycache",
+                                       "trashPath":  "F:\\vscode projects\\zbt prompt\\.workflow\\.clean\\clean-2026-04-28\\.trash\\.workflow_.pycache"
+                                   },
+                                   {
+                                       "path":  "Game content extraction\\__pycache__",
+                                       "trashPath":  "F:\\vscode projects\\zbt prompt\\.workflow\\.clean\\clean-2026-04-28\\.trash\\Game_content_extraction___pycache__"
+                                   },
+                                   {
+                                       "path":  "Game content extraction\\data\\__pycache__",
+                                       "trashPath":  "F:\\vscode projects\\zbt prompt\\.workflow\\.clean\\clean-2026-04-28\\.trash\\Game_content_extraction_data___pycache__"
+                                   },
+                                   {
+                                       "path":  "Game content extraction\\build\\内容抽取\\localpycs",
+                                       "trashPath":  "F:\\vscode projects\\zbt prompt\\.workflow\\.clean\\clean-2026-04-28\\.trash\\Game_content_extraction_build_内容抽取_localpycs"
+                                   },
+                                   {
+                                       "path":  "测试图",
+                                       "trashPath":  "F:\\vscode projects\\zbt prompt\\.workflow\\.clean\\clean-2026-04-28\\.trash\\测试图"
+                                   },
+                                   {
+                                       "path":  ".release-assets",
+                                       "trashPath":  "F:\\vscode projects\\zbt prompt\\.workflow\\.clean\\clean-2026-04-28\\.trash\\.release-assets"
+                                   }
+                               ],
                     "deleted":  [
-                                    ".workflow/active/WFS-game-content-ui-redesign",
-                                    ".workflow/.analysis/ANL-2026-04-20-game-content-extraction-ui-redesign",
-                                    ".workflow/.analysis/ANL-2026-04-20-game-content-extraction-update-feature",
-                                    ".workflow/.brainstorm/BS-2026-04-20-game-content-extraction-人物表情抽取窗口",
-                                    ".workflow/.spec/SPEC-2026-04-20-game-content-extraction-人物表情抽取窗口",
-                                    ".workflow/.csv-wave/cwp-20260420-game-content-ui-redesign",
-                                    ".workflow/active/WFS-game-content-expression-window/.process/__pycache__",
-                                    "Game content extraction/__pycache__",
-                                    "Game content extraction/data/__pycache__",
-                                    "Game content extraction/tmp5xwu7i_s",
-                                    "Game content extraction/tmp8jnjpujz",
-                                    "Game content extraction/tmp97gi0k11",
-                                    "Game content extraction/tmpbgyuky9r",
-                                    "Game content extraction/tmpcm0ubzpv",
-                                    "Game content extraction/tmpf2v26roe",
-                                    "Game content extraction/tmpibl17k8x",
-                                    "Game content extraction/tmpj2anna52",
-                                    "Game content extraction/tmplo8kwjba",
-                                    "Game content extraction/tmpsyp9cvh7",
-                                    "Game content extraction/tmpt6849p9q",
-                                    "Game content extraction/tmpu25bdnk1",
-                                    "Game content extraction/tmpu6ytmwwd",
-                                    "Game content extraction/tmpuwszs_8e",
-                                    "Game content extraction/tmpxv70qqus",
-                                    "Game content extraction/tmp_edypxc7"
+                                    ".workflow\\.team\\TLV4-20260428-zt23-compress",
+                                    ".workflow\\.pycache",
+                                    "Game content extraction\\__pycache__",
+                                    "Game content extraction\\data\\__pycache__",
+                                    "Game content extraction\\build\\内容抽取\\localpycs",
+                                    "测试图",
+                                    ".release-assets"
                                 ],
                     "failed":  [
 
                                ],
                     "skipped":  [
 
-                                ],
-                    "still_exists_after_cleanup":  [
-
-                                                   ]
+                                ]
                 },
     "summary":  {
-                    "deleted":  25,
+                    "deleted":  7,
                     "failed":  0,
-                    "skipped":  0,
-                    "still_exists_after_cleanup":  0
-                },
-    "notes":  [
-                  "16 permission-denied Game content extraction/tmp* directories required elevated cleanup after the first non-elevated pass."
-              ]
+                    "skipped":  0
+                }
 }
