@@ -1,0 +1,20 @@
+{
+  "session_id": "TLV4-20260428-main-image-step1-rule",
+  "pipeline": "implementation",
+  "requirement": "在仓库 f:\\vscode projects\\zbt prompt 中修改 `主图 第一步.md`：新增“先判断图像是否需要新增内容”的规则。若图像本身内容已经很多、完整、拥挤、无安全可放置空间或没有必要新增，则固定输出 `不需要新增物品`；只有确实需要新增时才按原有格式正常输出候选内容。保持中文提示词风格、固定输出、硬规则和自检项一致。",
+  "created_at": "2026-04-28T18:43:03.8567728+08:00",
+  "supervision": false,
+  "completed_waves": [
+    1
+  ],
+  "active_agents": {},
+  "tasks": {
+    "IMPL-001-CONTINUE": {
+      "role": "executor",
+      "status": "completed",
+      "title": "主图第一步新增必要性判断规则（基于当前未提交内容继续）",
+      "deps": [],
+      "wave": 1
+    }
+  }
+}
