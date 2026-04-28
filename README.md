@@ -26,13 +26,13 @@
 
 仓库源码打包发布到 GitHub Release 时，使用保留目录结构的 zip 资产，不直接上传文件夹。
 
-- 推荐资产名：`zbt-prompt-v0.1.3-source-YYYYMMDD.zip`
-- 推荐 tag：`v0.1.3-source-YYYYMMDD`
+- 推荐资产名：`zbt-prompt-v0.1.4-source-YYYYMMDD.zip`
+- 推荐 tag：`v0.1.4-source-YYYYMMDD`
 - 该类 source-bundle release 只用于分发仓库快照，不作为桌面工具新版本发布
 - tag 必须保持版本规范化后仍为当前正式桌面版本，避免触发应用内“发现新版本”提示
 
 ## 桌面工具发布
 
-当前桌面工具发布版为 `v0.1.3`，安装包为 `GameContentExtraction-Setup-v0.1.3.exe`。
+当前桌面工具发布版为 `v0.1.4`，安装包为 `GameContentExtraction-Setup-v0.1.4.exe`。
 
 桌面工具版本、安装包和更新检查约定仍以 `Game content extraction/` 下文档为准，不因源码打包 release 改变。

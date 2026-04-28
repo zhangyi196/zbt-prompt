@@ -16,12 +16,12 @@
 
 ## 下载
 
-当前发布版：`v0.1.3`
+当前发布版：`v0.1.4`
 
-- Release 页面：<https://github.com/zhangyi196/zbt-prompt/releases/tag/v0.1.3>
-- 安装包：`GameContentExtraction-Setup-v0.1.3.exe`
-- 大小：`14,031,310` bytes
-- SHA256：`58a9a2ac27be4553c33caa247f59994dd9dca4bde55fe1d1864e7da388ce9ad4`
+- Release 页面：<https://github.com/zhangyi196/zbt-prompt/releases/tag/v0.1.4>
+- 安装包：`GameContentExtraction-Setup-v0.1.4.exe`
+- 大小：`14,037,509` bytes
+- SHA256：`e3174f9e02e3631a5859ff3e041f06408771998964f10d0967c8a3db93b04098`
 - 安装器会显示安装路径选择页，可修改默认安装目录。
 
 ## 运行
@@ -136,7 +136,7 @@ https://api.github.com/repos/zhangyi196/zbt-prompt/releases?per_page=20
 
 当前版本写在 `内容抽取.py` 的 `APP_VERSION`。检查更新只比较 GitHub Release 版本并打开发布页，不自动下载、覆盖或重启。没有高于当前版本的 Release 时，更新按钮保持隐藏。
 
-发布新版时：更新 `APP_VERSION` 和 `installer.iss` 输出名 -> 构建 exe -> 检查 exe 归档包含 `tkinter` / `_tkinter` / Tcl / Tk -> 生成安装包 -> 做启动/静默安装烟测 -> 创建更高 tag（如 `v0.1.3`）并上传安装包。
+发布新版时：更新 `APP_VERSION` 和 `installer.iss` 输出名 -> 构建 exe -> 检查 exe 归档包含 `tkinter` / `_tkinter` / Tcl / Tk -> 生成安装包 -> 做启动/静默安装烟测 -> 创建更高 tag（如 `v0.1.4`）并上传安装包。
 
 ## 验证
 

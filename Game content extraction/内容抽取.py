@@ -16,7 +16,7 @@ from data.animals import ANIMALS
 from data.blind_boxes import BLIND_BOXES
 from data.item_states import ITEM_STATE_GROUPS, ITEM_STATE_GROUP_WEIGHTS
 
-APP_VERSION = "0.1.3"
+APP_VERSION = "0.1.4"
 UPDATE_API_URL = "https://api.github.com/repos/zhangyi196/zbt-prompt/releases/latest"
 UPDATE_RELEASES_LIST_API_URL = "https://api.github.com/repos/zhangyi196/zbt-prompt/releases?per_page=20"
 UPDATE_RELEASES_URL = "https://github.com/zhangyi196/zbt-prompt/releases"

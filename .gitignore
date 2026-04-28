@@ -31,7 +31,7 @@ ComfyUI_*.webp
 ComfyUI_*.gif
 ComfyUI_*.bmp
 
-# Local release packaging artifacts
+# Local release packaging scratch artifacts; tracked release installers remain under Game content extraction/release.
 .release-assets/
 
 # Prompt polishing follows tracked markdown files; expression expansion/regression uses tracked tests and workflow scripts.
