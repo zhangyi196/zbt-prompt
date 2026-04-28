@@ -24,6 +24,7 @@ Desktop.ini
 *.log
 
 # Local prompt/reference images and temporary visual inputs
+测试图/
 ComfyUI_*.png
 ComfyUI_*.jpg
 ComfyUI_*.jpeg
