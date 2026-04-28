@@ -36,6 +36,7 @@ ComfyUI_*.bmp
 .release-assets/
 
 # Prompt polishing follows tracked markdown files; expression expansion/regression uses tracked tests and workflow scripts.
+# Rule-doc sync files such as agents.md, README.md and 组图 23.md stay tracked; no markdown ignore rules here.
 # Prompt/spec compression review edits stay tracked; no markdown ignore rules here.
 # Expression history tests create temp folders only on failed/interrupted runs.
 Game content extraction/_tmp_history_test_*/
