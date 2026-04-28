@@ -35,4 +35,4 @@
 
 当前桌面工具发布版为 `v0.1.4`，安装包为 `GameContentExtraction-Setup-v0.1.4.exe`。
 
-桌面工具版本、安装包和更新检查约定仍以 `Game content extraction/` 下文档为准，不因源码打包 release 改变。
+桌面工具版本、安装包和更新检查约定仍以 `Game content extraction/` 下文档为准，不因源码打包 release 改变。应用内更新检查使用无认证 GitHub Release API，仓库需保持 public，否则旧版安装包无法发现新版本。

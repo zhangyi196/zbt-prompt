@@ -44,7 +44,7 @@
 - `draw_history.json` 服务物品池、动物池和人物表情历史；表情历史独立写入 `expression_pools`，不得混入 `item_pools` / `animal_pools`；重命名配置仍不得接入。
 - `config.json` 只服务批量重命名。
 - 当前版本 `APP_VERSION = "0.1.4"`；GitHub Release `v0.1.4` 已上传 `GameContentExtraction-Setup-v0.1.4.exe`，大小 `14,037,509` bytes，SHA256 `e3174f9e02e3631a5859ff3e041f06408771998964f10d0967c8a3db93b04098`；安装器会显示安装路径选择页。
-- 更新检查只提示并打开 Releases 页面，不自动下载/替换 exe，不写历史；没有更高 Release 时隐藏更新按钮。
+- 更新检查只提示并打开 Releases 页面，不自动下载/替换 exe，不写历史；没有更高 Release 时隐藏更新按钮。旧版安装包使用无认证 GitHub API 读取 release，仓库必须保持 public，否则会收到 404 并在静默检查时隐藏按钮；无认证 API 被限流时需等待 GitHub reset 后重试。
 - 图像抓取只复制同名文件到桌面 `图像抓取/`，不移动、不改名、不删除源文件。
 - 批量重命名必须保留目标文件存在时跳过的保护逻辑。
 - 发新版先更新 `APP_VERSION` 和 `installer.iss` 输出名，再构建 exe、确认 PyInstaller 归档包含 `pyi_rth__tkinter` / `_tkinter.pyd` / `tcl86t.dll` / `tk86t.dll`，生成安装包、做启动/静默安装烟测，最后创建更高 tag。若沙箱内构建误报 `tkinter installation is broken`，用可读取 Python Tcl/Tk 目录的提权环境重建。

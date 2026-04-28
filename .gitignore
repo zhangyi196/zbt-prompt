@@ -40,4 +40,5 @@ Game content extraction/_tmp_history_test_*/
 Game content extraction/_tmp_history_verify_*/
 
 # Desktop app build/release artifacts are intentionally tracked in this repo.
+# Release/update debugging records stay tracked when they document public release behavior.
 # Keep ignore changes scoped to untracked local clutter only.

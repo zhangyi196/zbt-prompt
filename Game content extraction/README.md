@@ -136,6 +136,8 @@ https://api.github.com/repos/zhangyi196/zbt-prompt/releases?per_page=20
 
 当前版本写在 `内容抽取.py` 的 `APP_VERSION`。检查更新只比较 GitHub Release 版本并打开发布页，不自动下载、覆盖或重启。没有高于当前版本的 Release 时，更新按钮保持隐藏。
 
+更新检查使用无认证 GitHub API，release 所在仓库需要保持 public。若仓库切回 private，旧版安装包会收到 404 并在静默检查时不显示按钮；若遇到 GitHub 无认证限流 403，需要等待 rate limit reset 后重试。
+
 发布新版时：更新 `APP_VERSION` 和 `installer.iss` 输出名 -> 构建 exe -> 检查 exe 归档包含 `tkinter` / `_tkinter` / Tcl / Tk -> 生成安装包 -> 做启动/静默安装烟测 -> 创建更高 tag（如 `v0.1.4`）并上传安装包。
 
 ## 验证
