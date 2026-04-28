@@ -1,0 +1,59 @@
+{
+  "task_id": "REVIEW-001",
+  "type": "review_result",
+  "mode": "code_review",
+  "verdict": "CONDITIONAL",
+  "dimensions": {
+    "quality": 86,
+    "security": 95,
+    "architecture": 82,
+    "requirements": 74
+  },
+  "overall_score": 84,
+  "issues": [
+    {
+      "severity": "medium",
+      "summary": "Implementation persists expression history in draw_history.json, but repo docs still forbid expression history there.",
+      "references": [
+        "Game content extraction/内容抽取.py:115-150",
+        "agents.md:42",
+        "Game content extraction/CLAUDE.md:39",
+        "Game content extraction/README.md:64-78,117,172-173"
+      ]
+    },
+    {
+      "severity": "medium",
+      "summary": "Expression history is only cleared by the all-history reset path, so reset semantics need explicit validation and documentation.",
+      "references": [
+        "Game content extraction/内容抽取.py:177-211",
+        "Game content extraction/内容抽取.py:373-377"
+      ]
+    }
+  ],
+  "findings": "Expression history now lives in draw_history.json as expression_pools with inverse-frequency weighting for multi-candidate categories and random templates. Unit tests cover weighting, migration, and pool isolation, but repo docs still say expression enhancement must not write to draw_history.json.",
+  "likely_files": [
+    "Game content extraction/内容抽取.py",
+    "Game content extraction/test_expression_enhancement.py",
+    ".workflow/active/WFS-game-content-expression-window/.process/verify_expression.py",
+    "Game content extraction/README.md",
+    "Game content extraction/CLAUDE.md",
+    "agents.md"
+  ],
+  "risk_points": [
+    "History-schema migration rewrites legacy draw_history.json to version 2 on load.",
+    "Expression history reset is coupled to the global reset path rather than an expression-only reset.",
+    "Docs and code disagree on whether expression enhancement is allowed to persist history."
+  ],
+  "validation_focus": [
+    "Weighted category selection from multi-candidate 具体表情.",
+    "Weighted random-template selection and specified-template history recording.",
+    "Legacy history upgrade to version 2 with expression_pools.",
+    "No mutation of item_pools or animal_pools during expression enhancement.",
+    "Reset-all clearing expression_pools."
+  ],
+  "prior_session": {
+    "session_id": "TLV4-20260427-expression-multi-candidate",
+    "takeaway": "Previous work added multi-candidate parsing, separator handling, whole-group validation, and single-category final output; current scope extends that path with persisted weighting."
+  },
+  "report_path": "artifacts/REVIEW-001-report.md"
+}

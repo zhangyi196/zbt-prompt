@@ -1,5 +1,6 @@
 {
-  "version": 1,
+  "version": 2,
   "item_pools": {},
-  "animal_pools": {}
+  "animal_pools": {},
+  "expression_pools": {}
 }

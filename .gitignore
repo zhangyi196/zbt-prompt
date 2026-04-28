@@ -34,8 +34,10 @@ ComfyUI_*.bmp
 # Local release packaging artifacts
 .release-assets/
 
-# Prompt polishing follows tracked markdown files; expression field candidate changes do not add ignore rules.
-# Multi-candidate expression regression uses tracked tests and workflow scripts, so no extra local ignores are needed.
+# Prompt polishing follows tracked markdown files; expression regression uses tracked tests and workflow scripts.
+# Expression history tests create temp folders only on failed/interrupted runs.
+Game content extraction/_tmp_history_test_*/
+Game content extraction/_tmp_history_verify_*/
 
 # Desktop app build/release artifacts are intentionally tracked in this repo.
 # Keep ignore changes scoped to untracked local clutter only.

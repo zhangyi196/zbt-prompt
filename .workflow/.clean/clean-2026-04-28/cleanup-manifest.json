@@ -1,0 +1,163 @@
+{
+  "generated_at": "2026-04-28T11:16:02.8095325+08:00",
+  "discoveries": {
+    "stale_sessions": [
+      {
+        "path": ".workflow/active/WFS-game-content-ui-redesign",
+        "age_days": 8,
+        "reason": "workflow-session.json still says planned from 2026-04-20, and the same redesign effort already has a completed csv-wave report from 2026-04-20 with all 5 tasks finished.",
+        "risk": "medium"
+      },
+      {
+        "path": ".workflow/.analysis/ANL-2026-04-20-game-content-extraction-ui-redesign",
+        "age_days": 8,
+        "reason": "conclusions.json was last updated on 2026-04-20 and records the redesign findings as addressed; it appears to be retained only as historical analysis after implementation.",
+        "risk": "low"
+      },
+      {
+        "path": ".workflow/.analysis/ANL-2026-04-20-game-content-extraction-update-feature",
+        "age_days": 8,
+        "reason": "conclusions.json was last updated on 2026-04-20 and documents completed update-check recommendations with no later activity.",
+        "risk": "low"
+      },
+      {
+        "path": ".workflow/.brainstorm/BS-2026-04-20-game-content-extraction-人物表情抽取窗口",
+        "age_days": 8,
+        "reason": "synthesis.json marks the brainstorm completed on 2026-04-20, and downstream spec/workflow artifacts for the same feature were subsequently completed.",
+        "risk": "low"
+      },
+      {
+        "path": ".workflow/.spec/SPEC-2026-04-20-game-content-extraction-人物表情抽取窗口",
+        "age_days": 8,
+        "reason": "spec-summary.md declares status complete on 2026-04-20; the expression-window feature already moved into completed workflow execution and current work no longer modifies this spec tree.",
+        "risk": "low"
+      },
+      {
+        "path": ".workflow/.csv-wave/cwp-20260420-game-content-ui-redesign",
+        "age_days": 8,
+        "reason": "context.md reports all 5 csv-wave tasks completed on 2026-04-20 and no later writes were found, so this looks like finished execution history.",
+        "risk": "low"
+      }
+    ],
+    "cache_temp_artifacts": [
+      {
+        "path": ".workflow/active/WFS-game-content-expression-window/.process/__pycache__",
+        "reason": "Python bytecode cache for the expression verification helper; derived artifact that can be regenerated automatically.",
+        "risk": "low"
+      },
+      {
+        "path": "Game content extraction/__pycache__",
+        "reason": "Top-level Python bytecode cache under the desktop tool; safe to rebuild on the next interpreter run.",
+        "risk": "low"
+      },
+      {
+        "path": "Game content extraction/data/__pycache__",
+        "reason": "Python bytecode cache under the data package; generated locally and not needed for source control.",
+        "risk": "low"
+      },
+      {
+        "path": "Game content extraction/tmp5xwu7i_s",
+        "reason": "Unreadable temp-named directory created on 2026-04-28; name pattern matches local temp output, but inspection hit permission denied so contents were not verified.",
+        "risk": "medium"
+      },
+      {
+        "path": "Game content extraction/tmp8jnjpujz",
+        "reason": "Unreadable temp-named directory created on 2026-04-28; name pattern matches local temp output, but inspection hit permission denied so contents were not verified.",
+        "risk": "medium"
+      },
+      {
+        "path": "Game content extraction/tmp97gi0k11",
+        "reason": "Unreadable temp-named directory created on 2026-04-28; name pattern matches local temp output, but inspection hit permission denied so contents were not verified.",
+        "risk": "medium"
+      },
+      {
+        "path": "Game content extraction/tmpbgyuky9r",
+        "reason": "Unreadable temp-named directory created on 2026-04-28; name pattern matches local temp output, but inspection hit permission denied so contents were not verified.",
+        "risk": "medium"
+      },
+      {
+        "path": "Game content extraction/tmpcm0ubzpv",
+        "reason": "Unreadable temp-named directory created on 2026-04-28; name pattern matches local temp output, but inspection hit permission denied so contents were not verified.",
+        "risk": "medium"
+      },
+      {
+        "path": "Game content extraction/tmpf2v26roe",
+        "reason": "Unreadable temp-named directory created on 2026-04-28; name pattern matches local temp output, but inspection hit permission denied so contents were not verified.",
+        "risk": "medium"
+      },
+      {
+        "path": "Game content extraction/tmpibl17k8x",
+        "reason": "Unreadable temp-named directory created on 2026-04-28; name pattern matches local temp output, but inspection hit permission denied so contents were not verified.",
+        "risk": "medium"
+      },
+      {
+        "path": "Game content extraction/tmpj2anna52",
+        "reason": "Unreadable temp-named directory created on 2026-04-28; name pattern matches local temp output, but inspection hit permission denied so contents were not verified.",
+        "risk": "medium"
+      },
+      {
+        "path": "Game content extraction/tmplo8kwjba",
+        "reason": "Unreadable temp-named directory created on 2026-04-28; name pattern matches local temp output, but inspection hit permission denied so contents were not verified.",
+        "risk": "medium"
+      },
+      {
+        "path": "Game content extraction/tmpsyp9cvh7",
+        "reason": "Unreadable temp-named directory created on 2026-04-28; name pattern matches local temp output, but inspection hit permission denied so contents were not verified.",
+        "risk": "medium"
+      },
+      {
+        "path": "Game content extraction/tmpt6849p9q",
+        "reason": "Unreadable temp-named directory created on 2026-04-28; name pattern matches local temp output, but inspection hit permission denied so contents were not verified.",
+        "risk": "medium"
+      },
+      {
+        "path": "Game content extraction/tmpu25bdnk1",
+        "reason": "Unreadable temp-named directory created on 2026-04-28; name pattern matches local temp output, but inspection hit permission denied so contents were not verified.",
+        "risk": "medium"
+      },
+      {
+        "path": "Game content extraction/tmpu6ytmwwd",
+        "reason": "Unreadable temp-named directory created on 2026-04-28; name pattern matches local temp output, but inspection hit permission denied so contents were not verified.",
+        "risk": "medium"
+      },
+      {
+        "path": "Game content extraction/tmpuwszs_8e",
+        "reason": "Unreadable temp-named directory created on 2026-04-28; name pattern matches local temp output, but inspection hit permission denied so contents were not verified.",
+        "risk": "medium"
+      },
+      {
+        "path": "Game content extraction/tmpxv70qqus",
+        "reason": "Unreadable temp-named directory created on 2026-04-28; name pattern matches local temp output, but inspection hit permission denied so contents were not verified.",
+        "risk": "medium"
+      },
+      {
+        "path": "Game content extraction/tmp_edypxc7",
+        "reason": "Unreadable temp-named directory created on 2026-04-28; name pattern matches local temp output, but inspection hit permission denied so contents were not verified.",
+        "risk": "medium"
+      }
+    ],
+    "drifted_documents": [],
+    "dead_code": []
+  },
+  "summary": {
+    "total_items": 25,
+    "by_category": {
+      "stale_sessions": 6,
+      "cache_temp_artifacts": 19,
+      "drifted_documents": 0,
+      "dead_code": 0
+    },
+    "by_risk": {
+      "low": 8,
+      "medium": 17,
+      "high": 0
+    }
+  },
+  "notes": [
+    "No .workflow/project-tech.json file was present, so discovery used .workflow/.clean/clean-2026-04-28/mainline-profile.json and the current git status as the session baseline.",
+    "The currently modified expression-history files were treated as active work and intentionally excluded from cleanup recommendations.",
+    "`.workflow/active/WFS-game-content-expression-window` was not marked stale even though its session file says completed on 2026-04-20, because `.process/verify_expression.py` under that tree is currently modified.",
+    "`.workflow/.scratchpad` and `.claude/rules/tech` do not exist in this repository, so no drifted documents were found there.",
+    "Several `Game content extraction/tmp*` directories were visible but unreadable due to permission denied, so they were flagged conservatively at medium risk instead of low risk."
+  ]
+}

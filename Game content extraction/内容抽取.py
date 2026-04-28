@@ -114,9 +114,10 @@ class BlindBoxExtractor:
     
     def _create_empty_draw_history(self):
         return {
-            "version": 1,
+            "version": 2,
             "item_pools": {},
             "animal_pools": {},
+            "expression_pools": {},
         }
 
     def _load_draw_history(self):
@@ -138,16 +139,76 @@ class BlindBoxExtractor:
         if isinstance(data, dict):
             item_pools = data.get("item_pools", {})
             animal_pools = data.get("animal_pools", {})
+            expression_pools = data.get("expression_pools", {})
             history["item_pools"] = item_pools if isinstance(item_pools, dict) else {}
             history["animal_pools"] = animal_pools if isinstance(animal_pools, dict) else {}
+            history["expression_pools"] = (
+                expression_pools if isinstance(expression_pools, dict) else {}
+            )
 
         self.draw_history = history
         self._save_draw_history()
         return history
 
     def _save_draw_history(self):
+        history_file = getattr(self, "history_file", None)
+        if not history_file:
+            return
         with open(self.history_file, "w", encoding="utf-8") as file:
             json.dump(self.draw_history, file, ensure_ascii=False, indent=2)
+
+    def _ensure_draw_history(self):
+        history = getattr(self, "draw_history", None)
+        if not isinstance(history, dict):
+            history = self._create_empty_draw_history()
+            self.draw_history = history
+
+        for key in ("item_pools", "animal_pools", "expression_pools"):
+            if not isinstance(history.get(key), dict):
+                history[key] = {}
+
+        try:
+            version = int(history.get("version", 0) or 0)
+        except (TypeError, ValueError):
+            version = 0
+        history["version"] = max(2, version)
+        return history
+
+    def _make_expression_category_pool_key(self, polarity, audience):
+        return f"expression_category:{polarity}:{audience}"
+
+    def _make_expression_template_pool_key(self, polarity, audience, expression_name):
+        return f"expression_template:{polarity}:{audience}:{expression_name}"
+
+    def _get_expression_pool_counts(self, pool_key):
+        history = self._ensure_draw_history()
+        expression_pools = history["expression_pools"]
+        raw_counts = expression_pools.get(pool_key, {})
+        if not isinstance(raw_counts, dict):
+            raw_counts = {}
+
+        normalized_counts = {}
+        for raw_name, raw_value in raw_counts.items():
+            try:
+                value = int(raw_value)
+            except (TypeError, ValueError):
+                value = 0
+            normalized_counts[str(raw_name)] = max(0, value)
+
+        expression_pools[pool_key] = normalized_counts
+        return normalized_counts
+
+    def _choose_weighted_history_value(self, candidates, used_counts):
+        weights = [
+            1 / (max(0, used_counts.get(str(candidate), 0)) + 1)
+            for candidate in candidates
+        ]
+        return random.choices(candidates, weights=weights, k=1)[0]
+
+    def _record_expression_history(self, pool_key, selected_value):
+        used_counts = self._get_expression_pool_counts(pool_key)
+        count_key = str(selected_value)
+        used_counts[count_key] = used_counts.get(count_key, 0) + 1
 
     def _load_renamer_config(self):
         if not os.path.exists(self.renamer_config_file):
@@ -312,6 +373,7 @@ class BlindBoxExtractor:
     def _reset_all_history(self):
         self.draw_history["item_pools"] = {}
         self.draw_history["animal_pools"] = {}
+        self.draw_history["expression_pools"] = {}
         self._save_draw_history()
         self._show_output_message("全部抽取历史已重置")
 
@@ -1822,23 +1884,31 @@ class BlindBoxExtractor:
                 raise ValueError(f"极性与表情类别错配：{expression_name} 属于{other_polarity}")
             raise ValueError(f"表情类别不存在：{expression_name}")
 
-    def _choose_expression_name(self, library, polarity, value):
+    def _choose_expression_name(self, library, polarity, audience, value):
         expression_candidates = self._split_expression_candidates(
             self._strip_existing_expression_template(value)
         )
         for expression_name in expression_candidates:
             self._validate_expression_name(library, polarity, expression_name)
+        pool_key = self._make_expression_category_pool_key(polarity, audience)
         if len(expression_candidates) == 1:
-            return expression_candidates[0]
-        return random.choice(expression_candidates)
+            return expression_candidates[0], pool_key
+        used_counts = self._get_expression_pool_counts(pool_key)
+        return self._choose_weighted_history_value(expression_candidates, used_counts), pool_key
 
     def _select_expression_template(self, library, polarity, expression_name, audience, template_index=None, random_template=False):
         self._validate_expression_name(library, polarity, expression_name)
         polarity_map = library.get(polarity, {})
 
         valid_indexes = [1, 2, 3, 4] if audience == "单人" else [5, 6, 7, 8]
+        pool_key = self._make_expression_template_pool_key(
+            polarity,
+            audience,
+            expression_name,
+        )
         if random_template:
-            selected_index = random.choice(valid_indexes)
+            used_counts = self._get_expression_pool_counts(pool_key)
+            selected_index = self._choose_weighted_history_value(valid_indexes, used_counts)
         else:
             if template_index is None:
                 raise ValueError("请填写模板编号，或切换为随机模板")
@@ -1851,24 +1921,26 @@ class BlindBoxExtractor:
                 range_text = "1-4" if audience == "单人" else "5-8"
                 raise ValueError(f"{audience}模板编号必须在 {range_text} 范围内")
 
-        return polarity_map[expression_name][audience][selected_index]
+        return selected_index, polarity_map[expression_name][audience][selected_index], pool_key
 
     def enhance_expression_text(self, text, template_index=None, random_template=False):
         library = self._load_expression_library()
         blocks = self._parse_expression_blocks(text)
         replacements = []
+        history_updates = []
 
         for block in blocks:
             fields = block["fields"]
             polarity = self._normalize_expression_polarity(fields["极性"]["value"])
             audience = self._normalize_expression_audience(fields["单人/多人"]["value"])
-            expression_name = self._choose_expression_name(
+            expression_name, category_pool_key = self._choose_expression_name(
                 library,
                 polarity,
+                audience,
                 fields["具体表情"]["value"],
             )
 
-            template = self._select_expression_template(
+            selected_template_index, template, template_pool_key = self._select_expression_template(
                 library,
                 polarity,
                 expression_name,
@@ -1882,10 +1954,17 @@ class BlindBoxExtractor:
                 fields["具体表情"]["trimmed_end"],
                 replacement,
             ))
+            history_updates.append((category_pool_key, expression_name))
+            history_updates.append((template_pool_key, selected_template_index))
 
         enhanced_text = text
         for start, end, replacement in sorted(replacements, reverse=True):
             enhanced_text = f"{enhanced_text[:start]}{replacement}{enhanced_text[end:]}"
+
+        for pool_key, selected_value in history_updates:
+            self._record_expression_history(pool_key, selected_value)
+        if history_updates:
+            self._save_draw_history()
 
         return enhanced_text
 if __name__ == "__main__":
