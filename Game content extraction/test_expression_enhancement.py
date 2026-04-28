@@ -149,6 +149,10 @@ class ExpressionEnhancementTests(unittest.TestCase):
                         "2": 0,
                         "3": 1,
                         "4": 0,
+                        "5": 3,
+                        "6": 2,
+                        "7": 1,
+                        "8": 0,
                     }
                 },
             }
@@ -165,12 +169,16 @@ class ExpressionEnhancementTests(unittest.TestCase):
         with mock.patch.object(content_extractor.random, "choices", side_effect=fake_choices):
             result = extractor.enhance_expression_text(NEGATIVE_SAMPLE, random_template=True)
 
-        self.assertEqual(captured["options"], [1, 2, 3, 4])
+        self.assertEqual(captured["options"], [1, 2, 3, 4, 5, 6, 7, 8])
         self.assertEqual(captured["k"], 1)
         self.assertAlmostEqual(captured["weights"][0], 1 / 3)
         self.assertAlmostEqual(captured["weights"][1], 1.0)
         self.assertAlmostEqual(captured["weights"][2], 0.5)
         self.assertAlmostEqual(captured["weights"][3], 1.0)
+        self.assertAlmostEqual(captured["weights"][4], 0.25)
+        self.assertAlmostEqual(captured["weights"][5], 1 / 3)
+        self.assertAlmostEqual(captured["weights"][6], 0.5)
+        self.assertAlmostEqual(captured["weights"][7], 1.0)
         self.assertIn(f"具体表情: 困惑，{expected_template}", result)
         self.assertEqual(
             extractor.draw_history["expression_pools"]["expression_template:负向:单人:困惑"]["2"],
@@ -185,7 +193,7 @@ class ExpressionEnhancementTests(unittest.TestCase):
                 "animal_pools": {},
                 "expression_pools": {
                     "expression_template:负向:多人:困惑": {
-                        "5": 2,
+                        "1": 2,
                         "6": 0,
                         "7": 1,
                         "8": 0,
@@ -205,12 +213,16 @@ class ExpressionEnhancementTests(unittest.TestCase):
         with mock.patch.object(content_extractor.random, "choices", side_effect=fake_choices):
             result = extractor.enhance_expression_text(MULTI_AUDIENCE_SAMPLE, random_template=True)
 
-        self.assertEqual(captured["options"], [5, 6, 7, 8])
+        self.assertEqual(captured["options"], [1, 2, 3, 4, 5, 6, 7, 8])
         self.assertEqual(captured["k"], 1)
         self.assertAlmostEqual(captured["weights"][0], 1 / 3)
         self.assertAlmostEqual(captured["weights"][1], 1.0)
-        self.assertAlmostEqual(captured["weights"][2], 0.5)
+        self.assertAlmostEqual(captured["weights"][2], 1.0)
         self.assertAlmostEqual(captured["weights"][3], 1.0)
+        self.assertAlmostEqual(captured["weights"][4], 1.0)
+        self.assertAlmostEqual(captured["weights"][5], 1.0)
+        self.assertAlmostEqual(captured["weights"][6], 0.5)
+        self.assertAlmostEqual(captured["weights"][7], 1.0)
         self.assertIn(f"具体表情: 困惑，{expected_template}", result)
         self.assertEqual(
             extractor.draw_history["expression_pools"]["expression_template:负向:多人:困惑"]["6"],

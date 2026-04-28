@@ -941,7 +941,7 @@ class BlindBoxExtractor:
             state="readonly",
             **self._spinbox_style_options(),
         ).pack(side=tk.LEFT, padx=5)
-        ttk.Label(control_frame, text="单人 1-4，多人 5-8", style="Muted.TLabel").pack(side=tk.LEFT, padx=10)
+        ttk.Label(control_frame, text="单人/多人均 1-8", style="Muted.TLabel").pack(side=tk.LEFT, padx=10)
 
         button_frame = ttk.Frame(parent)
         button_frame.pack(pady=(0, 14))
@@ -1771,9 +1771,10 @@ class BlindBoxExtractor:
             for expression_name, audience_map in expressions.items():
                 single_indexes = set(audience_map["单人"])
                 multi_indexes = set(audience_map["多人"])
-                if single_indexes != {1, 2, 3, 4} or multi_indexes != {5, 6, 7, 8}:
+                expected_indexes = set(range(1, 9))
+                if single_indexes != expected_indexes or multi_indexes != expected_indexes:
                     raise ValueError(
-                        f"表情库结构不符合预期：{polarity}/{expression_name} 必须包含单人 1-4 和多人 5-8"
+                        f"表情库结构不符合预期：{polarity}/{expression_name} 必须包含单人 1-8 和多人 1-8"
                     )
 
         return library
@@ -1900,7 +1901,7 @@ class BlindBoxExtractor:
         self._validate_expression_name(library, polarity, expression_name)
         polarity_map = library.get(polarity, {})
 
-        valid_indexes = [1, 2, 3, 4] if audience == "单人" else [5, 6, 7, 8]
+        valid_indexes = list(range(1, 9))
         pool_key = self._make_expression_template_pool_key(
             polarity,
             audience,
@@ -1918,8 +1919,7 @@ class BlindBoxExtractor:
                 raise ValueError("模板编号必须是数字") from exc
 
             if selected_index not in valid_indexes:
-                range_text = "1-4" if audience == "单人" else "5-8"
-                raise ValueError(f"{audience}模板编号必须在 {range_text} 范围内")
+                raise ValueError(f"{audience}模板编号必须在 1-8 范围内")
 
         return selected_index, polarity_map[expression_name][audience][selected_index], pool_key
 

@@ -100,9 +100,9 @@ try:
             raise AssertionError(f"bad text did not raise: {bad_text}")
 
     try:
-        inspector.enhance_expression_text(sample, template_index=5)
+        inspector.enhance_expression_text(sample, template_index=9)
     except ValueError as exc:
-        assert "单人模板编号必须在 1-4" in str(exc)
+        assert "单人模板编号必须在 1-8" in str(exc)
     else:
         raise AssertionError("template range did not raise")
 
