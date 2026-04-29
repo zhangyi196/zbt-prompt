@@ -1,0 +1,46 @@
+{
+  "perspective": "pragmatic",
+  "ideas": [
+    {
+      "title": "先重写 4 个最高频主题作为样板",
+      "description": "选择最常用或最问题明显的主题，重写物品池并验证不适合率，再扩展到全部主题。",
+      "novelty": 2,
+      "feasibility": 5,
+      "rationale": "比一次性重写 5600 个物品更可控。"
+    },
+    {
+      "title": "保留旧 key，换内部语义",
+      "description": "短期仍用 large/medium/small/hanging 的 UI 标签，但内容按新标准重排：large=主体锚点，medium=清晰独立物，small=小型清晰物，hanging=条件悬挂。",
+      "novelty": 2,
+      "feasibility": 5,
+      "rationale": "不破坏 UI、输入语法、历史 key，可先改内容。"
+    },
+    {
+      "title": "先砍掉低适配尾词",
+      "description": "减少样片、配色、标签、布标、流苏、帘带、边巾、挂串、灯串、镜盒等高风险尾词。",
+      "novelty": 1,
+      "feasibility": 5,
+      "rationale": "风险明确，收益直接。"
+    },
+    {
+      "title": "建立内容验收清单",
+      "description": "每个物品必须通过真实存在、边界清楚、第一眼可见、可单独圈选、无需特殊承载、不涉及光影反射六项检查。",
+      "novelty": 2,
+      "feasibility": 5,
+      "rationale": "重写内容库需要一致标准，否则很快又会滑回组合词。"
+    }
+  ],
+  "key_findings": [
+    "内容改造可以先不动抽取逻辑。",
+    "保留现有四类标签可降低实施风险。",
+    "最容易先改的是物品文本本身和尾词禁用清单。"
+  ],
+  "challenged_assumptions": [
+    "Rewrite 必须大规模一次性完成；可以先用样板主题验证标准。",
+    "分类名称必须马上改；实际可先内部重定义。"
+  ],
+  "open_questions": [
+    "用户最常用哪几个盲盒编号？",
+    "是否接受旧类别名语义轻微变化？"
+  ]
+}

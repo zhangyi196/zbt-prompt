@@ -1,0 +1,71 @@
+{
+  "session_id": "SPEC-2026-04-29-game-content-extraction-blind-box-library-refactor",
+  "generated_at": "2026-04-29T00:00:00+08:00",
+  "version": 1,
+  "terms": [
+    {
+      "term": "scene entry",
+      "definition": "A user-facing blind-box category name that follows a scene-plus-purpose pattern.",
+      "aliases": [
+        "category entry",
+        "theme entry"
+      ],
+      "first_defined_in": "product-brief.md",
+      "category": "business"
+    },
+    {
+      "term": "five-layer item pool",
+      "definition": "The content model composed of core_items, support_items, visible_small_items, conditional_items, and blocked_or_risky.",
+      "aliases": [
+        "five-layer pool"
+      ],
+      "first_defined_in": "product-brief.md",
+      "category": "core"
+    },
+    {
+      "term": "four-bucket compatibility mapping",
+      "definition": "Rules that map the five-layer content model back to large, medium, small, and hanging.",
+      "aliases": [
+        "runtime bucket mapping"
+      ],
+      "first_defined_in": "product-brief.md",
+      "category": "technical"
+    },
+    {
+      "term": "visible small item",
+      "definition": "A default small item that is grouped, blocky, or clearly supported by a visible surface.",
+      "aliases": [
+        "visible_small_items"
+      ],
+      "first_defined_in": "product-brief.md",
+      "category": "core"
+    },
+    {
+      "term": "conditional item",
+      "definition": "An item that only works when there is a clear support, wrapping, or hanging relation.",
+      "aliases": [
+        "conditional_items"
+      ],
+      "first_defined_in": "product-brief.md",
+      "category": "core"
+    },
+    {
+      "term": "risky item",
+      "definition": "An item isolated from default output because it depends on reflection, transparency, fine traces, or other unstable cues.",
+      "aliases": [
+        "blocked_or_risky"
+      ],
+      "first_defined_in": "product-brief.md",
+      "category": "core"
+    },
+    {
+      "term": "pilot category",
+      "definition": "A category rewritten first to validate quality and compatibility before any full-library rollout.",
+      "aliases": [
+        "pilot"
+      ],
+      "first_defined_in": "product-brief.md",
+      "category": "business"
+    }
+  ]
+}

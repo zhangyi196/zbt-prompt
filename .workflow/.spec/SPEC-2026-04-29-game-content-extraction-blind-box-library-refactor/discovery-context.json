@@ -1,0 +1,87 @@
+{
+  "relevant_files": [
+    {
+      "path": "Game content extraction/data/blind_boxes.py",
+      "relevance": "high",
+      "rationale": "Current single source of truth for blind-box category content and the four-bucket runtime data shape."
+    },
+    {
+      "path": "Game content extraction/内容抽取.py",
+      "relevance": "high",
+      "rationale": "UI labels, input parsing, extraction order, history keys, and output formatting all depend on the four-bucket shape."
+    },
+    {
+      "path": "Game content extraction/data/item_states.py",
+      "relevance": "medium",
+      "rationale": "Some state modifiers conflict with the new no-reflection and no-transparency quality rules."
+    },
+    {
+      "path": "Game content extraction/CLAUDE.md",
+      "relevance": "high",
+      "rationale": "Contains local maintenance constraints and the current direction for the blind-box library rewrite."
+    },
+    {
+      "path": "README.md",
+      "relevance": "medium",
+      "rationale": "Tracks repository-level direction and must stay aligned with the accepted content model."
+    }
+  ],
+  "existing_patterns": [
+    "The blind-box library is stored as static Python dictionaries.",
+    "Each current category exposes name, large, medium, small, and hanging lists.",
+    "The UI uses category_info to bind runtime buckets to controls and labels.",
+    "The input format supports numeric box ids and per-bucket overrides.",
+    "draw_history.json applies cycle and cooldown bias but does not understand semantic item layers.",
+    "Optional item states are added by randomly combining a small set of prefix groups."
+  ],
+  "architecture_constraints": [
+    "Short-term work must preserve compatibility with large, medium, small, and hanging.",
+    "Current input parsing expects numeric ids, so compatibility strategy matters.",
+    "draw_history item keys are tied to box id and bucket key.",
+    "The data layer should remain data-only, without new UI or persistence logic.",
+    "The project remains a local tkinter tool, not a service."
+  ],
+  "integration_points": [
+    "Game content extraction/内容抽取.py category_info",
+    "Game content extraction/内容抽取.py _parse_input",
+    "Game content extraction/内容抽取.py _extract_box_items",
+    "Game content extraction/draw_history.json item_pools",
+    "Game content extraction/data/item_states.py state prefixes"
+  ],
+  "tech_stack": {
+    "languages": [
+      "Python",
+      "Markdown",
+      "JSON"
+    ],
+    "frameworks": [
+      "tkinter",
+      "ttk",
+      "Python standard library"
+    ],
+    "data_files": [
+      "Game content extraction/data/blind_boxes.py",
+      "Game content extraction/data/item_states.py",
+      "Game content extraction/draw_history.json"
+    ]
+  },
+  "content_risks": [
+    "Legacy category ids and history keys can drift if new categories are introduced without mapping.",
+    "Fixed-size bucket authoring encourages filler items and repeated container patterns.",
+    "The hanging bucket conflicts with the new direction to isolate condition-heavy items.",
+    "Item state modifiers can reintroduce reflection and transparency language.",
+    "The current extraction logic does not understand the new five-layer semantics.",
+    "There is no automated quality validation for blind-box data."
+  ],
+  "recommended_spec_focus": [
+    "define 20 scene-plus-purpose categories",
+    "define the five-layer item model",
+    "define mapping back to the four runtime buckets",
+    "pilot three categories before full expansion",
+    "document quality gates and risky-item isolation"
+  ],
+  "_metadata": {
+    "exploration_type": "spec-discovery",
+    "timestamp": "2026-04-29T00:00:00+08:00"
+  }
+}

@@ -38,6 +38,7 @@ ComfyUI_*.bmp
 # Prompt polishing follows tracked markdown files; expression expansion/regression uses tracked tests and workflow scripts.
 # Rule-doc sync files such as agents.md, README.md and 组图 23.md stay tracked; List 2 dedupe/high-visibility guidance belongs in docs, not ignore rules.
 # Prompt/spec compression review edits stay tracked; no markdown ignore rules here.
+# Brainstorm/spec workflow outputs are kept trackable when they document accepted project direction.
 # Expression history tests create temp folders only on failed/interrupted runs.
 Game content extraction/_tmp_history_test_*/
 Game content extraction/_tmp_history_verify_*/
@@ -45,3 +46,4 @@ Game content extraction/_tmp_history_verify_*/
 # Desktop app build/release artifacts are intentionally tracked in this repo.
 # Release/update debugging records stay tracked when they document public release behavior.
 # Keep ignore changes scoped to untracked local clutter only.
+# Spec/product-brief session outputs remain tracked when they record accepted requirements and glossary decisions.

@@ -42,6 +42,8 @@
 
 - 四工作区：`盲盒物品/动物抽取`、`人物表情抽取`、`图像抓取`、`批量重命名`。
 - `盲盒物品/动物抽取` 工作区采用左侧配置、右侧输出的双栏布局；修改该区 UI 时优先保持输出框常驻可见，不要把结果区重新压回页面底部。
+- 盲盒物品内容库后续优化方向见 `.workflow/.brainstorm/BS-2026-04-29-优化game-content-extraction盲盒物品内容/`，完整规格包见 `.workflow/.spec/SPEC-2026-04-29-game-content-extraction-blind-box-library-refactor/`：建议从旧主题改为 20 个 `常见场景+用途` 入口，如 `桌面+学习`、`餐桌+茶歇`、`沙滩+度假`、`海底+潜水`；类别下物品按 `core_items`、`support_items`、`visible_small_items`、`conditional_items`、`blocked_or_risky` 五层维护，再按需要映射回现有大型 / 中型 / 小型 / 悬挂四栏。
+- 盲盒物品写库时优先真实、常见、边界清楚、可单独圈选且场景强相关的物品；小物必须成组、块状或有明确承载；悬挂、墙面、软布、灯、镜、透明反光、细绳、流苏、微型痕迹和动物本体默认进条件池或风险池，不进入默认主抽取池。
 - `人物表情抽取` 工作区的“清空输入”只清空输入框，不清空增强结果；若“自动粘贴”开启，清空后要像盲盒区一样回填当前剪贴板文本。
 - 不改成 Web、数据库、服务端或大型工程；不引入第三方 UI 依赖。
 - `draw_history.json` 服务物品池、动物池和人物表情历史；表情历史独立写入 `expression_pools`，不得混入 `item_pools` / `animal_pools`；重命名配置仍不得接入。
@@ -66,6 +68,14 @@ python -B -m unittest discover -s 'Game content extraction' -p 'test_*.py'
 修改前读目标文件的角色、输入、输出和核心约束；修改中只动相关段落；修改后检查数量、格式、禁区、承载关系、固定输出和自检是否一致。涉及表情链路时，同步检查 `组图 23 表情库.md`、`组图 23 表情前置.md`、`组图 23.md` 与 App 接入关系。
 
 ## 仓库源码打包发布
+
+## 盲盒物品库重构 Spec
+
+- `.workflow/.spec/SPEC-2026-04-29-game-content-extraction-blind-box-library-refactor/spec-summary.md` 已完成 spec-generator 全链路规格包，覆盖 product brief、requirements、architecture、epics、readiness 与 issue export。
+- 规格方向已将盲盒物品库重构收敛为 20 个 `常见场景+用途` 入口、五层物品池、四栏兼容映射与三类试点路线。
+- 当前试点类别固定为 `桌面+学习`、`海底+潜水`、`公园+野餐`；后续落地优先先做试点，再扩全部 20 类。
+- 写库验收沿用“真实、常见、边界清楚、可单独圈选、强场景相关”；`visible_small_items` 必须成组、块状或有明确承载，`blocked_or_risky` 不得进入默认输出。
+- 试点质量目标：人工抽样 30 次时，明显不适合项低于 10%，且不得让 `blocked_or_risky` 物品进入默认抽取结果。
 
 - 仓库源码打包到 GitHub Release 时，使用保留目录结构的 zip 资产，不直接上传文件夹。
 - 推荐 source-bundle tag：`v0.1.4-source-YYYYMMDD`；该命名规范化后仍为当前正式桌面版本，不会误触发 App 更新提示。

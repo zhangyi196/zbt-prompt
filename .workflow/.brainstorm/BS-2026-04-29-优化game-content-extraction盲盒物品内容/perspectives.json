@@ -1,0 +1,39 @@
+{
+  "session_id": "BS-2026-04-29-优化game-content-extraction盲盒物品内容",
+  "topic": "优化 Game content extraction 中盲盒物品抽取内容，包括盲盒类别和类别下物品",
+  "synthesis": {
+    "convergent_themes": [
+      "当前问题是结构性内容问题，不只是少量坏物品。",
+      "应减少组合式容器词、小型抽象词、悬挂依赖词。",
+      "应建立精品核心池与风险屏蔽/降权机制。",
+      "主题库应从风格主题扩展到场景主题。",
+      "短期可以保留现有 UI 和 key，先重写内容语义。"
+    ],
+    "conflicting_views": [
+      {
+        "topic": "是否彻底改类别名",
+        "creative": "建议直接按功能/场景重构。",
+        "pragmatic": "建议保留 large/medium/small/hanging，先内部重新定义。",
+        "systematic": "建议设计新模型，但可分阶段兼容。"
+      },
+      {
+        "topic": "主题重写幅度",
+        "creative": "新增场景片场式主题。",
+        "pragmatic": "先做 4 个样板主题。",
+        "systematic": "建立完整主题矩阵后分批迁移。"
+      }
+    ],
+    "aggregated_ideas": [
+      "场景适配主题库",
+      "用途型物品分类",
+      "精品核心池",
+      "风险标签体系",
+      "低适配尾词禁用清单",
+      "保留旧 key 的渐进式重写",
+      "通用 fallback 物品库"
+    ]
+  },
+  "_metadata": {
+    "created": "2026-04-29T00:00:00+08:00"
+  }
+}

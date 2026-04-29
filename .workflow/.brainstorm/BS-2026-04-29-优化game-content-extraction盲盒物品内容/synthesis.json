@@ -1,0 +1,93 @@
+{
+  "session_id": "BS-2026-04-29-optimize-game-content-extraction-blind-box-content",
+  "topic": "Optimize blind-box categories and item lists for Game content extraction",
+  "completed": "2026-04-29T00:00:00+08:00",
+  "total_rounds": 13,
+  "top_ideas": [
+    {
+      "title": "20 common scene entries",
+      "description": "Replace broad legacy themes with 20 more intuitive scene entry points.",
+      "score": 9,
+      "novelty": 3,
+      "feasibility": 4,
+      "review_status": "accepted"
+    },
+    {
+      "title": "short scene-plus-purpose names",
+      "description": "Use compact names that fit a small Chinese UI and remain easy to scan.",
+      "score": 9,
+      "novelty": 2,
+      "feasibility": 5,
+      "review_status": "accepted"
+    },
+    {
+      "title": "five-layer item pool model",
+      "description": "Split each category into core_items, support_items, visible_small_items, conditional_items, and blocked_or_risky.",
+      "score": 10,
+      "novelty": 4,
+      "feasibility": 4,
+      "review_status": "accepted"
+    },
+    {
+      "title": "keep current runtime buckets for compatibility",
+      "description": "Retain large, medium, small, and hanging in the short term, but redefine their source semantics.",
+      "score": 8,
+      "novelty": 2,
+      "feasibility": 5,
+      "review_status": "accepted"
+    },
+    {
+      "title": "underwater-diving pilot",
+      "description": "Preserve the underwater theme while excluding glow, reflection, transparency, and animal bodies.",
+      "score": 8,
+      "novelty": 3,
+      "feasibility": 4,
+      "review_status": "accepted"
+    }
+  ],
+  "recommended_categories": [
+    "desk-study",
+    "table-tea-break",
+    "kitchen-baking",
+    "bedroom-dressing",
+    "bathroom-care",
+    "living-room-decoration",
+    "kids-room-toys",
+    "pet-daily",
+    "yard-gardening",
+    "entry-rain-gear",
+    "beach-vacation",
+    "park-picnic",
+    "camping",
+    "street-commute",
+    "sports-gear",
+    "underwater-diving",
+    "festival-gifts",
+    "craft-sewing",
+    "craft-knitting",
+    "shop-snacks"
+  ],
+  "item_pool_model": [
+    "core_items",
+    "support_items",
+    "visible_small_items",
+    "conditional_items",
+    "blocked_or_risky"
+  ],
+  "primary_recommendation": "Use the 20 category scene model and the five-layer item pools as the target content model, starting with three pilots before any full-library rewrite.",
+  "implementation_path": [
+    "Define the 20-category target table.",
+    "Rewrite three pilots: desk-study, underwater-diving, and park-picnic.",
+    "Map the five-layer model back to the current runtime buckets.",
+    "Run sample extraction reviews and record mismatch causes.",
+    "Expand the remaining categories only after pilots meet quality targets."
+  ],
+  "artifacts": [
+    "brainstorm.md",
+    "exploration-codebase.json",
+    "perspectives.json",
+    "ideas/item-type-allocation-20-categories.md",
+    "ideas/item-direction-optimization.md",
+    "ideas/core-sample-underwater-diving.md"
+  ]
+}

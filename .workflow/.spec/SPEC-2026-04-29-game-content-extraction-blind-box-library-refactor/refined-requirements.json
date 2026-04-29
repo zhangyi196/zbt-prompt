@@ -1,0 +1,190 @@
+{
+  "session_id": "SPEC-2026-04-29-game-content-extraction-blind-box-library-refactor",
+  "phase": "1.5",
+  "generated_at": "2026-04-29T00:00:00+08:00",
+  "source": "auto-expansion-from-brainstorm-handoff",
+  "discussion_rounds": 0,
+  "clarified_problem_statement": "Rebuild the blind-box item library around 20 scene-plus-purpose entry points and a five-layer content model so the default output is more visible, easier to place, and safer for image-difference prompts.",
+  "confirmed_target_users": [
+    {
+      "name": "Content Maintainer",
+      "needs": [
+        "clear 20-category entry table",
+        "rules for assigning items into five pools",
+        "repeatable quality checklist"
+      ],
+      "pain_points": [
+        "legacy themes are too broad",
+        "four buckets encourage filler items",
+        "quality review rules are not explicit"
+      ]
+    },
+    {
+      "name": "Tool User",
+      "needs": [
+        "more intuitive category names",
+        "items that are visible and easy to circle",
+        "no change to current input habits"
+      ],
+      "pain_points": [
+        "some outputs do not fit the target image",
+        "small items can be too tiny or unsupported",
+        "category choice is slow when names are vague"
+      ]
+    },
+    {
+      "name": "App Maintainer",
+      "needs": [
+        "clear mapping from the new model back to the current runtime schema",
+        "explicit history compatibility decisions",
+        "pilot-first rollout path"
+      ],
+      "pain_points": [
+        "runtime logic is tightly bound to four bucket keys",
+        "there is no blind-box data quality test layer",
+        "full rewrites are high risk"
+      ]
+    }
+  ],
+  "confirmed_domain": "local tkinter desktop tool content taxonomy and static data library",
+  "confirmed_features": [
+    {
+      "name": "20 scene-plus-purpose categories",
+      "description": "Define 20 short category names such as desk-study, table-tea-break, beach-vacation, and underwater-diving.",
+      "acceptance_criteria": [
+        "A category table lists all 20 categories and scene hints.",
+        "Names follow a scene-plus-purpose pattern.",
+        "The underwater-diving category remains as a special theme entry."
+      ],
+      "edge_cases": [
+        "Some legacy themes must be merged instead of renamed one-to-one.",
+        "Legacy numeric box ids may need compatibility mapping."
+      ],
+      "priority": "must"
+    },
+    {
+      "name": "five-layer item pool model",
+      "description": "Each category is structured as core_items, support_items, visible_small_items, conditional_items, and blocked_or_risky.",
+      "acceptance_criteria": [
+        "Each layer has scope, entry rules, and exclusion rules.",
+        "visible_small_items must be grouped, blocky, or have a clear support surface.",
+        "blocked_or_risky items never enter default output."
+      ],
+      "edge_cases": [
+        "Some items can shift between visible_small and risky depending on visibility.",
+        "The underwater category must exclude animal bodies and lighting effects."
+      ],
+      "priority": "must"
+    },
+    {
+      "name": "compatibility mapping",
+      "description": "Map the five-layer content model back to large, medium, small, and hanging without breaking the current UI.",
+      "acceptance_criteria": [
+        "large maps to scene anchors",
+        "medium maps to main clear items",
+        "small maps only to visible_small_items",
+        "hanging maps only to low-weight conditional items",
+        "input override syntax remains compatible"
+      ],
+      "edge_cases": [
+        "draw_history keys are tied to box id and bucket key",
+        "history reset or migration must be decided later if runtime categories change"
+      ],
+      "priority": "must"
+    },
+    {
+      "name": "three pilot category rewrites",
+      "description": "Rewrite desk-study, underwater-diving, and park-picnic first.",
+      "acceptance_criteria": [
+        "Each pilot contains all five pools.",
+        "Each pilot can be mapped to the current four runtime buckets.",
+        "The rest of the library expands only after pilot quality is proven."
+      ],
+      "edge_cases": [
+        "underwater-diving must avoid glow, reflections, transparency, bubbles, and animal bodies",
+        "outdoor nature items must be grouped or clearly blocky"
+      ],
+      "priority": "must"
+    },
+    {
+      "name": "quality and risk rules",
+      "description": "Document entry criteria for safe default items and isolation criteria for risky items.",
+      "acceptance_criteria": [
+        "core items are recognizable at first glance and independently selectable",
+        "risky lists include lights, mirrors, transparent reflective objects, fine strings, tassels, edge lines, and animal bodies",
+        "category lists do not rely on repeated container suffixes for volume"
+      ],
+      "edge_cases": [
+        "item_states may push safe items into reflective or transparent language",
+        "some conditional items are valid only with clear support surfaces"
+      ],
+      "priority": "should"
+    }
+  ],
+  "non_functional_requirements": [
+    {
+      "type": "Usability",
+      "details": "Category names must stay short and easy to scan in a Chinese UI.",
+      "measurable_criteria": "All 20 names follow a compact scene-plus-purpose pattern."
+    },
+    {
+      "type": "Compatibility",
+      "details": "Short-term behavior must preserve current input syntax, runtime buckets, and history semantics.",
+      "measurable_criteria": "Existing examples still parse without schema errors."
+    },
+    {
+      "type": "Maintainability",
+      "details": "The data model must support gradual per-category rollout.",
+      "measurable_criteria": "Each pilot can be reviewed and replaced independently."
+    },
+    {
+      "type": "Quality",
+      "details": "Default output must significantly reduce low-visibility and risky items.",
+      "measurable_criteria": "In 30 pilot samples, obviously unsuitable items stay below 10 percent and blocked_or_risky never appears in default output."
+    }
+  ],
+  "boundary_conditions": {
+    "in_scope": [
+      "20 target categories",
+      "five-layer schema and authoring rules",
+      "three pilot rewrites",
+      "mapping to four existing buckets",
+      "quality review and documentation sync"
+    ],
+    "out_of_scope": [
+      "full rewrite of all 20 production categories right now",
+      "web or server migration",
+      "changes to animal or expression history semantics",
+      "automatic category selection from image understanding",
+      "new app release or app version change"
+    ],
+    "constraints": [
+      "keep the local tkinter tool scope",
+      "keep data-only changes in the data layer",
+      "preserve current large medium small hanging runtime output in the short term",
+      "avoid light, reflection, transparency, micro-traces, fine strings, and animal bodies in default pools"
+    ]
+  },
+  "integration_points": [
+    "Game content extraction/data/blind_boxes.py",
+    "Game content extraction/data/item_states.py",
+    "Game content extraction/内容抽取.py",
+    "Game content extraction/draw_history.json",
+    "Game content extraction/CLAUDE.md",
+    "README.md"
+  ],
+  "key_assumptions": [
+    "pilot quality matters more than immediate full replacement",
+    "the team accepts the 20-category direction",
+    "short-term implementation will preserve current UI and input syntax",
+    "runtime structure upgrades can be decided after pilots are validated"
+  ],
+  "discussion_log": [
+    {
+      "round": 1,
+      "agent_prompt": "Use brainstorm handoff artifacts as confirmed input.",
+      "user_response": "The spec-generator run was started from the brainstorm handoff path.",
+      "timestamp": "2026-04-29T00:00:00+08:00"
+    }
+  ]
+}

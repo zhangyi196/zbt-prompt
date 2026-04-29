@@ -1,0 +1,111 @@
+{
+  "session_id": "SPEC-2026-04-29-game-content-extraction-blind-box-library-refactor",
+  "seed_input": "brainstorm handoff for blind-box content refactor",
+  "input_type": "file",
+  "timestamp": "2026-04-29T00:00:00+08:00",
+  "mode": "interactive",
+  "complexity": "moderate",
+  "depth": "standard",
+  "focus_areas": [
+    "blind-box category taxonomy",
+    "five-layer item pool schema",
+    "pilot content rewrite",
+    "compatibility mapping",
+    "quality validation"
+  ],
+  "spec_type": "platform",
+  "profile_note": "No platform profile file exists in spec-generator templates; base templates are used with content-library emphasis.",
+  "iteration_count": 0,
+  "iteration_history": [],
+  "seed_analysis": {
+    "problem_statement": "Refactor the blind-box item library from broad legacy theme buckets into a clearer multi-scene content model that produces more usable visual-difference items.",
+    "target_users": [
+      "content maintainer",
+      "tool user",
+      "app maintainer"
+    ],
+    "domain": "desktop-tool content library and data taxonomy",
+    "constraints": [
+      "Do not break existing comma-based input syntax.",
+      "Keep the current large/medium/small/hanging runtime shape for short-term compatibility.",
+      "Do not introduce web, database, server, or large new infrastructure.",
+      "Keep the project as a local tkinter desktop tool.",
+      "Validate pilot categories before any full-library rewrite."
+    ],
+    "dimensions": [
+      "20 scene-plus-purpose categories",
+      "five-layer item pool model",
+      "mapping back to large medium small hanging",
+      "pilot category rewrite and review",
+      "migration and risk control"
+    ]
+  },
+  "has_codebase": true,
+  "refined_requirements_file": "refined-requirements.json",
+  "issue_ids": [],
+  "issues_created": 0,
+  "phasesCompleted": [
+    {
+      "phase": 1,
+      "name": "discovery",
+      "output_file": "spec-config.json",
+      "completed_at": "2026-04-29T00:00:00+08:00"
+    },
+    {
+      "phase": 1.5,
+      "name": "requirement-clarification",
+      "output_file": "refined-requirements.json",
+      "discussion_rounds": 0,
+      "completed_at": "2026-04-29T00:00:00+08:00"
+    },
+    {
+      "phase": 2,
+      "name": "product-brief",
+      "output_file": "product-brief.md",
+      "completed_at": "2026-04-29T00:00:00+08:00"
+    },
+    {
+      "phase": 3,
+      "name": "requirements",
+      "output_dir": "requirements/",
+      "output_index": "requirements/_index.md",
+      "file_count": 12,
+      "completed_at": "2026-04-29T00:00:00+08:00"
+    },
+    {
+      "phase": 4,
+      "name": "architecture",
+      "output_dir": "architecture/",
+      "output_index": "architecture/_index.md",
+      "file_count": 6,
+      "completed_at": "2026-04-29T00:00:00+08:00"
+    },
+    {
+      "phase": 5,
+      "name": "epics-stories",
+      "output_dir": "epics/",
+      "output_index": "epics/_index.md",
+      "file_count": 5,
+      "mvp_epic_count": 4,
+      "total_story_count": 15,
+      "completed_at": "2026-04-29T00:00:00+08:00"
+    },
+    {
+      "phase": 6,
+      "name": "readiness-check",
+      "output_file": "readiness-report.md",
+      "summary_file": "spec-summary.md",
+      "overall_score": 92.75,
+      "gate": "Pass",
+      "completed_at": "2026-04-29T00:00:00+08:00"
+    },
+    {
+      "phase": 7,
+      "name": "issue-export",
+      "output_file": "issue-export-report.md",
+      "issues_created": 0,
+      "export_mode": "manual-ready",
+      "completed_at": "2026-04-29T00:00:00+08:00"
+    }
+  ]
+}

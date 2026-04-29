@@ -1,0 +1,81 @@
+{
+  "project_type": "python-tkinter-tool",
+  "topic": "blind box item content optimization",
+  "relevant_files": [
+    {
+      "path": "Game content extraction/data/blind_boxes.py",
+      "relevance": "primary",
+      "summary": "Defines 14 blind-box themes. Each theme has large, medium, small, hanging categories with 100 items each."
+    },
+    {
+      "path": "Game content extraction/data/item_states.py",
+      "relevance": "secondary",
+      "summary": "Defines optional item state prefixes. Some surface/light/color terms may conflict with image-difference constraints."
+    },
+    {
+      "path": "Game content extraction/内容抽取.py",
+      "relevance": "primary",
+      "summary": "Tkinter UI and extraction logic. Current extraction uses category enable/count controls, history cooldown, and optional state prefix."
+    },
+    {
+      "path": "Game content extraction/CLAUDE.md",
+      "relevance": "constraints",
+      "summary": "Documents single-line input syntax, category overrides, history semantics, and UI constraints."
+    },
+    {
+      "path": "Game content extraction/README.md",
+      "relevance": "user-facing-docs",
+      "summary": "Documents blind-box input syntax and extraction behavior."
+    }
+  ],
+  "existing_patterns": [
+    {
+      "pattern": "fixed theme/category dictionary",
+      "description": "BLIND_BOXES is a static Python dictionary keyed by numeric box id."
+    },
+    {
+      "pattern": "category quantity controls",
+      "description": "UI exposes large, medium, small, hanging as independently enabled categories with spinbox counts."
+    },
+    {
+      "pattern": "history cooldown",
+      "description": "Items are selected with seen-cycle and cooldown history, but no quality or suitability metadata."
+    },
+    {
+      "pattern": "single-line override syntax",
+      "description": "Users can disable or adjust categories with terms such as 无大型物品 and 中型物品+1."
+    }
+  ],
+  "content_findings": [
+    {
+      "finding": "The current theme set is stylistically coherent but narrow.",
+      "evidence": "14 themes skew toward warm home, craft, storage, decor, and light lifestyle scenes."
+    },
+    {
+      "finding": "The large category is dominated by containers and storage objects.",
+      "evidence": "Keyword counting found about 93.4% of large items match container/storage characters."
+    },
+    {
+      "finding": "The small category frequently becomes too tiny or abstract.",
+      "evidence": "About 49.9% of small items match mini/label/sample/card/button/clip-like terms."
+    },
+    {
+      "finding": "The hanging category is conditional rather than generally applicable.",
+      "evidence": "About 60.4% of hanging items match hanging or support-dependent terms; about 57.4% are soft/deformable."
+    },
+    {
+      "finding": "The medium category is comparatively healthier.",
+      "evidence": "It more often contains recognizable tools and independent objects."
+    }
+  ],
+  "architecture_constraints": [
+    "Do not break the existing comma input syntax unless explicitly redesigning the UI.",
+    "Existing docs expect category labels 大型物品, 中型物品, 散落小型物品, 悬挂物品.",
+    "History keys currently include category keys; category migrations would need compatibility handling if implemented later.",
+    "This brainstorm session is read-only and does not modify source code."
+  ],
+  "_metadata": {
+    "created": "2026-04-29T00:00:00+08:00",
+    "exploration_scope": "content library structure, not implementation"
+  }
+}

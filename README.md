@@ -12,6 +12,12 @@
 - `组图 23.md`：Ref-A / Ref-B 到 Target 的差异迁移规则；当前 v1.7.10.8 为中等压缩结构版，保留 List 1 人物贴邻热区互斥、List 2 冷区兜底、新增物体空间可放置性、高可见差异与重复抑制约束。
 - `Game content extraction/`：本地 `tkinter` 小工具，详细说明见 [Game content extraction/README.md](Game%20content%20extraction/README.md)。
 
+## 盲盒内容库优化方向
+
+`Game content extraction` 的盲盒物品内容库后续建议从旧式主题杂货池，重构为 20 个 `常见场景+用途` 入口：`桌面+学习`、`餐桌+茶歇`、`厨房+烘焙`、`卧室+梳妆`、`浴室+洗护`、`客厅+装饰`、`儿童房+玩具`、`宠物+日常`、`庭院+园艺`、`门口+雨具`、`沙滩+度假`、`公园+野餐`、`营地+露营`、`街道+出行`、`运动场+装备`、`海底+潜水`、`节日+礼物`、`手作+缝纫`、`手作+编织`、`商店+零食`。
+
+每个类别下建议按 `core_items`、`support_items`、`visible_small_items`、`conditional_items`、`blocked_or_risky` 五层维护；落地时可先映射回现有大型 / 中型 / 小型 / 悬挂四栏。完整头脑风暴见 `.workflow/.brainstorm/BS-2026-04-29-优化game-content-extraction盲盒物品内容/`，规格包见 `.workflow/.spec/SPEC-2026-04-29-game-content-extraction-blind-box-library-refactor/`。
+
 ## 提示词维护要点
 
 - `组图 23.md` 的 List 2 可以追求边角和边缘覆盖，但不得为了填点新增无法容纳的物体。
@@ -37,6 +43,17 @@
 - tag 必须保持版本规范化后仍为当前正式桌面版本，避免触发应用内“发现新版本”提示
 
 ## 桌面工具发布
+
+## 盲盒物品库重构 Spec 状态
+
+`Game content extraction` 的盲盒物品库重构已完成 spec-generator 全链路规格包，工作目录位于 `.workflow/.spec/SPEC-2026-04-29-game-content-extraction-blind-box-library-refactor/`。当前确定的方向不是直接改代码，而是先固定内容模型：
+
+- 20 个 `常见场景+用途` 入口：如 `桌面+学习`、`餐桌+茶歇`、`沙滩+度假`、`海底+潜水`。
+- 五层物品池：`core_items`、`support_items`、`visible_small_items`、`conditional_items`、`blocked_or_risky`。
+- 兼容现有四栏：短期仍映射回 `large` / `medium` / `small` / `hanging`，不破坏现有编号输入和 UI。
+- 三个试点类别：`桌面+学习`、`海底+潜水`、`公园+野餐`。
+- 质量目标：人工抽样 30 次时，明显不适合项低于 10%，且 `blocked_or_risky` 不进入默认输出。
+- Readiness 结果：`readiness-report.md` 评分 92.75 / 100，Gate 为 Pass；`issue-export-report.md` 已给出 4 个可手动创建的 Epic issue。
 
 当前桌面工具发布版为 `v0.1.4`，安装包为 `GameContentExtraction-Setup-v0.1.4.exe`。
 

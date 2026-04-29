@@ -1,0 +1,45 @@
+{
+  "perspective": "systematic",
+  "ideas": [
+    {
+      "title": "三层内容模型",
+      "description": "主题层决定场景，物品类型层决定适配方式，质量层决定抽取权重。每个物品不只属于主题，还带有适配等级。",
+      "novelty": 3,
+      "feasibility": 4,
+      "rationale": "把当前混在物品名里的信息拆出来，便于持续维护。"
+    },
+    {
+      "title": "主题矩阵",
+      "description": "用场景维度覆盖：桌面、地面、墙面、厨房、浴室、户外、儿童、办公、商店、工具、节日、宠物、海边/自然、幻想装饰。",
+      "novelty": 3,
+      "feasibility": 4,
+      "rationale": "比现有主题更能覆盖目标图类型。"
+    },
+    {
+      "title": "风险标签体系",
+      "description": "给物品打风险标签：too_tiny、support_required、soft_boundary、reflective、lighting_related、transparent、abstract、duplicate_tail。",
+      "novelty": 3,
+      "feasibility": 3,
+      "rationale": "为未来自动筛选和用户反馈提供结构。"
+    },
+    {
+      "title": "配额从数量转为质量",
+      "description": "每个主题核心池 40-60 个即可，扩展池 60-100 个，风险池单独存放。质量比四类各 100 更重要。",
+      "novelty": 2,
+      "feasibility": 4,
+      "rationale": "减少为了凑数而产生的低真实感组合词。"
+    }
+  ],
+  "key_findings": [
+    "现有结构把尺寸、位置、主题、质量全部隐含在字符串里。",
+    "重写时需要先定义可维护的数据标准，再生成或手写物品。"
+  ],
+  "challenged_assumptions": [
+    "物品名足以表达所有信息；长期看需要类型和风险标签。",
+    "数量越多越好；对抽取工具而言，精品稳定池更有价值。"
+  ],
+  "open_questions": [
+    "是否愿意未来把 blind_boxes.py 从纯列表升级为带 metadata 的结构？",
+    "短期是否需要兼容旧版历史文件？"
+  ]
+}

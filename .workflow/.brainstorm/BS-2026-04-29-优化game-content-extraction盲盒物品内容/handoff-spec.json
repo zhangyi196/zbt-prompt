@@ -1,0 +1,76 @@
+{
+  "session_id": "BS-2026-04-29-optimize-game-content-extraction-blind-box-content",
+  "topic": "Game content extraction blind-box content refactor",
+  "generated": "2026-04-29T00:00:00+08:00",
+  "recommended_workflow": "Start with a focused content rewrite task before code changes.",
+  "scope_items": [
+    {
+      "title": "Define 20 target blind-box categories",
+      "priority": "high",
+      "description": "Use the accepted 20 scene categories and keep the naming short and intuitive.",
+      "deliverable": "Category table with scene hints and optional legacy mapping."
+    },
+    {
+      "title": "Create five-layer item pool schema",
+      "priority": "high",
+      "description": "Author core_items, support_items, visible_small_items, conditional_items, and blocked_or_risky for each category.",
+      "deliverable": "Authoring template and review checklist."
+    },
+    {
+      "title": "Rewrite three pilot categories",
+      "priority": "high",
+      "description": "Pilot categories are desk-study, underwater-diving, and park-picnic.",
+      "deliverable": "Pilot item lists that map back to large medium small hanging."
+    },
+    {
+      "title": "Compatibility mapping",
+      "priority": "medium",
+      "description": "Map the new model back to the current runtime buckets while UI and extraction logic stay unchanged.",
+      "deliverable": "Mapping rules and migration notes."
+    },
+    {
+      "title": "Validation pass",
+      "priority": "medium",
+      "description": "Review pilot outputs against visibility, placement, category fit, and risk rules.",
+      "deliverable": "Quality review summary and adjustment notes."
+    }
+  ],
+  "accepted_categories": [
+    "desk-study",
+    "table-tea-break",
+    "kitchen-baking",
+    "bedroom-dressing",
+    "bathroom-care",
+    "living-room-decoration",
+    "kids-room-toys",
+    "pet-daily",
+    "yard-gardening",
+    "entry-rain-gear",
+    "beach-vacation",
+    "park-picnic",
+    "camping",
+    "street-commute",
+    "sports-gear",
+    "underwater-diving",
+    "festival-gifts",
+    "craft-sewing",
+    "craft-knitting",
+    "shop-snacks"
+  ],
+  "quality_rules": [
+    "Core items must be immediately identifiable and easy to circle.",
+    "Small items must be grouped, blocky, or clearly supported.",
+    "Conditional items must depend on explicit support or hanging relations.",
+    "Risky items such as lights, mirrors, transparent reflective objects, fine strings, tassels, micro traces, and animal bodies should not be in default pools.",
+    "Do not fill categories with repeated container suffixes."
+  ],
+  "source_artifacts": [
+    "brainstorm.md",
+    "synthesis.json",
+    "ideas/reconstructed-broad-scene-categories.md",
+    "ideas/outdoor-category-expansion.md",
+    "ideas/item-type-allocation-20-categories.md",
+    "ideas/item-direction-optimization.md",
+    "ideas/core-sample-underwater-diving.md"
+  ]
+}
