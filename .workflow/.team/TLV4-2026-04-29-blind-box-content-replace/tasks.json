@@ -1,0 +1,53 @@
+{
+  "session_id": "TLV4-2026-04-29-blind-box-content-replace",
+  "pipeline": "impl-only",
+  "requirement": "将 Game content extraction 的盲盒物品内容替换为新的四类内容池方案。基于此前已验证的案例，将旧盲盒物品类别库替换为常见场景+用途的新内容，沿用 core_items、support_items、visible_small_items、scene_expansion_items 四类结构，并保持现有 UI、历史、四栏兼容输出可用。",
+  "created_at": "2026-04-29T00:00:00+08:00",
+  "updated_at": "2026-04-29T17:30:00+08:00",
+  "supervision": false,
+  "completed_waves": [1, 2, 3],
+  "active_agents": {},
+  "tasks": {
+    "PLAN-001": {
+      "id": "PLAN-001",
+      "role": "planner",
+      "status": "completed",
+      "wave": 1,
+      "depends_on": [],
+      "title": "确认盲盒物品内容替换边界与执行方案",
+      "description": "读取既有四池规格、WFS 执行记录、blind_boxes.py 与测试，确认应替换的类别范围、内容数量、兼容映射和文档同步要求，输出可执行计划。",
+      "artifact": ".workflow/.team/TLV4-2026-04-29-blind-box-content-replace/discoveries/PLAN-001.json"
+    },
+    "IMPL-001": {
+      "id": "IMPL-001",
+      "role": "executor",
+      "status": "completed",
+      "wave": 2,
+      "depends_on": ["PLAN-001"],
+      "title": "替换盲盒物品库为新四池内容",
+      "description": "将盲盒物品内容库全量替换为 20 类场景+用途四池内容，移除旧静态物品池，并同步测试和文档。",
+      "artifact": ".workflow/.team/TLV4-2026-04-29-blind-box-content-replace/discoveries/IMPL-001.json",
+      "note": "两个 executor worker 超时后由主线程接管并完成。"
+    },
+    "TEST-001": {
+      "id": "TEST-001",
+      "role": "tester",
+      "status": "completed",
+      "wave": 3,
+      "depends_on": ["IMPL-001"],
+      "title": "运行盲盒物品库替换后的验证",
+      "description": "运行 py_compile、表达式验收和 unittest。",
+      "artifact": ".workflow/.team/TLV4-2026-04-29-blind-box-content-replace/discoveries/TEST-001.json"
+    },
+    "REVIEW-001": {
+      "id": "REVIEW-001",
+      "role": "reviewer",
+      "status": "completed",
+      "wave": 3,
+      "depends_on": ["IMPL-001"],
+      "title": "复核内容质量和兼容风险",
+      "description": "复核四池结构、低质量内容回流、兼容映射、文档同步和测试覆盖。",
+      "artifact": ".workflow/.team/TLV4-2026-04-29-blind-box-content-replace/discoveries/REVIEW-001.json"
+    }
+  }
+}

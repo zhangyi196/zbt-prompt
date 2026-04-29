@@ -65,13 +65,13 @@ python '内容抽取.py'
 
 ### 盲盒内容库优化方向
 
-后续盲盒物品库建议从旧式主题杂货池，重构为 20 个 `常见场景+用途` 入口：`桌面+学习`、`餐桌+茶歇`、`厨房+烘焙`、`卧室+梳妆`、`浴室+洗护`、`客厅+装饰`、`儿童房+玩具`、`宠物+日常`、`庭院+园艺`、`门口+雨具`、`沙滩+度假`、`公园+野餐`、`营地+露营`、`街道+出行`、`运动场+装备`、`海底+潜水`、`节日+礼物`、`手作+缝纫`、`手作+编织`、`商店+零食`。
+盲盒物品库已从旧式主题杂货池，替换为 20 个 `常见场景+用途` 入口：`桌面+学习`、`餐桌+茶歇`、`厨房+烘焙`、`卧室+梳妆`、`浴室+洗护`、`客厅+装饰`、`儿童房+玩具`、`宠物+日常`、`庭院+园艺`、`门口+雨具`、`沙滩+度假`、`公园+野餐`、`营地+露营`、`街道+出行`、`运动场+装备`、`海底+潜水`、`节日+礼物`、`手作+缝纫`、`手作+编织`、`商店+零食`。
 
-每个类别下后续建议按四类内容池维护：`core_items` 作为核心物，`support_items` 作为配套物，`visible_small_items` 作为可见小物，`scene_expansion_items` 作为场景扩展物。若短期不改 UI，可先把四池内容映射回现有大型 / 中型 / 小型 / 悬挂四栏。最新讨论见 `../.workflow/.brainstorm/BS-2026-04-29-重新定义conditional-items-blocked-or-risky/`，规格包见 `../.workflow/.spec/SPEC-2026-04-29-game-content-extraction-four-pool-refactor/`。
+每个类别下按四类内容池维护：`core_items` 作为核心物，`support_items` 作为配套物，`visible_small_items` 作为可见小物，`scene_expansion_items` 作为场景扩展物。运行时继续把四池内容映射回现有大型 / 中型 / 小型 / 悬挂四栏，其中悬挂栏保留为空兼容桶。最新讨论见 `../.workflow/.brainstorm/BS-2026-04-29-重新定义conditional-items-blocked-or-risky/`，规格包见 `../.workflow/.spec/SPEC-2026-04-29-game-content-extraction-four-pool-refactor/`。
 
-当前已新增三个试点盲盒：15 `桌面+学习`、16 `海底+潜水`、17 `公园+野餐`。这三个试点已按四类内容池重构，同时继续映射回现有大型 / 中型 / 小型 / 悬挂四栏。启用物品状态时，程序会过滤 `半透明`、`高光反光`、`带有光泽` 等风险状态词。
+当前 20 个盲盒盒号均已按四类内容池重构，旧静态盲盒物品内容已从数据文件移除；抽取物品直接来自新的四池内容，并继续映射回现有大型 / 中型 / 小型 / 悬挂四栏。盒号 1-20 保留用于逗号输入和历史兼容，但语义已切换为新的场景+用途目录。启用物品状态时，程序会过滤 `半透明`、`高光反光`、`带有光泽` 等风险状态词。
 
-四类内容池规格 `../.workflow/.spec/SPEC-2026-04-29-game-content-extraction-four-pool-refactor/` 已落地：后续不再使用 `conditional_items`、`anchor_required_items`、`blocked_or_risky` 作为目标内容类别；风险内容只作为 `blocked_patterns` 校验，不作为盲盒物品。
+四类内容池规格 `../.workflow/.spec/SPEC-2026-04-29-game-content-extraction-four-pool-refactor/` 已落地；全量替换执行会话见 `../.workflow/.team/TLV4-2026-04-29-blind-box-content-replace/`。后续不再使用 `conditional_items`、`anchor_required_items`、`blocked_or_risky` 作为目标内容类别；风险内容只作为 `blocked_patterns` 校验，不作为盲盒物品。
 
 ## 人物表情抽取
 

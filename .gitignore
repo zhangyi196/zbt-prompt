@@ -38,7 +38,7 @@ ComfyUI_*.bmp
 # Prompt polishing follows tracked markdown files; expression expansion/regression uses tracked tests and workflow scripts.
 # Rule-doc sync files such as agents.md, README.md and 组图 23.md stay tracked; List 2 dedupe/high-visibility guidance belongs in docs, not ignore rules.
 # Prompt/spec compression review edits stay tracked; no markdown ignore rules here.
-# Brainstorm/spec/execution workflow outputs are kept trackable when they document accepted project direction, including blind-box itemization and four-pool refactor specs/execution records.
+# Brainstorm/spec/team execution outputs are kept trackable when they document accepted project direction, including blind-box itemization, four-pool refactor, and full content replacement records.
 # Expression history tests create temp folders only on failed/interrupted runs.
 Game content extraction/_tmp_history_test_*/
 Game content extraction/_tmp_history_verify_*/

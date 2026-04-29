@@ -14,6 +14,7 @@ from data.blind_boxes import (  # noqa: E402
     BLIND_BOX_COMPATIBILITY_MAPPING,
     BLIND_BOX_ITEM_POOL_BUNDLES,
     BLIND_BOX_PILOT_BOX_IDS,
+    BLIND_BOX_RUNTIME_ID_BY_SCENE,
     BLIND_BOX_SCENE_ENTRIES,
     BLIND_BOXES,
 )
@@ -56,32 +57,41 @@ BLOCKED_ITEM_PATTERNS = (
 
 
 class BlindBoxContentModelTests(unittest.TestCase):
-    def test_scene_entries_define_twenty_categories_and_three_pilots(self):
+    def test_scene_entries_define_twenty_categories_and_pilot_markers(self):
         self.assertEqual(len(BLIND_BOX_SCENE_ENTRIES), 20)
 
         names = {entry["name_zh"] for entry in BLIND_BOX_SCENE_ENTRIES}
-        self.assertIn("桌面+学习", names)
-        self.assertIn("海底+潜水", names)
-        self.assertIn("公园+野餐", names)
+        self.assertEqual(names, set(BLIND_BOX_ITEM_POOL_BUNDLES))
+        self.assertEqual(names, set(BLIND_BOX_RUNTIME_ID_BY_SCENE))
 
         pilots = {entry["name_zh"] for entry in BLIND_BOX_SCENE_ENTRIES if entry["pilot"]}
-        self.assertEqual(pilots, {"桌面+学习", "海底+潜水", "公园+野餐"})
+        self.assertEqual(pilots, set(BLIND_BOX_PILOT_BOX_IDS))
+        self.assertEqual(BLIND_BOX_PILOT_BOX_IDS["桌面+学习"], 1)
+        self.assertEqual(BLIND_BOX_PILOT_BOX_IDS["公园+野餐"], 12)
+        self.assertEqual(BLIND_BOX_PILOT_BOX_IDS["海底+潜水"], 16)
 
-    def test_pilot_bundles_have_complete_four_pool_schema(self):
-        self.assertEqual(set(BLIND_BOX_ITEM_POOL_BUNDLES), set(BLIND_BOX_PILOT_BOX_IDS))
-
+    def test_all_scene_bundles_have_complete_four_pool_schema(self):
         for scene_name, bundle in BLIND_BOX_ITEM_POOL_BUNDLES.items():
             with self.subTest(scene_name=scene_name):
                 self.assertEqual(set(bundle), FOUR_POOL_KEYS)
                 self.assertNotIn("conditional_items", bundle)
+                self.assertNotIn("anchor_required_items", bundle)
                 self.assertNotIn("blocked_or_risky", bundle)
                 for key in FOUR_POOL_KEYS:
                     self.assertIsInstance(bundle[key], list)
                     self.assertGreater(len(bundle[key]), 0)
 
-    def test_pilot_legacy_view_keeps_runtime_bucket_contract(self):
-        for scene_name, box_id in BLIND_BOX_PILOT_BOX_IDS.items():
-            with self.subTest(scene_name=scene_name):
+                self.assertGreaterEqual(len(bundle["core_items"]), 6)
+                self.assertGreaterEqual(len(bundle["support_items"]), 6)
+
+    def test_runtime_entries_keep_four_bucket_contract_for_all_twenty_boxes(self):
+        self.assertEqual(
+            set(BLIND_BOXES),
+            set(BLIND_BOX_RUNTIME_ID_BY_SCENE.values()),
+        )
+
+        for scene_name, box_id in BLIND_BOX_RUNTIME_ID_BY_SCENE.items():
+            with self.subTest(scene_name=scene_name, box_id=box_id):
                 box = BLIND_BOXES[box_id]
                 self.assertEqual(box["name"], scene_name)
                 self.assertEqual(
@@ -93,18 +103,34 @@ class BlindBoxContentModelTests(unittest.TestCase):
                 for key in ("large", "medium", "small"):
                     self.assertGreater(len(box[key]), 0)
 
-    def test_removed_candidate_pools_do_not_enter_mapping(self):
-        for scene_name, box_id in BLIND_BOX_PILOT_BOX_IDS.items():
-            with self.subTest(scene_name=scene_name):
-                mapping = BLIND_BOX_COMPATIBILITY_MAPPING[scene_name]
-                self.assertNotIn("conditional_items", mapping["large_sources"])
-                self.assertNotIn("conditional_items", mapping["medium_sources"])
-                self.assertNotIn("conditional_items", mapping["small_sources"])
-                self.assertNotIn("conditional_items", mapping["hanging_sources"])
-                self.assertNotIn("blocked_or_risky", mapping["excluded_sources"])
-                self.assertIn("blocked_patterns", mapping["excluded_sources"])
+    def test_compatibility_mapping_covers_all_runtime_boxes(self):
+        self.assertEqual(
+            set(BLIND_BOX_COMPATIBILITY_MAPPING),
+            set(BLIND_BOX_RUNTIME_ID_BY_SCENE),
+        )
 
-    def test_pilot_item_pools_do_not_contain_blocked_patterns(self):
+        for scene_name, mapping in BLIND_BOX_COMPATIBILITY_MAPPING.items():
+            with self.subTest(scene_name=scene_name):
+                self.assertEqual(
+                    mapping["box_id"],
+                    BLIND_BOX_RUNTIME_ID_BY_SCENE[scene_name],
+                )
+                self.assertEqual(
+                    mapping["large_sources"],
+                    ["core_items", "scene_expansion_items"],
+                )
+                self.assertEqual(
+                    mapping["medium_sources"],
+                    ["support_items", "core_items:first_6"],
+                )
+                self.assertEqual(mapping["small_sources"], ["visible_small_items"])
+                self.assertEqual(mapping["hanging_sources"], [])
+                self.assertIn("blocked_patterns", mapping["excluded_sources"])
+                self.assertNotIn("conditional_items", mapping["excluded_sources"])
+                self.assertNotIn("anchor_required_items", mapping["excluded_sources"])
+                self.assertNotIn("blocked_or_risky", mapping["excluded_sources"])
+
+    def test_default_item_pools_do_not_contain_blocked_patterns(self):
         for scene_name, bundle in BLIND_BOX_ITEM_POOL_BUNDLES.items():
             for layer_name in FOUR_POOL_KEYS:
                 for item_name in bundle[layer_name]:
@@ -112,7 +138,7 @@ class BlindBoxContentModelTests(unittest.TestCase):
                         for pattern in BLOCKED_ITEM_PATTERNS:
                             self.assertNotIn(pattern, item_name)
 
-    def test_existing_input_override_syntax_accepts_pilot_box_ids(self):
+    def test_existing_input_override_syntax_accepts_new_runtime_box_ids(self):
         extractor = content_extractor.BlindBoxExtractor.__new__(content_extractor.BlindBoxExtractor)
         extractor.blind_boxes = BLIND_BOXES
         extractor.animals = {"地面动物": {}, "空中动物": {}, "水中动物": {}}
@@ -134,9 +160,9 @@ class BlindBoxContentModelTests(unittest.TestCase):
             label: ("animal", key) for key, label in extractor.animal_info
         })
 
-        numbers, animal_type, overrides = extractor._parse_input("15,无大型物品,中型物品+1")
+        numbers, animal_type, overrides = extractor._parse_input("1,无大型物品,中型物品+1")
 
-        self.assertEqual(numbers, [15])
+        self.assertEqual(numbers, [1])
         self.assertEqual(animal_type, "无动物")
         self.assertIn("large", overrides["category"]["disabled"])
         self.assertEqual(overrides["category"]["count_delta"]["medium"], 1)

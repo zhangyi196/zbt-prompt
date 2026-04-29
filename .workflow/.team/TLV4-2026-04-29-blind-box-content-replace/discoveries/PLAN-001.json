@@ -1,0 +1,62 @@
+{
+  "task_id": "PLAN-001",
+  "role": "planner",
+  "timestamp": "2026-04-29T16:49:52.6996353+08:00",
+  "complexity": "High",
+  "scope": {
+    "summary": "Replace the remaining legacy blind-box category library with the validated 20-entry scene-plus-purpose model, authored in four pools and still consumed through the existing four runtime buckets.",
+    "in": [
+      "Expand four-pool authoring data from the 3 pilot bundles to all 20 scene entries in Game content extraction/data/blind_boxes.py.",
+      "Define an explicit compatibility path from the new authoring model to the existing BLIND_BOXES runtime shape and comma-input flow.",
+      "Extend tests from pilot-only assertions to full-library coverage, including deprecated-pool absence and blocked-pattern scanning.",
+      "Sync required docs: agents.md, README.md, Game content extraction/CLAUDE.md, Game content extraction/README.md, .gitignore."
+    ],
+    "out": [
+      "UI redesign or new input controls.",
+      "Web, database, service-side, or third-party UI dependencies.",
+      "Release packaging, APP_VERSION bump, or installer changes.",
+      "Expression, image fetcher, and batch renamer behavior changes outside doc sync."
+    ]
+  },
+  "current_state": {
+    "catalog": "BLIND_BOX_SCENE_ENTRIES already defines 20 scene-plus-purpose entries with scene hints and pilot flags.",
+    "authoring_model": "BLIND_BOX_ITEM_POOL_BUNDLES currently contains only 3 four-pool pilot bundles: 桌面+学习, 海底+潜水, 公园+野餐.",
+    "runtime_model": "BLIND_BOXES is still the old 20-box runtime library, with only ids 15, 16, and 17 overwritten by pilot-compatible generated entries.",
+    "compatibility": "BLIND_BOX_COMPATIBILITY_MAPPING is pilot-only and BLIND_BOX_PILOT_BOX_IDS remaps pilot names to legacy runtime ids 15/16/17.",
+    "tests": "Game content extraction/test_blind_box_content_model.py validates the 20-entry catalog but only asserts full four-pool coverage for the 3 pilot bundles."
+  },
+  "files": [
+    "Game content extraction/data/blind_boxes.py",
+    "Game content extraction/test_blind_box_content_model.py",
+    "agents.md",
+    "README.md",
+    "Game content extraction/CLAUDE.md",
+    "Game content extraction/README.md",
+    ".gitignore"
+  ],
+  "implementation_steps": [
+    "Replace the pilot-only bundle registry with a 20-entry four-pool registry keyed by the scene-plus-purpose names from BLIND_BOX_SCENE_ENTRIES, using the 3 validated pilots as quality templates.",
+    "Introduce or expand a stable mapping layer that connects each runtime box id to one new scene entry, then build BLIND_BOXES from the new four-pool source instead of mixing old static boxes with pilot overrides.",
+    "Preserve the current runtime bucket contract by continuing to emit large/medium/small/hanging, with large sourced from core_items + scene_expansion_items, medium sourced from support_items plus a bounded core fallback, small sourced from visible_small_items, and hanging kept as a compatibility bucket.",
+    "Decide and encode the history-safe mapping explicitly: either preserve existing legacy ids through a dedicated mapping table, or document the semantic drift and migration impact if ids are reassigned to the new 20-entry catalog.",
+    "Rewrite the remaining 17 scene libraries with the same content rules already used by the validated pilots: concrete visible objects only, no deprecated pools, visible_small_items must be grouped/blocky/supported, scene_expansion_items must be medium-or-larger and not anchor-dependent.",
+    "Expand regression tests to all 20 scenes, assert exact four-pool keys for every bundle, verify compatibility mapping coverage for every runtime box, and continue scanning all default pools for blocked patterns and risky terms.",
+    "Sync the required docs so they describe the full 20-entry four-pool library as current behavior rather than future direction, and keep .gitignore changes limited to real cache/build clutter only."
+  ],
+  "acceptance_criteria": [
+    "Every scene entry in BLIND_BOX_SCENE_ENTRIES has a corresponding non-empty four-pool bundle.",
+    "No bundle contains conditional_items, anchor_required_items, or blocked_or_risky.",
+    "BLIND_BOXES still exposes the existing runtime schema for every reachable box id: name, large, medium, small, hanging.",
+    "Comma-input extraction remains usable without UI changes, and draw_history compatibility is either preserved by explicit mapping or covered by a documented migration decision.",
+    "Full-library tests pass after broadening coverage beyond the 3 pilots, including blocked-pattern scans over all default pools.",
+    "agents.md, README.md, Game content extraction/CLAUDE.md, Game content extraction/README.md, and .gitignore are synchronized with the implemented state."
+  ],
+  "risks": [
+    "The biggest design risk is id/history semantics: the new 20-entry catalog currently uses ids 1-20, while the validated pilot rollout preserved runtime behavior by overriding legacy ids 15/16/17 only.",
+    "A full 20-category rewrite is content-heavy and easy to regress in quality; the remaining 17 categories need the same visible-object discipline as the pilots or blocked-pattern tests will be insufficient.",
+    "If BLIND_BOXES is regenerated wholesale, any hidden assumptions in UI defaults, saved history, or manual user habits around legacy names/ids may surface as regressions.",
+    "Doc sync is mandatory in this repo; forgetting agents.md, README.md, Game content extraction/CLAUDE.md, or .gitignore would leave the codebase internally inconsistent even if tests pass.",
+    "If .gitignore is expanded to cover tracked cache/build outputs, the implementation task must also clean tracked entries instead of only editing ignore rules."
+  ],
+  "recommendation": "Implement IMPL-001 as a full-library data/model rewrite in one shared pass over blind_boxes.py, then update tests and docs immediately after. Do not treat this as another pilot-only patch."
+}
