@@ -1,0 +1,24 @@
+{
+  "perspective": "creative",
+  "summary": "把五层池从大小/位置分类改成抽取策略分类，conditional_items 变为 anchor_required_items，blocked_or_risky 变为风险标签和负例规则。",
+  "ideas": [
+    {
+      "name": "anchor_required_items",
+      "description": "每个条件物声明 required_anchor；锚点不存在时跳过。",
+      "novelty": 4,
+      "feasibility": 3
+    },
+    {
+      "name": "risk_tags_not_items",
+      "description": "blocked_or_risky 不再是候选物清单，而是风险标签：transparent, reflective, thin_line, too_small, animal_body。",
+      "novelty": 3,
+      "feasibility": 4
+    },
+    {
+      "name": "default_safe_pool",
+      "description": "默认抽取只从无需前置锚点且体量足够的安全池抽取。",
+      "novelty": 2,
+      "feasibility": 5
+    }
+  ]
+}

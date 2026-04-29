@@ -1,0 +1,56 @@
+{
+  "session_id": "SPEC-2026-04-29-game-content-extraction-four-pool-refactor",
+  "phase": 1,
+  "generated_at": "2026-04-29T00:00:00+08:00",
+  "source_files": [
+    ".workflow/.brainstorm/BS-2026-04-29-重新定义conditional-items-blocked-or-risky/handoff-spec.json",
+    ".workflow/.brainstorm/BS-2026-04-29-重新定义conditional-items-blocked-or-risky/synthesis.json",
+    "Game content extraction/data/blind_boxes.py",
+    "Game content extraction/test_blind_box_content_model.py",
+    "Game content extraction/内容抽取.py"
+  ],
+  "current_state": {
+    "pilot_boxes": {
+      "桌面+学习": 15,
+      "海底+潜水": 16,
+      "公园+野餐": 17
+    },
+    "current_pool_keys": [
+      "core_items",
+      "support_items",
+      "visible_small_items",
+      "conditional_items",
+      "blocked_or_risky"
+    ],
+    "current_runtime_buckets": ["large", "medium", "small", "hanging"],
+    "current_tests": [
+      "20 category entries and 3 pilots",
+      "five-layer schema",
+      "legacy runtime bucket contract",
+      "blocked_or_risky leakage prevention",
+      "forbidden non-object pattern scan",
+      "pilot box input override",
+      "risky item state filtering"
+    ]
+  },
+  "target_state": {
+    "pilot_pool_keys": [
+      "core_items",
+      "support_items",
+      "visible_small_items",
+      "scene_expansion_items"
+    ],
+    "removed_candidate_pools": [
+      "conditional_items",
+      "blocked_or_risky"
+    ],
+    "risk_handling": "blocked_patterns validation rules, not item pools",
+    "runtime_contract": "BLIND_BOXES remains a four-column compatibility view"
+  },
+  "implementation_risks": [
+    "Existing tests currently expect five keys and blocked_or_risky leakage behavior.",
+    "hanging output may become lower quality if it is force-filled from scene_expansion_items.",
+    "scene_expansion_items must not become a dumping ground for anchor-dependent or risky objects.",
+    "Docs already mention previous five-layer model and must be updated consistently."
+  ]
+}

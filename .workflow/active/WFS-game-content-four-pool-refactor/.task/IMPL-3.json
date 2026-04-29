@@ -1,0 +1,32 @@
+{
+  "id": "IMPL-3",
+  "title": "Update regression tests for four-pool schema and blocked patterns",
+  "status": "completed",
+  "owner_hint": "tests",
+  "depends_on": ["IMPL-1", "IMPL-2"],
+  "files": [
+    "Game content extraction/test_blind_box_content_model.py"
+  ],
+  "objective": "Update blind box content model tests to validate the four-pool schema and blocked pattern rules.",
+  "requirements": [
+    "Replace FIVE_LAYER_KEYS with a four-pool key constant.",
+    "Assert conditional_items and blocked_or_risky are absent from pilot bundles.",
+    "Update forbidden pattern scan to cover all four default pools.",
+    "Replace blocked_or_risky leakage test with a no-risk-candidate-pool or blocked_patterns test.",
+    "Keep existing input override and risky item state tests."
+  ],
+  "acceptance_criteria": [
+    "unittest discovery passes.",
+    "Tests fail if old candidate pools return.",
+    "Tests fail if blocked pattern terms enter any default content pool."
+  ],
+  "verification": [
+    "python -B -m unittest discover -s 'Game content extraction' -p 'test_*.py'"
+  ],
+  "result": {
+    "files_modified": ["Game content extraction/test_blind_box_content_model.py"],
+    "tests_passed": true,
+    "acceptance_met": true,
+    "summary": "Updated tests to assert the four-pool schema, old pool removal, compatibility mapping, and blocked pattern filtering."
+  }
+}

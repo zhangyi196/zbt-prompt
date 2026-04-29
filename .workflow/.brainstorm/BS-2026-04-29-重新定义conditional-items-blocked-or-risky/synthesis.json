@@ -1,0 +1,61 @@
+{
+  "session_id": "BS-2026-04-29-重新定义conditional-items-blocked-or-risky",
+  "problem_statement": "The blind-box item library should not model image anchors because the tool cannot inspect images. The fourth content category should therefore be a default-safe scene enrichment pool rather than conditional, anchor-required, or risky content.",
+  "recommended_direction": {
+    "summary": "Refactor the content model into four default-safe pools: core_items, support_items, visible_small_items, and scene_expansion_items. Remove blocked_or_risky from content categories and enforce risks through blocked_patterns tests.",
+    "four_pool_model": {
+      "core_items": "Most typical and stable primary objects for the scene.",
+      "support_items": "Tools, containers, storage, carriers, or functional accessories around core objects.",
+      "visible_small_items": "Grouped, blocky, carrier-backed small items with clear boundaries.",
+      "scene_expansion_items": "Medium-or-larger scene enrichment objects that do not require image anchors and add variety beyond core/support items."
+    },
+    "removed_concepts": [
+      "conditional_items",
+      "anchor_required_items",
+      "explicit_context_items",
+      "context_dependent_excluded_items",
+      "blocked_or_risky"
+    ],
+    "risk_handling": "Use blocked_patterns / blocked_terms in tests and validation, not item pools."
+  },
+  "examples": {
+    "桌面+学习": {
+      "core_items": ["硬壳笔记本", "桌面文件架", "书桌小白板"],
+      "support_items": ["笔筒", "资料夹", "计时器"],
+      "visible_small_items": ["一排彩色笔套", "三块记号小卡"],
+      "scene_expansion_items": ["桌面日历", "桌面小风扇", "护眼书架", "桌面收纳抽屉"]
+    },
+    "公园+野餐": {
+      "core_items": ["格纹野餐垫", "藤编食物篮", "双层餐盒"],
+      "support_items": ["餐具盒", "保温水壶", "杯架托盘"],
+      "visible_small_items": ["三块三明治切块", "一组水果叉盒"],
+      "scene_expansion_items": ["折叠野餐桌", "便携冷藏箱", "户外收纳箱", "野餐遮阳布"]
+    }
+  },
+  "short_term_patch": [
+    "Replace pilot conditional_items with scene_expansion_items.",
+    "Remove blocked_or_risky from pilot content bundles.",
+    "Add blocked_patterns / blocked_terms as validation constants or test fixtures.",
+    "Update legacy four-column mapping so large/medium/small remain populated from safe pools and hanging is not force-filled with low-quality thin objects.",
+    "Rewrite the three pilot boxes 15/16/17 using the four-pool model."
+  ],
+  "runtime_mapping_recommendation": {
+    "large": ["core_items", "scene_expansion_items"],
+    "medium": ["support_items", "core_items:first_6"],
+    "small": ["visible_small_items"],
+    "hanging": ["do_not_force_fill", "optional_high_quality_scene_expansion_only"]
+  },
+  "quality_gates": [
+    "scene_expansion_items must not require image facts such as visible monitor, whiteboard, umbrella pole, wall hook, or available side space.",
+    "scene_expansion_items must be medium-or-larger, common, boundary-clear, independently circleable, and scene-relevant.",
+    "visible_small_items must be grouped, blocky, or carrier-backed.",
+    "No default pool may contain thin strings, tassels, edge lines, scratches, folds, bubbles, shadows, highlights, transparent/reflective/glowing objects, animal bodies, or tiny trace-like objects.",
+    "blocked_or_risky must not exist as a candidate item pool in the pilot model."
+  ],
+  "open_questions": [
+    "Should hanging output be reduced/skipped when no high-quality safe hanging candidate exists?",
+    "Should scene_expansion_items be sampled into large only, or large plus medium with lower weight?",
+    "Should blocked_patterns live in data/blind_boxes.py or in the test module only?"
+  ],
+  "recommended_next_step": "Run spec-generator on the updated handoff-spec.json, then plan and execute the four-pool content refactor."
+}

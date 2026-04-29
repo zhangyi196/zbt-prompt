@@ -1,0 +1,42 @@
+{
+  "session_id": "SPEC-2026-04-29-game-content-extraction-four-pool-refactor",
+  "generated_at": "2026-04-29T00:00:00+08:00",
+  "version": 1,
+  "terms": [
+    {
+      "term": "四类内容池",
+      "definition": "盲盒试点内容库的新目标模型，由 core_items、support_items、visible_small_items、scene_expansion_items 组成。",
+      "aliases": ["four-pool model"],
+      "first_defined_in": "product-brief.md",
+      "category": "core"
+    },
+    {
+      "term": "场景扩展物",
+      "definition": "无需图像锚点、体量中等以上、能自然扩展场景变化的默认安全物品。",
+      "aliases": ["scene_expansion_items"],
+      "first_defined_in": "product-brief.md",
+      "category": "core"
+    },
+    {
+      "term": "默认安全池",
+      "definition": "不依赖图像识别、用户额外触发或不可验证前置条件即可参与默认抽取的内容池。",
+      "aliases": ["default-safe pool"],
+      "first_defined_in": "product-brief.md",
+      "category": "technical"
+    },
+    {
+      "term": "blocked_patterns",
+      "definition": "用于测试和校验的禁用模式集合，不是候选物品池。",
+      "aliases": ["blocked_terms", "风险规则"],
+      "first_defined_in": "product-brief.md",
+      "category": "technical"
+    },
+    {
+      "term": "四栏兼容视图",
+      "definition": "现有 BLIND_BOXES large、medium、small、hanging 输出结构，用于保持 UI 和输入逻辑不变。",
+      "aliases": ["legacy runtime contract"],
+      "first_defined_in": "product-brief.md",
+      "category": "technical"
+    }
+  ]
+}

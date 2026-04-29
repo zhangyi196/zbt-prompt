@@ -1,0 +1,48 @@
+{
+  "session_id": "WFS-game-content-four-pool-refactor",
+  "source_spec": ".workflow/.spec/SPEC-2026-04-29-game-content-extraction-four-pool-refactor/",
+  "context_summary": "Implement a scoped data/test/docs refactor for Game content extraction blind-box pilots. Replace five-layer pilot pools with four default-safe pools and keep BLIND_BOXES four-column compatibility.",
+  "critical_files": [
+    "Game content extraction/data/blind_boxes.py",
+    "Game content extraction/test_blind_box_content_model.py",
+    "agents.md",
+    "README.md",
+    "Game content extraction/CLAUDE.md",
+    "Game content extraction/README.md",
+    ".gitignore"
+  ],
+  "reference_files": [
+    ".workflow/.spec/SPEC-2026-04-29-game-content-extraction-four-pool-refactor/spec-summary.md",
+    ".workflow/.spec/SPEC-2026-04-29-game-content-extraction-four-pool-refactor/requirements/_index.md",
+    ".workflow/.spec/SPEC-2026-04-29-game-content-extraction-four-pool-refactor/architecture/_index.md",
+    ".workflow/.spec/SPEC-2026-04-29-game-content-extraction-four-pool-refactor/epics/_index.md",
+    ".workflow/.brainstorm/BS-2026-04-29-重新定义conditional-items-blocked-or-risky/handoff-spec.json"
+  ],
+  "existing_patterns": [
+    "BLIND_BOX_SCENE_ENTRIES stores 20 scene+purpose entries.",
+    "BLIND_BOX_PILOT_BOX_IDS maps 桌面+学习, 海底+潜水, 公园+野餐 to 15, 16, 17.",
+    "BLIND_BOX_ITEM_POOL_BUNDLES currently stores five-layer pilot pools.",
+    "_build_legacy_blind_box_entry creates the legacy large/medium/small/hanging view.",
+    "test_blind_box_content_model.py imports data constants and verifies schema, compatibility, and forbidden patterns."
+  ],
+  "target_patterns": [
+    "Pilot bundles use exactly four content pools.",
+    "scene_expansion_items replaces conditional_items.",
+    "blocked_or_risky is removed from candidate bundles.",
+    "blocked_patterns are validation/test rules only.",
+    "BLIND_BOXES remains compatible with existing UI and input parsing."
+  ],
+  "conflict_risk": "medium",
+  "risk_factors": [
+    "Existing working tree contains prior generated spec/docs changes.",
+    "Multiple tasks touch the same data file, so execution should be sequential.",
+    "hanging compatibility field needs careful handling to avoid reintroducing low-quality objects."
+  ],
+  "implementation_constraints": [
+    "Do not change UI.",
+    "Do not change APP_VERSION or release packaging.",
+    "Do not expand all 20 categories.",
+    "Do not introduce image recognition, anchor detection, or user text trigger parsing.",
+    "Use UTF-8 for Chinese files."
+  ]
+}

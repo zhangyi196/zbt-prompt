@@ -1,0 +1,32 @@
+{
+  "id": "IMPL-2",
+  "title": "Rewrite pilot content with high-quality scene_expansion_items",
+  "status": "completed",
+  "owner_hint": "content-data",
+  "depends_on": ["IMPL-1"],
+  "files": [
+    "Game content extraction/data/blind_boxes.py"
+  ],
+  "objective": "Rewrite scene_expansion_items for the three pilot scenes so the fourth pool is default-safe and useful for gameplay.",
+  "requirements": [
+    "桌面+学习 includes quality examples like 桌面日历, 桌面小风扇, 护眼书架, 桌面收纳抽屉 or equivalents.",
+    "公园+野餐 includes quality examples like 折叠野餐桌, 便携冷藏箱, 户外收纳箱, 野餐遮阳布 or equivalents.",
+    "海底+潜水 uses concrete equipment/storage/work objects, not animal bodies, transparent/glowing/reflective objects, or thin rope/net objects.",
+    "Default pools must not contain image-anchor-dependent, thin/string-like, transparent, reflective, glowing, animal-body, or micro-detail terms."
+  ],
+  "acceptance_criteria": [
+    "All scene_expansion_items are medium-or-larger, common, boundary-clear, independently circleable, and scene-relevant.",
+    "No item requires unobservable image facts such as visible monitor, whiteboard, umbrella pole, wall hook, or available side space.",
+    "No risk-pattern term appears in default pools."
+  ],
+  "verification": [
+    "Manual review of the three pilot bundles.",
+    "Full tests after IMPL-3"
+  ],
+  "result": {
+    "files_modified": ["Game content extraction/data/blind_boxes.py"],
+    "tests_passed": true,
+    "acceptance_met": true,
+    "summary": "Rewrote scene_expansion_items for 桌面+学习, 海底+潜水, and 公园+野餐 using medium-or-larger default-safe scene enrichment objects."
+  }
+}

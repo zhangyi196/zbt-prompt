@@ -20,15 +20,14 @@ from data.blind_boxes import (  # noqa: E402
 from data.item_states import ITEM_STATE_GROUPS, ITEM_STATE_GROUP_WEIGHTS  # noqa: E402
 
 
-FIVE_LAYER_KEYS = {
+FOUR_POOL_KEYS = {
     "core_items",
     "support_items",
     "visible_small_items",
-    "conditional_items",
-    "blocked_or_risky",
+    "scene_expansion_items",
 }
 
-FORBIDDEN_NON_OBJECT_PATTERNS = (
+BLOCKED_ITEM_PATTERNS = (
     "折线",
     "擦痕",
     "气泡",
@@ -41,6 +40,18 @@ FORBIDDEN_NON_OBJECT_PATTERNS = (
     "风吹纸片边缘",
     "漂浮细海草丝",
     "水面高光",
+    "显示器下方",
+    "白板磁吸",
+    "伞杆",
+    "挂点",
+    "桌侧",
+    "细绳",
+    "流苏",
+    "透明",
+    "反光",
+    "发光",
+    "动物本体",
+    "微小",
 )
 
 
@@ -56,13 +67,15 @@ class BlindBoxContentModelTests(unittest.TestCase):
         pilots = {entry["name_zh"] for entry in BLIND_BOX_SCENE_ENTRIES if entry["pilot"]}
         self.assertEqual(pilots, {"桌面+学习", "海底+潜水", "公园+野餐"})
 
-    def test_pilot_bundles_have_complete_five_layer_schema(self):
+    def test_pilot_bundles_have_complete_four_pool_schema(self):
         self.assertEqual(set(BLIND_BOX_ITEM_POOL_BUNDLES), set(BLIND_BOX_PILOT_BOX_IDS))
 
         for scene_name, bundle in BLIND_BOX_ITEM_POOL_BUNDLES.items():
             with self.subTest(scene_name=scene_name):
-                self.assertEqual(set(bundle), FIVE_LAYER_KEYS)
-                for key in FIVE_LAYER_KEYS:
+                self.assertEqual(set(bundle), FOUR_POOL_KEYS)
+                self.assertNotIn("conditional_items", bundle)
+                self.assertNotIn("blocked_or_risky", bundle)
+                for key in FOUR_POOL_KEYS:
                     self.assertIsInstance(bundle[key], list)
                     self.assertGreater(len(bundle[key]), 0)
 
@@ -77,24 +90,26 @@ class BlindBoxContentModelTests(unittest.TestCase):
                 )
                 for key in ("large", "medium", "small", "hanging"):
                     self.assertIsInstance(box[key], list)
+                for key in ("large", "medium", "small"):
                     self.assertGreater(len(box[key]), 0)
 
-    def test_blocked_or_risky_items_do_not_enter_default_buckets(self):
+    def test_removed_candidate_pools_do_not_enter_mapping(self):
         for scene_name, box_id in BLIND_BOX_PILOT_BOX_IDS.items():
             with self.subTest(scene_name=scene_name):
-                blocked_items = set(BLIND_BOX_ITEM_POOL_BUNDLES[scene_name]["blocked_or_risky"])
-                default_items = set()
-                for key in ("large", "medium", "small", "hanging"):
-                    default_items.update(BLIND_BOXES[box_id][key])
-                self.assertTrue(blocked_items.isdisjoint(default_items))
-                self.assertIn("blocked_or_risky", BLIND_BOX_COMPATIBILITY_MAPPING[scene_name]["excluded_sources"])
+                mapping = BLIND_BOX_COMPATIBILITY_MAPPING[scene_name]
+                self.assertNotIn("conditional_items", mapping["large_sources"])
+                self.assertNotIn("conditional_items", mapping["medium_sources"])
+                self.assertNotIn("conditional_items", mapping["small_sources"])
+                self.assertNotIn("conditional_items", mapping["hanging_sources"])
+                self.assertNotIn("blocked_or_risky", mapping["excluded_sources"])
+                self.assertIn("blocked_patterns", mapping["excluded_sources"])
 
-    def test_pilot_item_pools_do_not_contain_non_object_patterns(self):
+    def test_pilot_item_pools_do_not_contain_blocked_patterns(self):
         for scene_name, bundle in BLIND_BOX_ITEM_POOL_BUNDLES.items():
-            for layer_name in FIVE_LAYER_KEYS:
+            for layer_name in FOUR_POOL_KEYS:
                 for item_name in bundle[layer_name]:
                     with self.subTest(scene_name=scene_name, layer_name=layer_name, item_name=item_name):
-                        for pattern in FORBIDDEN_NON_OBJECT_PATTERNS:
+                        for pattern in BLOCKED_ITEM_PATTERNS:
                             self.assertNotIn(pattern, item_name)
 
     def test_existing_input_override_syntax_accepts_pilot_box_ids(self):

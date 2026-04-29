@@ -1,0 +1,51 @@
+{
+  "session_id": "WFS-game-content-four-pool-refactor",
+  "status": "completed",
+  "source_spec": ".workflow/.spec/SPEC-2026-04-29-game-content-extraction-four-pool-refactor/",
+  "goal": "Implement the four-pool blind-box pilot refactor while preserving the legacy BLIND_BOXES runtime contract.",
+  "scope": {
+    "in": [
+      "Pilot boxes 15, 16, and 17",
+      "Game content extraction/data/blind_boxes.py",
+      "Game content extraction/test_blind_box_content_model.py",
+      "Required docs and workflow artifacts"
+    ],
+    "out": [
+      "Image recognition",
+      "Anchor detection",
+      "User text trigger parsing",
+      "UI rewrite",
+      "All 20 category expansion",
+      "Release packaging"
+    ]
+  },
+  "conflict_risk": "medium",
+  "execution_strategy": "sequential",
+  "tasks": [
+    {
+      "id": "IMPL-1",
+      "title": "Refactor pilot schema and legacy mapping",
+      "depends_on": []
+    },
+    {
+      "id": "IMPL-2",
+      "title": "Rewrite pilot content with high-quality scene_expansion_items",
+      "depends_on": ["IMPL-1"]
+    },
+    {
+      "id": "IMPL-3",
+      "title": "Update regression tests for four-pool schema and blocked patterns",
+      "depends_on": ["IMPL-1", "IMPL-2"]
+    },
+    {
+      "id": "IMPL-4",
+      "title": "Sync docs and verification records",
+      "depends_on": ["IMPL-3"]
+    }
+  ],
+  "verification_commands": [
+    "python -B -m py_compile 'Game content extraction\\内容抽取.py' 'Game content extraction\\data\\blind_boxes.py'",
+    "python -B -m unittest discover -s 'Game content extraction' -p 'test_*.py'"
+  ],
+  "next_recommended_command": "$workflow-execute --resume-session=WFS-game-content-four-pool-refactor"
+}

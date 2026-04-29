@@ -1,0 +1,20 @@
+{
+  "session_id": "WFS-game-content-four-pool-refactor",
+  "trigger": "context-package conflict_risk is medium",
+  "resolution_strategy": "Run tasks sequentially and keep file ownership narrow. Treat existing uncommitted spec/doc changes as intentional baseline.",
+  "decisions": [
+    {
+      "risk": "Multiple edits target Game content extraction/data/blind_boxes.py.",
+      "decision": "Plan IMPL-1 and IMPL-2 sequentially; do not parallelize data edits."
+    },
+    {
+      "risk": "hanging field may tempt low-quality filler.",
+      "decision": "Keep hanging as a compatibility bucket but only map safe scene expansion/support objects, allowing conservative candidate count."
+    },
+    {
+      "risk": "Docs still mention five-layer model.",
+      "decision": "Include a final docs task that updates all required docs after code/tests stabilize."
+    }
+  ],
+  "status": "resolved_for_planning"
+}

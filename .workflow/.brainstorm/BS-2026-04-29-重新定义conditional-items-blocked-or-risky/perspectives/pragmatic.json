@@ -1,0 +1,10 @@
+{
+  "perspective": "pragmatic",
+  "summary": "短期不要让 conditional_items 进入默认输出，blocked_or_risky 继续 excluded，并删除太细太小的具体示例。",
+  "recommendation": "先做保守修正：取消 conditional_items -> hanging 默认映射，或把 conditional_items 全部替换为无需前置锚点的中型物；blocked_or_risky 保留为 excluded 风险说明。",
+  "risks": [
+    "如果立刻结构化 item schema，会扩大改动面。",
+    "如果继续字符串池，无法表达显示器/白板/伞杆等前置条件。",
+    "如果 blocked_or_risky 仍列出太细小对象，维护者会误以为这些是可接受候选。"
+  ]
+}

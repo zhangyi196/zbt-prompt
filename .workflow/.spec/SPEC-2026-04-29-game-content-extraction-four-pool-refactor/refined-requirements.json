@@ -1,0 +1,88 @@
+{
+  "session_id": "SPEC-2026-04-29-game-content-extraction-four-pool-refactor",
+  "phase": "1.5",
+  "generated_at": "2026-04-29T00:00:00+08:00",
+  "source": "auto-expansion",
+  "discussion_rounds": 0,
+  "clarified_problem_statement": "Refactor the Game content extraction blind-box pilot item library from a five-layer model with conditional/risky pools into a four-pool model where every content pool is default-safe and compatible with a tool that cannot inspect images.",
+  "confirmed_target_users": [
+    {
+      "name": "提示词和数据维护者",
+      "needs": ["清晰的内容分类边界", "可执行的数据改写规则", "测试能防止低质量内容回流"],
+      "pain_points": ["conditional_items 容易产生图像锚点依赖", "blocked_or_risky 容易被误当候选物池"]
+    },
+    {
+      "name": "盲盒抽取工具用户",
+      "needs": ["输出物品具体、常见、可圈选", "不出现太细太小或依赖画面条件的物品"],
+      "pain_points": ["随机输出与实际图像不匹配", "风险池和条件池内容降低游戏可用性"]
+    }
+  ],
+  "confirmed_domain": "Game content extraction 本地 tkinter 工具的盲盒物品数据模型",
+  "confirmed_features": [
+    {
+      "name": "四类内容池模型",
+      "description": "试点盲盒只保留 core_items、support_items、visible_small_items、scene_expansion_items 四类内容池。",
+      "acceptance_criteria": [
+        "三个试点 bundle 只包含四个内容池键",
+        "conditional_items 和 blocked_or_risky 不再作为候选池出现"
+      ],
+      "edge_cases": ["旧测试仍引用五层池", "兼容映射仍需要输出 hanging"],
+      "priority": "must"
+    },
+    {
+      "name": "场景扩展物",
+      "description": "将第四类定义为默认安全、无需图像锚点、能扩展场景变化的中等以上物品。",
+      "acceptance_criteria": [
+        "scene_expansion_items 不包含显示器下方、白板磁吸、伞杆、墙面挂点等图像条件语义",
+        "scene_expansion_items 中物品边界清楚、可单独圈选、场景相关"
+      ],
+      "edge_cases": ["场景扩展物不能重复核心物", "不能变成悬挂/细绳物回收站"],
+      "priority": "must"
+    },
+    {
+      "name": "风险规则测试",
+      "description": "将风险内容迁移为 blocked_patterns 测试/校验规则，不再保存为可候选内容池。",
+      "acceptance_criteria": [
+        "blocked_patterns 能阻止细绳、流苏、透明、反光、发光、动物本体、微型痕迹进入默认池",
+        "blocked_or_risky 不再进入 pilot bundle schema"
+      ],
+      "edge_cases": ["某些合法物品名可能包含透明/反光词，需要规则保持精准"],
+      "priority": "must"
+    },
+    {
+      "name": "四栏兼容映射",
+      "description": "保留现有 BLIND_BOXES large/medium/small/hanging 输出，避免 UI 和输入逻辑改动。",
+      "acceptance_criteria": [
+        "BLIND_BOXES[15/16/17] 仍包含 name、large、medium、small、hanging",
+        "large/medium/small 至少从安全池生成",
+        "hanging 不强制用低质量细线物凑数"
+      ],
+      "edge_cases": ["hanging 是否为空或降权需要实现时明确"],
+      "priority": "must"
+    }
+  ],
+  "non_functional_requirements": [
+    {
+      "type": "Reliability",
+      "details": "测试必须防止旧条件池、风险池和低质量对象回流。",
+      "measurable_criteria": "unittest discovery passes and includes four-pool schema/risk pattern checks"
+    },
+    {
+      "type": "Usability",
+      "details": "维护文档必须让后续维护者能清楚区分四类内容池。",
+      "measurable_criteria": "agents.md、README.md、Game content extraction/CLAUDE.md 和 Game content extraction/README.md 同步更新"
+    }
+  ],
+  "boundary_conditions": {
+    "in_scope": ["三类试点盒 15/16/17", "blind_boxes.py 数据模型", "test_blind_box_content_model.py", "项目文档同步"],
+    "out_of_scope": ["图像识别", "用户文本触发解析", "UI 重写", "全量 20 类内容扩展", "版本发布和安装包"],
+    "constraints": ["中文内容 UTF-8", "不引入第三方依赖", "不破坏旧四栏 runtime contract"]
+  },
+  "integration_points": ["Game content extraction/data/blind_boxes.py", "Game content extraction/内容抽取.py", "Game content extraction/test_blind_box_content_model.py"],
+  "key_assumptions": [
+    "四栏兼容视图仍是短期运行时消费层。",
+    "blocked_patterns 可以先放在测试中，后续如需运行时复用再移入数据模块。",
+    "scene_expansion_items 进入默认安全池，但抽取权重和 hanging 映射可在实现阶段保守处理。"
+  ],
+  "discussion_log": []
+}

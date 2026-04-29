@@ -1,0 +1,4 @@
+{"task_id":"IMPL-1","type":"implementation","message":"Pilot bundle schema changed to four content pools; legacy BLIND_BOXES four-column view preserved with hanging kept as an empty compatibility bucket."}
+{"task_id":"IMPL-2","type":"implementation","message":"scene_expansion_items rewritten for 桌面+学习, 海底+潜水, and 公园+野餐 with default-safe scene enrichment objects."}
+{"task_id":"IMPL-3","type":"verification","message":"Regression tests now validate four-pool schema, removed candidate pools, compatibility mapping, and blocked pattern filtering."}
+{"task_id":"IMPL-4","type":"documentation","message":"Required project docs and workflow records synchronized."}

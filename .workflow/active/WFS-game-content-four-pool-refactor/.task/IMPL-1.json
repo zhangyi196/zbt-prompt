@@ -1,0 +1,32 @@
+{
+  "id": "IMPL-1",
+  "title": "Refactor pilot schema and legacy mapping",
+  "status": "completed",
+  "owner_hint": "data-model",
+  "depends_on": [],
+  "files": [
+    "Game content extraction/data/blind_boxes.py"
+  ],
+  "objective": "Replace the pilot five-layer bundle schema with four content pools and update the legacy BLIND_BOXES mapping.",
+  "requirements": [
+    "Use exactly core_items, support_items, visible_small_items, scene_expansion_items for pilot bundles.",
+    "Remove conditional_items and blocked_or_risky from pilot bundle schema.",
+    "Preserve BLIND_BOXES name/large/medium/small/hanging contract.",
+    "Update BLIND_BOX_COMPATIBILITY_MAPPING to reflect four-pool sources."
+  ],
+  "acceptance_criteria": [
+    "Pilot bundle keys are exactly the four content pools.",
+    "BLIND_BOXES[15], BLIND_BOXES[16], and BLIND_BOXES[17] still expose the legacy four buckets.",
+    "No compatibility mapping references conditional_items or blocked_or_risky."
+  ],
+  "verification": [
+    "python -B -m py_compile 'Game content extraction\\data\\blind_boxes.py'",
+    "Full tests after IMPL-3"
+  ],
+  "result": {
+    "files_modified": ["Game content extraction/data/blind_boxes.py"],
+    "tests_passed": true,
+    "acceptance_met": true,
+    "summary": "Pilot bundles now use four content pools, compatibility mapping no longer references conditional_items or blocked_or_risky, and BLIND_BOXES keeps the legacy four buckets."
+  }
+}

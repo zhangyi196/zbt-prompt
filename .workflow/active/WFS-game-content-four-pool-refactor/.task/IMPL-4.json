@@ -1,0 +1,45 @@
+{
+  "id": "IMPL-4",
+  "title": "Sync docs and verification records",
+  "status": "completed",
+  "owner_hint": "docs",
+  "depends_on": ["IMPL-3"],
+  "files": [
+    "agents.md",
+    "README.md",
+    "Game content extraction/CLAUDE.md",
+    "Game content extraction/README.md",
+    ".gitignore",
+    ".workflow/active/WFS-game-content-four-pool-refactor/TODO_LIST.md"
+  ],
+  "objective": "Update required project docs and workflow status after the four-pool implementation.",
+  "requirements": [
+    "Docs state that the four-pool model is implemented, not only planned.",
+    "Docs explain scene_expansion_items and blocked_patterns.",
+    "Docs no longer describe conditional_items or blocked_or_risky as target content categories.",
+    "Record verification results in workflow artifacts."
+  ],
+  "acceptance_criteria": [
+    "Required docs are synchronized.",
+    "TODO list and task statuses are updated during execution.",
+    "py_compile and unittest verification results are recorded."
+  ],
+  "verification": [
+    "python -B -m py_compile 'Game content extraction\\内容抽取.py' 'Game content extraction\\data\\blind_boxes.py'",
+    "python -B -m unittest discover -s 'Game content extraction' -p 'test_*.py'",
+    "git status --short"
+  ],
+  "result": {
+    "files_modified": [
+      "agents.md",
+      "README.md",
+      "Game content extraction/CLAUDE.md",
+      "Game content extraction/README.md",
+      ".gitignore",
+      ".workflow/active/WFS-game-content-four-pool-refactor/TODO_LIST.md"
+    ],
+    "tests_passed": true,
+    "acceptance_met": true,
+    "summary": "Synchronized required docs and workflow records after successful py_compile and unittest verification."
+  }
+}

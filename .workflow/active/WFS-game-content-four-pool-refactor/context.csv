@@ -1,0 +1,4 @@
+key,type,value,source
+context_package_path,path,.process/context-package.json,session
+source_spec,path,.workflow/.spec/SPEC-2026-04-29-game-content-extraction-four-pool-refactor/,plan.json
+verification,array,"py_compile passed; unittest discovery 24 tests OK",execution

@@ -42,10 +42,10 @@
 
 - 四工作区：`盲盒物品/动物抽取`、`人物表情抽取`、`图像抓取`、`批量重命名`。
 - `盲盒物品/动物抽取` 工作区采用左侧配置、右侧输出的双栏布局；修改该区 UI 时优先保持输出框常驻可见，不要把结果区重新压回页面底部。
-- 盲盒物品内容库后续优化方向见 `.workflow/.brainstorm/BS-2026-04-29-优化game-content-extraction盲盒物品内容/`，完整规格包见 `.workflow/.spec/SPEC-2026-04-29-game-content-extraction-blind-box-library-refactor/`：建议从旧主题改为 20 个 `常见场景+用途` 入口，如 `桌面+学习`、`餐桌+茶歇`、`沙滩+度假`、`海底+潜水`；类别下物品按 `core_items`、`support_items`、`visible_small_items`、`conditional_items`、`blocked_or_risky` 五层维护，再按需要映射回现有大型 / 中型 / 小型 / 悬挂四栏。
-- 已落地试点盒号：15 `桌面+学习`、16 `海底+潜水`、17 `公园+野餐`；`BLIND_BOX_SCENE_ENTRIES` 保留 20 个入口，`BLIND_BOX_ITEM_POOL_BUNDLES` 保留三类五层池，`BLIND_BOX_COMPATIBILITY_MAPPING` 映射回现有四栏。
-- 条件池 / 风险池物品化修正已按 `.workflow/.spec/SPEC-2026-04-29-blind-box-pool-itemization-fix/` 落地：五层池都必须只写具体物品或物品组；`conditional_items` 必须是中等以上体量、可单独圈选的条件启用物品；`blocked_or_risky` 只保留具体风险物；折线、擦痕、气泡、阴影、边线、微小颗粒等非物品内容只能作为 forbidden patterns 校验规则，不得进入任何池层。
-- 盲盒物品写库时优先真实、常见、边界清楚、可单独圈选且场景强相关的物品；小物必须成组、块状或有明确承载；悬挂、墙面、软布、灯、镜、透明反光、细绳、流苏、微型痕迹和动物本体默认进条件池或风险池，不进入默认主抽取池。
+- 盲盒物品内容库后续优化方向见 `.workflow/.brainstorm/BS-2026-04-29-优化game-content-extraction盲盒物品内容/`，完整规格包见 `.workflow/.spec/SPEC-2026-04-29-game-content-extraction-blind-box-library-refactor/`：建议从旧主题改为 20 个 `常见场景+用途` 入口，如 `桌面+学习`、`餐桌+茶歇`、`沙滩+度假`、`海底+潜水`。
+- 最新四类内容池规格见 `.workflow/.spec/SPEC-2026-04-29-game-content-extraction-four-pool-refactor/`，执行会话见 `.workflow/active/WFS-game-content-four-pool-refactor/`：三类试点已收敛为 `core_items`、`support_items`、`visible_small_items`、`scene_expansion_items`；`scene_expansion_items` 是中等以上、无图像锚点依赖、用于增加场景变化的场景扩展物。
+- 已落地试点盒号：15 `桌面+学习`、16 `海底+潜水`、17 `公园+野餐`；`BLIND_BOX_ITEM_POOL_BUNDLES` 已改为三类四池，`BLIND_BOX_COMPATIBILITY_MAPPING` 继续映射回现有四栏，`hanging` 作为兼容字段保留但不强制用细绳 / 挂饰补位。
+- 盲盒物品写库时优先真实、常见、边界清楚、可单独圈选且场景强相关的物品；小物必须成组、块状或有明确承载；`conditional_items`、`anchor_required_items`、`blocked_or_risky` 不再作为目标内容类别，风险内容只进入 `blocked_patterns` 测试 / 校验规则。
 - `人物表情抽取` 工作区的“清空输入”只清空输入框，不清空增强结果；若“自动粘贴”开启，清空后要像盲盒区一样回填当前剪贴板文本。
 - 不改成 Web、数据库、服务端或大型工程；不引入第三方 UI 依赖。
 - `draw_history.json` 服务物品池、动物池和人物表情历史；表情历史独立写入 `expression_pools`，不得混入 `item_pools` / `animal_pools`；重命名配置仍不得接入。
@@ -75,11 +75,12 @@ python -B -m unittest discover -s 'Game content extraction' -p 'test_*.py'
 
 - `.workflow/.spec/SPEC-2026-04-29-game-content-extraction-blind-box-library-refactor/spec-summary.md` 已完成 spec-generator 全链路规格包，覆盖 product brief、requirements、architecture、epics、readiness 与 issue export。
 - `.workflow/.spec/SPEC-2026-04-29-blind-box-pool-itemization-fix/spec-summary.md` 是对条件池 / 风险池的补丁规格，Readiness 评分 95.25 / 100，Gate 为 Pass；执行会话见 `.workflow/active/WFS-blind-box-pool-itemization-fix/`。
-- 规格方向已将盲盒物品库重构收敛为 20 个 `常见场景+用途` 入口、五层物品池、四栏兼容映射与三类试点路线。
-- 当前试点类别固定为 `桌面+学习`、`海底+潜水`、`公园+野餐`；后续落地优先先做试点，再扩全部 20 类。
+- `.workflow/.spec/SPEC-2026-04-29-game-content-extraction-four-pool-refactor/spec-summary.md` 是最新四类内容池规格，Readiness 评分 96.5 / 100，Gate 为 Pass；执行会话 `.workflow/active/WFS-game-content-four-pool-refactor/` 已完成。
+- 规格方向已将盲盒物品库重构收敛为 20 个 `常见场景+用途` 入口、四类内容池、四栏兼容映射与三类试点路线。
+- 当前试点类别固定为 `桌面+学习`、`海底+潜水`、`公园+野餐`；已优先完成试点，后续再扩全部 20 类。
 - 当前已新增 15 / 16 / 17 号试点盒，兼容现有逗号输入、四栏勾选和 `draw_history.json.item_pools` 历史 key；新增测试文件为 `Game content extraction/test_blind_box_content_model.py`。
-- 写库验收沿用“真实、常见、边界清楚、可单独圈选、强场景相关”；`visible_small_items` 必须成组、块状或有明确承载，`blocked_or_risky` 不得进入默认输出；`test_blind_box_content_model.py` 已覆盖非物品 forbidden patterns 回归校验。
-- 试点质量目标：人工抽样 30 次时，明显不适合项低于 10%，且不得让 `blocked_or_risky` 物品进入默认抽取结果。
+- 写库验收沿用“真实、常见、边界清楚、可单独圈选、强场景相关”；`visible_small_items` 必须成组、块状或有明确承载，`scene_expansion_items` 必须中等以上且不依赖图像已有对象；`test_blind_box_content_model.py` 已改为四池 schema 与 blocked patterns 回归校验。
+- 试点质量目标：人工抽样 30 次时，明显不适合项低于 10%，且风险内容不得进入默认抽取结果。
 
 - 仓库源码打包到 GitHub Release 时，使用保留目录结构的 zip 资产，不直接上传文件夹。
 - 推荐 source-bundle tag：`v0.1.4-source-YYYYMMDD`；该命名规范化后仍为当前正式桌面版本，不会误触发 App 更新提示。

@@ -1,0 +1,92 @@
+{
+  "session_id": "SPEC-2026-04-29-game-content-extraction-four-pool-refactor",
+  "seed_input": ".workflow/.brainstorm/BS-2026-04-29-重新定义conditional-items-blocked-or-risky/handoff-spec.json",
+  "input_type": "file",
+  "timestamp": "2026-04-29T00:00:00+08:00",
+  "mode": "auto",
+  "complexity": "moderate",
+  "depth": "standard",
+  "focus_areas": [
+    "blind box item content model",
+    "four-pool schema",
+    "scene_expansion_items",
+    "blocked pattern validation",
+    "legacy runtime compatibility"
+  ],
+  "seed_analysis": {
+    "problem_statement": "The pilot blind-box item model still contains conditional/risky semantics that do not match a non-image-aware tool. The model should be refactored into four default-safe content pools and move risk handling into validation rules.",
+    "target_users": ["prompt maintainer", "desktop tool user", "future implementation agent"],
+    "domain": "local Python tkinter tool and Chinese prompt/data maintenance",
+    "constraints": [
+      "No image recognition or anchor detection",
+      "No UI rewrite",
+      "No release packaging or version bump",
+      "Preserve BLIND_BOXES four-column runtime contract",
+      "Limit first implementation to pilot boxes 15, 16, and 17"
+    ],
+    "dimensions": [
+      "content taxonomy",
+      "runtime compatibility",
+      "quality validation",
+      "pilot migration",
+      "documentation synchronization"
+    ]
+  },
+  "has_codebase": true,
+  "spec_type": "library",
+  "iteration_count": 0,
+  "iteration_history": [],
+  "refined_requirements_file": "refined-requirements.json",
+  "phasesCompleted": [
+    {
+      "phase": 1,
+      "name": "Discovery",
+      "output_file": "discovery-context.json",
+      "completed_at": "2026-04-29T00:00:00+08:00"
+    },
+    {
+      "phase": 1.5,
+      "name": "Requirement Expansion",
+      "output_file": "refined-requirements.json",
+      "completed_at": "2026-04-29T00:00:00+08:00"
+    },
+    {
+      "phase": 2,
+      "name": "Product Brief",
+      "output_file": "product-brief.md",
+      "completed_at": "2026-04-29T00:00:00+08:00"
+    },
+    {
+      "phase": 3,
+      "name": "Requirements",
+      "output_file": "requirements/_index.md",
+      "completed_at": "2026-04-29T00:00:00+08:00"
+    },
+    {
+      "phase": 4,
+      "name": "Architecture",
+      "output_file": "architecture/_index.md",
+      "completed_at": "2026-04-29T00:00:00+08:00"
+    },
+    {
+      "phase": 5,
+      "name": "Epics & Stories",
+      "output_file": "epics/_index.md",
+      "completed_at": "2026-04-29T00:00:00+08:00"
+    },
+    {
+      "phase": 6,
+      "name": "Readiness Check",
+      "output_file": "readiness-report.md",
+      "completed_at": "2026-04-29T00:00:00+08:00"
+    },
+    {
+      "phase": 7,
+      "name": "Issue Export",
+      "output_file": "issue-export-report.md",
+      "completed_at": "2026-04-29T00:00:00+08:00"
+    }
+  ],
+  "issue_ids": [],
+  "issues_created": 0
+}

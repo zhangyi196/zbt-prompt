@@ -1,0 +1,87 @@
+{
+  "title": "Game content extraction 盲盒物品四类内容池重构",
+  "source_brainstorm": ".workflow/.brainstorm/BS-2026-04-29-重新定义conditional-items-blocked-or-risky/",
+  "problem": "The current pilot blind-box model still carries conditional/risky semantics that do not match the tool's capabilities. The tool cannot inspect images, so anchor-based items are invalid. blocked_or_risky should not be a content category. The content model should use four default-safe pools, with the fourth pool redefined as scene_expansion_items.",
+  "goals": [
+    "Replace conditional_items / anchor_required_items concepts with scene_expansion_items.",
+    "Remove blocked_or_risky as a content pool and handle risky content through blocked_patterns validation.",
+    "Keep core_items, support_items, and visible_small_items as the first three content categories.",
+    "Define scene_expansion_items as medium-or-larger, boundary-clear, scene-enriching objects that do not require image anchors.",
+    "Preserve the legacy BLIND_BOXES four-column runtime contract for the UI.",
+    "Rewrite the three pilot boxes 15 桌面+学习, 16 海底+潜水, and 17 公园+野餐 with the four-pool model.",
+    "Add tests that prevent anchor-dependent, thin/string-like, trace-like, transparent/reflective/glowing, and animal-body terms from entering default pools."
+  ],
+  "non_goals": [
+    "No image recognition or anchor detection.",
+    "No user text trigger parser in this phase.",
+    "No UI rewrite.",
+    "No database or web service.",
+    "No full 20-category expansion in the first implementation.",
+    "No release packaging/version bump unless requested later."
+  ],
+  "proposed_model": {
+    "content_pools": {
+      "core_items": {
+        "zh": "核心物",
+        "default_enabled": true,
+        "definition": "The most typical and stable primary objects for the scene."
+      },
+      "support_items": {
+        "zh": "配套物",
+        "default_enabled": true,
+        "definition": "Tools, containers, storage, carriers, or functional accessories around core objects."
+      },
+      "visible_small_items": {
+        "zh": "可见小物",
+        "default_enabled": true,
+        "definition": "Grouped, blocky, or carrier-backed small items with clear boundaries."
+      },
+      "scene_expansion_items": {
+        "zh": "场景扩展物",
+        "default_enabled": true,
+        "definition": "Medium-or-larger objects that naturally enrich the scene, add variety, and do not require any image anchor or pre-existing object to be valid."
+      }
+    },
+    "removed_pools": [
+      "conditional_items",
+      "anchor_required_items",
+      "explicit_context_items",
+      "context_dependent_excluded_items",
+      "blocked_or_risky"
+    ],
+    "blocked_patterns": {
+      "role": "Validation/test rules only, not content pools.",
+      "examples": ["细绳", "流苏", "边线", "折线", "擦痕", "阴影", "高光", "反光", "透明", "发光", "动物本体", "微小"]
+    },
+    "legacy_mapping": {
+      "large": ["core_items", "scene_expansion_items"],
+      "medium": ["support_items", "core_items:first_6"],
+      "small": ["visible_small_items"],
+      "hanging": ["do_not_force_fill", "optional_high_quality_scene_expansion_only"]
+    }
+  },
+  "examples": {
+    "桌面+学习": {
+      "core_items": ["硬壳笔记本", "桌面文件架", "书桌小白板"],
+      "support_items": ["笔筒", "资料夹", "计时器"],
+      "visible_small_items": ["一排彩色笔套", "三块记号小卡"],
+      "scene_expansion_items": ["桌面日历", "桌面小风扇", "护眼书架", "桌面收纳抽屉"]
+    },
+    "公园+野餐": {
+      "core_items": ["格纹野餐垫", "藤编食物篮", "双层餐盒"],
+      "support_items": ["餐具盒", "保温水壶", "杯架托盘"],
+      "visible_small_items": ["三块三明治切块", "一组水果叉盒"],
+      "scene_expansion_items": ["折叠野餐桌", "便携冷藏箱", "户外收纳箱", "野餐遮阳布"]
+    }
+  },
+  "acceptance_criteria": [
+    "Pilot content bundles use exactly four content pools: core_items, support_items, visible_small_items, scene_expansion_items.",
+    "conditional_items and blocked_or_risky are no longer candidate pools in the pilot model.",
+    "scene_expansion_items contain only medium-or-larger, common, boundary-clear, independently circleable objects that are reasonable from the selected scene category alone.",
+    "scene_expansion_items do not require image facts such as visible monitor, whiteboard, umbrella pole, wall hook, or available side space.",
+    "blocked_patterns validation prevents thin/string-like, trace-like, transparent/reflective/glowing, animal-body, and micro-detail terms from entering default pools.",
+    "Legacy tests for 20 entries, three pilots, box ids 15/16/17, input override, and runtime four-column compatibility continue to pass.",
+    "New tests cover the four-pool schema and the removal of blocked_or_risky from content bundles."
+  ],
+  "recommended_next_step": "Run spec-generator on this handoff, then workflow-plan and workflow-execute for the four-pool content refactor."
+}

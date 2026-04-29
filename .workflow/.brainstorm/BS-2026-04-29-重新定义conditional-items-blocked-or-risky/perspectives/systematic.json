@@ -1,0 +1,23 @@
+{
+  "perspective": "systematic",
+  "field_redefinition": {
+    "conditional_items": {
+      "new_name_candidate": "anchor_required_items",
+      "role": "Only enabled when the required visible anchor exists.",
+      "default_output": false,
+      "required_attributes": ["name", "required_anchor", "min_size", "skip_if_anchor_missing"]
+    },
+    "blocked_or_risky": {
+      "new_name_candidate": "blocked_rules",
+      "role": "Validation and exclusion metadata, not an item pool.",
+      "default_output": false,
+      "required_attributes": ["pattern_or_example", "risk_reason", "severity"]
+    }
+  },
+  "quality_gates": [
+    "No candidate may require an unverified object in the image.",
+    "No candidate may be mainly a thin line, string, edge, trace, light effect, reflection, or tiny particle.",
+    "Default output candidates must be independently visible and circleable.",
+    "Risk examples must not be mapped into large, medium, small, or hanging."
+  ]
+}

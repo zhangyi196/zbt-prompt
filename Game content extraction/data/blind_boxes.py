@@ -1329,14 +1329,10 @@ BLIND_BOX_ITEM_POOL_BUNDLES = {
             "一排彩色笔套", "成组标签贴片", "三块记号小卡", "一叠迷你资料卡",
             "两枚圆角尺片", "一组纸夹收纳格", "三枚课程贴纸块"
         ],
-        "conditional_items": [
-            "桌边帆布收纳袋", "显示器下方收纳架", "桌面打印纸盒",
-            "折叠阅读支架", "白板磁吸收纳盒", "桌侧耳机支架",
-            "立式资料分层架", "桌角计时钟座"
-        ],
-        "blocked_or_risky": [
-            "透明亚克力书架", "镜面金属笔筒", "发光阅读灯", "细绳挂饰", "流苏书签",
-            "玻璃墨水瓶", "透明胶带卷", "水晶镇纸", "玻璃相框", "反光镜片盒"
+        "scene_expansion_items": [
+            "桌面日历", "桌面小风扇", "护眼书架", "桌面收纳抽屉",
+            "桌面文件柜", "错题整理箱", "学习资料推车", "桌面阅读灯座",
+            "书本展示架", "课程计划板", "桌面分层收纳柜", "学习计时钟"
         ]
     },
     "海底+潜水": {
@@ -1358,14 +1354,10 @@ BLIND_BOX_ITEM_POOL_BUNDLES = {
             "一排圆形压力贴片", "成组采样小管架", "三块防水标记牌", "一组脚蹼扣件",
             "两枚安全提示牌", "一组密封盒标签", "三块水下标尺片"
         ],
-        "conditional_items": [
-            "潜水装备背包", "水下采样篮", "浮标收纳盘",
-            "潜水相机防水壳", "配重块收纳盒", "备用面罩盒",
-            "水下工具腰包", "氧气罐托架"
-        ],
-        "blocked_or_risky": [
-            "鱼群本体", "海龟本体", "透明水母", "发光珊瑚", "反光贝壳盘",
-            "玻璃漂流瓶", "细绳渔网", "透明潜水罩", "发光浮标", "软体海葵本体"
+        "scene_expansion_items": [
+            "潜水装备背包", "水下采样篮", "浮标收纳盘", "配重块收纳箱",
+            "备用面罩盒", "氧气罐托架", "水下作业台", "潜水器材整理架",
+            "海底样本收纳箱", "防水设备箱", "潜水安全标识板", "水下记录支架"
         ]
     },
     "公园+野餐": {
@@ -1387,14 +1379,10 @@ BLIND_BOX_ITEM_POOL_BUNDLES = {
             "两盒零食分装块", "一排餐具束带", "三块甜点纸托", "一组封口夹盒",
             "两枚餐巾压块", "一组水果切块盒", "三张野餐清单卡"
         ],
-        "conditional_items": [
-            "折叠野餐桌", "野餐冷藏箱", "藤编餐具篮",
-            "便携垃圾袋架", "地钉固定收纳盒", "保温袋支架",
-            "餐盘托架", "遮阳伞底座"
-        ],
-        "blocked_or_risky": [
-            "透明塑料杯", "反光金属餐刀", "细绳挂旗", "昆虫本体", "远处飞鸟",
-            "玻璃饮料瓶", "透明食品罩", "镜面保温壶", "发光露营灯", "细杆风车"
+        "scene_expansion_items": [
+            "折叠野餐桌", "便携冷藏箱", "户外收纳箱", "野餐遮阳布",
+            "便携置物架", "野餐折叠凳", "保温餐食箱", "户外餐具整理箱",
+            "野餐服务推车", "饮品保冷桶", "食物展示托架", "防潮野餐垫包"
         ]
     },
 }
@@ -1403,21 +1391,21 @@ BLIND_BOX_ITEM_POOL_BUNDLES = {
 def _build_legacy_blind_box_entry(scene_name, bundle):
     return {
         "name": scene_name,
-        "large": list(bundle["core_items"]),
+        "large": list(bundle["core_items"] + bundle["scene_expansion_items"]),
         "medium": list(bundle["support_items"] + bundle["core_items"][:6]),
         "small": list(bundle["visible_small_items"]),
-        "hanging": list(bundle["conditional_items"]),
+        "hanging": [],
     }
 
 
 BLIND_BOX_COMPATIBILITY_MAPPING = {
     scene_name: {
         "box_id": BLIND_BOX_PILOT_BOX_IDS[scene_name],
-        "large_sources": ["core_items"],
+        "large_sources": ["core_items", "scene_expansion_items"],
         "medium_sources": ["support_items", "core_items:first_6"],
         "small_sources": ["visible_small_items"],
-        "hanging_sources": ["conditional_items"],
-        "excluded_sources": ["blocked_or_risky"],
+        "hanging_sources": [],
+        "excluded_sources": ["blocked_patterns"],
     }
     for scene_name in BLIND_BOX_ITEM_POOL_BUNDLES
 }

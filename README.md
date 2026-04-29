@@ -16,11 +16,11 @@
 
 `Game content extraction` 的盲盒物品内容库后续建议从旧式主题杂货池，重构为 20 个 `常见场景+用途` 入口：`桌面+学习`、`餐桌+茶歇`、`厨房+烘焙`、`卧室+梳妆`、`浴室+洗护`、`客厅+装饰`、`儿童房+玩具`、`宠物+日常`、`庭院+园艺`、`门口+雨具`、`沙滩+度假`、`公园+野餐`、`营地+露营`、`街道+出行`、`运动场+装备`、`海底+潜水`、`节日+礼物`、`手作+缝纫`、`手作+编织`、`商店+零食`。
 
-每个类别下建议按 `core_items`、`support_items`、`visible_small_items`、`conditional_items`、`blocked_or_risky` 五层维护；落地时可先映射回现有大型 / 中型 / 小型 / 悬挂四栏。完整头脑风暴见 `.workflow/.brainstorm/BS-2026-04-29-优化game-content-extraction盲盒物品内容/`，规格包见 `.workflow/.spec/SPEC-2026-04-29-game-content-extraction-blind-box-library-refactor/`。
+每个类别下后续建议收敛为四类内容池：`core_items`、`support_items`、`visible_small_items`、`scene_expansion_items`；落地时继续映射回现有大型 / 中型 / 小型 / 悬挂四栏。完整头脑风暴见 `.workflow/.brainstorm/BS-2026-04-29-重新定义conditional-items-blocked-or-risky/`，最新规格包见 `.workflow/.spec/SPEC-2026-04-29-game-content-extraction-four-pool-refactor/`。
 
-当前已先落地三类试点：15 `桌面+学习`、16 `海底+潜水`、17 `公园+野餐`。数据层新增 20 类入口清单、三类五层池和五层到四栏兼容映射；旧逗号输入、四栏输出和历史语义保持不变。
+当前已先落地三类试点：15 `桌面+学习`、16 `海底+潜水`、17 `公园+野餐`。数据层新增 20 类入口清单；三类试点已按四类内容池规格重构；旧逗号输入、四栏输出和历史语义保持不变。
 
-条件池 / 风险池物品化修正已按 `.workflow/.spec/SPEC-2026-04-29-blind-box-pool-itemization-fix/` 落地。五层池全部只写具体物品或物品组；`conditional_items` 不再写标签、贴片、扣件等小附属物，`blocked_or_risky` 不再写折线、擦痕、气泡、阴影、边线、微小颗粒等非物品内容。
+四类内容池重构已按 `.workflow/.spec/SPEC-2026-04-29-game-content-extraction-four-pool-refactor/` 落地。后续不再把 `conditional_items`、`anchor_required_items`、`blocked_or_risky` 作为目标内容类别；风险内容只进入 `blocked_patterns` 测试/校验规则。
 
 ## 提示词维护要点
 
@@ -53,13 +53,13 @@
 `Game content extraction` 的盲盒物品库重构已完成 spec-generator 全链路规格包，工作目录位于 `.workflow/.spec/SPEC-2026-04-29-game-content-extraction-blind-box-library-refactor/`。当前已按 MVP 先落地三类试点，继续保持旧运行时兼容：
 
 - 20 个 `常见场景+用途` 入口：如 `桌面+学习`、`餐桌+茶歇`、`沙滩+度假`、`海底+潜水`。
-- 五层物品池：`core_items`、`support_items`、`visible_small_items`、`conditional_items`、`blocked_or_risky`。
+- 四类内容池目标：`core_items`、`support_items`、`visible_small_items`、`scene_expansion_items`。
 - 兼容现有四栏：短期仍映射回 `large` / `medium` / `small` / `hanging`，不破坏现有编号输入和 UI。
 - 三个试点类别：`桌面+学习`、`海底+潜水`、`公园+野餐`。
-- 质量目标：人工抽样 30 次时，明显不适合项低于 10%，且 `blocked_or_risky` 不进入默认输出。
+- 质量目标：人工抽样 30 次时，明显不适合项低于 10%，且风险内容不进入默认输出。
 - Readiness 结果：`readiness-report.md` 评分 92.75 / 100，Gate 为 Pass；`issue-export-report.md` 已给出 4 个可手动创建的 Epic issue。
-- 验证覆盖：`Game content extraction/test_blind_box_content_model.py` 检查五层 schema、风险池零泄漏、试点盒四栏兼容、旧输入覆盖、物品状态风险过滤和非物品 forbidden patterns。
-- 物品化补丁：`.workflow/.spec/SPEC-2026-04-29-blind-box-pool-itemization-fix/` 已生成，Readiness 评分 95.25 / 100；实现会话为 `.workflow/active/WFS-blind-box-pool-itemization-fix/`，已替换三类试点条件池 / 风险池并补充 forbidden patterns 测试。
+- 当前测试覆盖：`Game content extraction/test_blind_box_content_model.py` 检查四池 schema、旧条件/风险池移除、试点盒四栏兼容、旧输入覆盖、物品状态风险过滤和 `blocked_patterns`。
+- 最新规格：`.workflow/.spec/SPEC-2026-04-29-game-content-extraction-four-pool-refactor/` 已生成，Readiness 评分 96.5 / 100；执行会话为 `.workflow/active/WFS-game-content-four-pool-refactor/`。
 
 当前桌面工具发布版为 `v0.1.4`，安装包为 `GameContentExtraction-Setup-v0.1.4.exe`。
 
