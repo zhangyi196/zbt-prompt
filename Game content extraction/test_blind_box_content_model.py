@@ -84,6 +84,13 @@ class BlindBoxContentModelTests(unittest.TestCase):
                 self.assertGreaterEqual(len(bundle["core_items"]), 6)
                 self.assertGreaterEqual(len(bundle["support_items"]), 6)
 
+    def test_all_scene_bundles_expand_each_pool_to_fifty_unique_items(self):
+        for scene_name, bundle in BLIND_BOX_ITEM_POOL_BUNDLES.items():
+            for key in FOUR_POOL_KEYS:
+                with self.subTest(scene_name=scene_name, pool=key):
+                    self.assertEqual(len(bundle[key]), 50)
+                    self.assertEqual(len(bundle[key]), len(set(bundle[key])))
+
     def test_runtime_entries_keep_four_bucket_contract_for_all_twenty_boxes(self):
         self.assertEqual(
             set(BLIND_BOXES),
