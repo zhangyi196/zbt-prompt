@@ -1,0 +1,36 @@
+{
+  "session_id": "WFS-game-content-blind-box-library-refactor",
+  "status": "ready_for_review",
+  "source_spec": ".workflow/.spec/SPEC-2026-04-29-game-content-extraction-blind-box-library-refactor/",
+  "task_ids": [
+    "IMPL-1",
+    "IMPL-2",
+    "IMPL-3",
+    "IMPL-4",
+    "IMPL-5"
+  ],
+  "recommended_execution": "sequential",
+  "complexity": "moderate",
+  "conflict_risk": "medium",
+  "shared_context": {
+    "critical_files": [
+      "Game content extraction/data/blind_boxes.py",
+      "Game content extraction/内容抽取.py",
+      "Game content extraction/data/item_states.py",
+      "Game content extraction/test_*.py",
+      "agents.md",
+      "README.md",
+      "Game content extraction/CLAUDE.md",
+      "Game content extraction/README.md",
+      ".gitignore"
+    ],
+    "hard_constraints": [
+      "Keep comma-based input syntax.",
+      "Keep large/medium/small/hanging runtime output shape.",
+      "Do not migrate draw_history.json.",
+      "Do not introduce web, database, service, or new UI dependency.",
+      "Limit MVP content to 桌面+学习, 海底+潜水, 公园+野餐.",
+      "Do not allow blocked_or_risky into default output."
+    ]
+  }
+}

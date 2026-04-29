@@ -1,0 +1,24 @@
+{
+  "id": "IMPL-1",
+  "title": "Add blind-box content model and compatibility mapping contract",
+  "description": "Introduce the static content-model layer for blind-box item authoring: 20 scene entries, five-layer bundle schema, and a deterministic mapping contract back to legacy runtime buckets. Prefer a small data/helper module or clearly isolated section in blind_boxes.py so the existing BLIND_BOXES consumer contract remains intact.",
+  "depends_on": [],
+  "files": [
+    "Game content extraction/data/blind_boxes.py",
+    "Game content extraction/data/__init__.py"
+  ],
+  "convergence": [
+    "20 scene entries are represented with stable Chinese names and pilot markers.",
+    "Five-layer keys are defined: core_items, support_items, visible_small_items, conditional_items, blocked_or_risky.",
+    "Compatibility mapping produces legacy keys large, medium, small, hanging.",
+    "blocked_or_risky has no default mapping target.",
+    "No UI or history behavior changes are introduced."
+  ],
+  "meta": {
+    "type": "data-model",
+    "agent": "code_developer",
+    "estimated_size": "M",
+    "source_epic": "EPIC-001"
+  },
+  "status": "completed"
+}

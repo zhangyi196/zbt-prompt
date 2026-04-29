@@ -1,0 +1,138 @@
+{
+  "session_id": "BS-2026-04-29-盲盒条件风险池物品化修正",
+  "topic": "修正盲盒物品库 conditional_items 与 blocked_or_risky 的内容定义",
+  "created_at": "2026-04-29T00:00:00+08:00",
+  "problem_statement": "当前三类试点的 conditional_items 过小，blocked_or_risky 混入痕迹、阴影、气泡、边线等非物品内容。用户明确要求这些池层也必须产出具体物品，而不是不可用的视觉现象。",
+  "scope_items": [
+    {
+      "title": "重写 conditional_items 为条件启用的完整可见物品",
+      "description": "替换 桌面+学习、海底+潜水、公园+野餐 的 conditional_items，删除小标签、小贴片、小卡扣、小边缘附属物，改为中等以上体量、可单独圈选、只因场景前提才条件启用的具体物品。",
+      "priority": "high",
+      "estimated_complexity": "low",
+      "target_file": "Game content extraction/data/blind_boxes.py"
+    },
+    {
+      "title": "重写 blocked_or_risky 为具体风险物池",
+      "description": "blocked_or_risky 只保留具体风险物，如透明/反光/发光物、动物本体、细绳流苏类具体物品；移除纸张边缘折线、微小擦痕、细小气泡串、漂浮细海草丝、海底阴影斑、边线、微小污点等非物品内容。",
+      "priority": "high",
+      "estimated_complexity": "low",
+      "target_file": "Game content extraction/data/blind_boxes.py"
+    },
+    {
+      "title": "新增 forbidden_patterns 校验",
+      "description": "在测试中增加非物品禁词清单，确保 forbidden_patterns 不出现在 core_items、support_items、visible_small_items、conditional_items、blocked_or_risky 任一池层。",
+      "priority": "high",
+      "estimated_complexity": "low",
+      "target_file": "Game content extraction/test_blind_box_content_model.py"
+    },
+    {
+      "title": "同步池层定义文档",
+      "description": "更新 agents.md、README.md、Game content extraction/CLAUDE.md、Game content extraction/README.md，明确五层池都必须是具体物品；非物品内容只作为禁用模式，不作为池条目。",
+      "priority": "medium",
+      "estimated_complexity": "low",
+      "target_files": [
+        "agents.md",
+        "README.md",
+        "Game content extraction/CLAUDE.md",
+        "Game content extraction/README.md",
+        ".gitignore"
+      ]
+    }
+  ],
+  "acceptance_criteria": [
+    "三类试点的 conditional_items 不再包含标签、卡片、扣件、贴片、边缘小附属物等低价值小件。",
+    "三类试点的 blocked_or_risky 不再包含折线、擦痕、气泡、阴影、边线、碎叶点、石子、微小污点等非物品内容。",
+    "所有五层池条目都是具体物品或具体物品组。",
+    "新增测试能阻止 forbidden_patterns 出现在任何五层池。",
+    "现有 15 / 16 / 17 试点盒仍映射回 large / medium / small / hanging，且 blocked_or_risky 不进入默认四栏。",
+    "完整 unittest 通过。"
+  ],
+  "recommended_replacement_examples": {
+    "桌面+学习": {
+      "conditional_items": [
+        "桌面显示器支架",
+        "桌边文件挂篮",
+        "墙面课程白板",
+        "立式书包挂架",
+        "桌下移动书箱",
+        "书桌洞洞板",
+        "台面阅读灯罩盒",
+        "桌侧耳机挂架"
+      ],
+      "blocked_or_risky": [
+        "透明亚克力尺",
+        "反光金属书签",
+        "发光台灯",
+        "细绳书签",
+        "流苏书签",
+        "玻璃墨水瓶",
+        "镜面笔筒",
+        "透明文件夹"
+      ]
+    },
+    "海底+潜水": {
+      "conditional_items": [
+        "潜水装备挂架",
+        "水下标记浮标",
+        "海底采样箱",
+        "潜水绳收纳架",
+        "氧气罐固定架",
+        "水下工具背板",
+        "潜水相机支架",
+        "防水装备吊箱"
+      ],
+      "blocked_or_risky": [
+        "鱼群本体",
+        "海龟本体",
+        "透明水母",
+        "发光珊瑚灯",
+        "反光贝壳盘",
+        "玻璃漂流瓶",
+        "细绳贝壳串",
+        "流苏海草挂饰"
+      ]
+    },
+    "公园+野餐": {
+      "conditional_items": [
+        "折叠野餐椅",
+        "遮阳伞底座",
+        "野餐推车",
+        "户外置物架",
+        "野餐垫收纳筒",
+        "便携垃圾袋架",
+        "折叠餐桌",
+        "户外饮料桶"
+      ],
+      "blocked_or_risky": [
+        "透明塑料杯",
+        "反光金属餐刀",
+        "细绳挂旗",
+        "流苏餐垫",
+        "玻璃饮料瓶",
+        "昆虫本体",
+        "远处飞鸟",
+        "镜面保温壶"
+      ]
+    }
+  },
+  "forbidden_patterns": [
+    "折线",
+    "擦痕",
+    "气泡",
+    "阴影",
+    "高光",
+    "边线",
+    "碎叶点",
+    "细小石子",
+    "微小污点",
+    "微小沙粒",
+    "漂浮细",
+    "边缘"
+  ],
+  "recommended_workflow": "workflow-plan or direct scoped edit",
+  "source_artifacts": [
+    ".workflow/.brainstorm/BS-2026-04-29-盲盒条件风险池物品化修正/brainstorm.md",
+    ".workflow/.brainstorm/BS-2026-04-29-盲盒条件风险池物品化修正/synthesis.json",
+    ".workflow/.brainstorm/BS-2026-04-29-盲盒条件风险池物品化修正/ideas/pool-rule-rewrite.md"
+  ]
+}

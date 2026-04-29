@@ -18,6 +18,10 @@
 
 每个类别下建议按 `core_items`、`support_items`、`visible_small_items`、`conditional_items`、`blocked_or_risky` 五层维护；落地时可先映射回现有大型 / 中型 / 小型 / 悬挂四栏。完整头脑风暴见 `.workflow/.brainstorm/BS-2026-04-29-优化game-content-extraction盲盒物品内容/`，规格包见 `.workflow/.spec/SPEC-2026-04-29-game-content-extraction-blind-box-library-refactor/`。
 
+当前已先落地三类试点：15 `桌面+学习`、16 `海底+潜水`、17 `公园+野餐`。数据层新增 20 类入口清单、三类五层池和五层到四栏兼容映射；旧逗号输入、四栏输出和历史语义保持不变。
+
+条件池 / 风险池物品化修正规格见 `.workflow/.spec/SPEC-2026-04-29-blind-box-pool-itemization-fix/`。该补丁规格要求五层池全部只写具体物品或物品组；`conditional_items` 不再写标签、贴片、扣件等小附属物，`blocked_or_risky` 不再写折线、擦痕、气泡、阴影、边线、微小颗粒等非物品内容。
+
 ## 提示词维护要点
 
 - `组图 23.md` 的 List 2 可以追求边角和边缘覆盖，但不得为了填点新增无法容纳的物体。
@@ -46,7 +50,7 @@
 
 ## 盲盒物品库重构 Spec 状态
 
-`Game content extraction` 的盲盒物品库重构已完成 spec-generator 全链路规格包，工作目录位于 `.workflow/.spec/SPEC-2026-04-29-game-content-extraction-blind-box-library-refactor/`。当前确定的方向不是直接改代码，而是先固定内容模型：
+`Game content extraction` 的盲盒物品库重构已完成 spec-generator 全链路规格包，工作目录位于 `.workflow/.spec/SPEC-2026-04-29-game-content-extraction-blind-box-library-refactor/`。当前已按 MVP 先落地三类试点，继续保持旧运行时兼容：
 
 - 20 个 `常见场景+用途` 入口：如 `桌面+学习`、`餐桌+茶歇`、`沙滩+度假`、`海底+潜水`。
 - 五层物品池：`core_items`、`support_items`、`visible_small_items`、`conditional_items`、`blocked_or_risky`。
@@ -54,6 +58,8 @@
 - 三个试点类别：`桌面+学习`、`海底+潜水`、`公园+野餐`。
 - 质量目标：人工抽样 30 次时，明显不适合项低于 10%，且 `blocked_or_risky` 不进入默认输出。
 - Readiness 结果：`readiness-report.md` 评分 92.75 / 100，Gate 为 Pass；`issue-export-report.md` 已给出 4 个可手动创建的 Epic issue。
+- 验证覆盖：`Game content extraction/test_blind_box_content_model.py` 检查五层 schema、风险池零泄漏、试点盒四栏兼容、旧输入覆盖和物品状态风险过滤。
+- 物品化补丁：`.workflow/.spec/SPEC-2026-04-29-blind-box-pool-itemization-fix/` 已生成，Readiness 评分 95.25 / 100，后续实现应先替换三类试点条件池 / 风险池，再补 forbidden patterns 测试。
 
 当前桌面工具发布版为 `v0.1.4`，安装包为 `GameContentExtraction-Setup-v0.1.4.exe`。
 

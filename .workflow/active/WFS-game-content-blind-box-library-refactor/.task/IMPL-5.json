@@ -1,0 +1,30 @@
+{
+  "id": "IMPL-5",
+  "title": "Sync docs and review workflow artifacts",
+  "description": "Update required repository documentation after implementation so future agents and users understand the final model, pilot categories, validation commands, and deferred work. Keep workflow/spec artifacts trackable and do not ignore accepted planning outputs.",
+  "depends_on": [
+    "IMPL-4"
+  ],
+  "files": [
+    "agents.md",
+    "README.md",
+    "Game content extraction/CLAUDE.md",
+    "Game content extraction/README.md",
+    ".gitignore",
+    ".workflow/active/WFS-game-content-blind-box-library-refactor/TODO_LIST.md"
+  ],
+  "convergence": [
+    "agents.md, README.md, Game content extraction/CLAUDE.md and .gitignore are synchronized per project rule.",
+    "Game content extraction/README.md reflects any user-facing behavior or data model changes.",
+    "Deferred scope is explicit: no full 20-category rewrite, no UI redesign, no history migration.",
+    "TODO_LIST.md reflects completed implementation tasks if executed.",
+    "git status is reviewed so unrelated changes are not staged or reverted."
+  ],
+  "meta": {
+    "type": "docs",
+    "agent": "code_developer",
+    "estimated_size": "S",
+    "source_epic": "EPIC-004"
+  },
+  "status": "completed"
+}

@@ -1,0 +1,35 @@
+{
+  "perspective": "systematic",
+  "ideas": [
+    {
+      "title": "五层池职责重定义",
+      "description": "core/support/visible_small/conditional/blocked 五层都必须是物品池；非物品禁用内容独立为 validation.reject_patterns。",
+      "novelty": 2,
+      "feasibility": 4,
+      "rationale": "从数据模型上防止语义污染。"
+    },
+    {
+      "title": "conditional_items 的进入条件",
+      "description": "必须同时满足：具体物品、中等以上可见体量、可单独圈选、需要场景前提才合理、前提不写进物品名主体。",
+      "novelty": 2,
+      "feasibility": 5,
+      "rationale": "把条件池从“小附属件”改为“条件启用的完整物品”。"
+    },
+    {
+      "title": "blocked_or_risky 的进入条件",
+      "description": "必须同时满足：具体物品、场景相关、理论上常见、但因透明反光/发光/动物本体/细绳流苏/安全放置不稳定而禁用。",
+      "novelty": 2,
+      "feasibility": 5,
+      "rationale": "风险池只用于记录容易误放进默认池的具体物品。"
+    }
+  ],
+  "key_findings": [
+    "当前模型缺少“非物品禁用模式”这个数据位置，导致 blocked_or_risky 被拿来塞不可用现象。",
+    "conditional_items 应该映射到 hanging 或未来条件输出，但它的条目质量必须不低于 medium。"
+  ],
+  "recommended_schema_rule": {
+    "item_pool_entry": "必须是名词性具体物品或物品组",
+    "reject_pattern": "可以是痕迹、现象、视觉变化、位置边线等禁用表达",
+    "blocked_object": "必须是具体物品，但默认禁用"
+  }
+}

@@ -48,6 +48,7 @@ class BlindBoxExtractor:
         # Static content lives in data/ so this file can focus on logic.
         self.item_state_groups = ITEM_STATE_GROUPS
         self.item_state_group_weights = ITEM_STATE_GROUP_WEIGHTS
+        self.blocked_item_state_keywords = ("半透明", "高光反光", "带有光泽")
 
 
         self.category_info = [
@@ -1305,7 +1306,26 @@ class BlindBoxExtractor:
         group_names = list(self.item_state_groups)
         group_weights = [self.item_state_group_weights[name] for name in group_names]
         selected_group = random.choices(group_names, weights=group_weights, k=1)[0]
-        return random.choice(self.item_state_groups[selected_group])
+        safe_states = [
+            state for state in self.item_state_groups[selected_group]
+            if self._is_safe_item_state(state)
+        ]
+        if not safe_states:
+            safe_states = [
+                state
+                for states in self.item_state_groups.values()
+                for state in states
+                if self._is_safe_item_state(state)
+            ]
+        return random.choice(safe_states)
+
+    def _is_safe_item_state(self, state):
+        blocked_keywords = getattr(
+            self,
+            "blocked_item_state_keywords",
+            ("半透明", "高光反光", "带有光泽"),
+        )
+        return not any(keyword in state for keyword in blocked_keywords)
     
     def _format_item(self, item, use_state):
         if use_state:

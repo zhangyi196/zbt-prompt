@@ -1,0 +1,34 @@
+{
+  "resolved_at": "2026-04-29T00:00:00+08:00",
+  "conflicts": [
+    {
+      "area": "Game content extraction/data/blind_boxes.py",
+      "severity": "medium",
+      "description": "The file is a large legacy static dictionary. Rewriting all categories at once would create a broad review surface and make regressions hard to isolate.",
+      "strategy": "Pilot-first: add or adapt only the three MVP pilot categories and keep the legacy BLIND_BOXES runtime view intact.",
+      "impact": "Implementation becomes smaller and easier to verify; full 20-category content migration is deferred."
+    },
+    {
+      "area": "Game content extraction/内容抽取.py",
+      "severity": "medium",
+      "description": "Runtime input labels, extraction buckets and history keys are coupled to large/medium/small/hanging.",
+      "strategy": "Introduce compatibility mapping or generated legacy view before changing runtime UI behavior; keep category_info and input parser stable.",
+      "impact": "Users keep current comma syntax and history behavior while new content model can be tested."
+    },
+    {
+      "area": "Game content extraction/data/item_states.py",
+      "severity": "medium",
+      "description": "State words include transparent/reflection wording that conflicts with the new risk isolation rules.",
+      "strategy": "Treat risky state handling as a validation/test concern in MVP; do not relax default blind-box output rules.",
+      "impact": "Prevents accidental reintroduction of rejected visual qualities."
+    },
+    {
+      "area": ".workflow and documentation files",
+      "severity": "low",
+      "description": "Recent brainstorm/spec artifacts and documentation updates are intentionally uncommitted.",
+      "strategy": "Plan tasks must explicitly preserve existing workflow/spec artifacts and sync docs only in implementation tasks that touch behavior or data.",
+      "impact": "Avoids overwriting planning context while satisfying repository doc-sync rules."
+    }
+  ],
+  "summary": "Proceed with phased implementation: schema and mapping first, pilot data second, validation third, documentation last. Keep runtime compatibility as a hard constraint."
+}

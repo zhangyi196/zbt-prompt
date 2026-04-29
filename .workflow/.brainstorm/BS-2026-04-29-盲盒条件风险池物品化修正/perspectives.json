@@ -1,0 +1,20 @@
+{
+  "session_id": "BS-2026-04-29-盲盒条件风险池物品化修正",
+  "topic": "conditional_items 与 blocked_or_risky 物品化修正",
+  "synthesis": {
+    "convergent_themes": [
+      "所有五层池条目都必须是具体物品或具体物品组。",
+      "conditional_items 当前太小，应升级为中等以上体量、可单独圈选的条件启用物品。",
+      "blocked_or_risky 不应收纳折线、擦痕、阴影、气泡、碎叶点等非物品内容。",
+      "非物品禁用内容应进入独立 reject_patterns / forbidden_terms 校验清单。"
+    ],
+    "conflicting_views": [
+      "是否保留 blocked_or_risky 字段名：短期保留兼容文档和测试，长期可考虑改名为 blocked_objects。"
+    ],
+    "top_ideas": [
+      "重定义 conditional_items 为 conditional_visible_items：条件启用、但仍是完整可见物。",
+      "重定义 blocked_or_risky 为具体风险物池，禁止非物品现象。",
+      "新增 forbidden_patterns 校验清单，阻止痕迹/阴影/边线进入任何物品池。"
+    ]
+  }
+}

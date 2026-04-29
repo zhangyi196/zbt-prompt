@@ -1,0 +1,95 @@
+{
+  "critical_files": [
+    "Game content extraction/data/blind_boxes.py",
+    "Game content extraction/内容抽取.py",
+    "Game content extraction/data/item_states.py",
+    "Game content extraction/test_clear_input_behavior.py",
+    "Game content extraction/test_expression_enhancement.py",
+    "Game content extraction/test_update_check.py",
+    "agents.md",
+    "README.md",
+    "Game content extraction/CLAUDE.md",
+    "Game content extraction/README.md",
+    ".gitignore"
+  ],
+  "patterns": [
+    "Blind-box runtime currently imports BLIND_BOXES as a Python dict keyed by numeric box id.",
+    "Each blind-box entry exposes legacy runtime buckets: name, large, medium, small, hanging.",
+    "Input overrides are label-driven from category_info: 大型物品, 中型物品, 散落小型物品, 悬挂物品.",
+    "History keys are generated as box:{box_id}:{category_key} and stored under draw_history.json item_pools.",
+    "Item state text is applied at formatting time by _format_item when 启用物品状态 is checked.",
+    "Existing tests use importlib to load 内容抽取.py and lightweight fake objects for logic-level tests."
+  ],
+  "dependencies": [
+    "No new third-party dependencies should be introduced.",
+    "Runtime must remain local tkinter and Python stdlib.",
+    "New data structures must be consumable without breaking BLIND_BOXES legacy shape.",
+    "Spec source: .workflow/.spec/SPEC-2026-04-29-game-content-extraction-blind-box-library-refactor/"
+  ],
+  "integration_points": [
+    {
+      "module": "data_model",
+      "files": [
+        "Game content extraction/data/blind_boxes.py"
+      ],
+      "notes": "Add pilot five-layer content data and keep or generate legacy four-bucket view."
+    },
+    {
+      "module": "runtime_compatibility",
+      "files": [
+        "Game content extraction/内容抽取.py"
+      ],
+      "notes": "Keep category_info, input override labels, draw_history item_pools and output behavior stable."
+    },
+    {
+      "module": "risk_filtering",
+      "files": [
+        "Game content extraction/data/item_states.py",
+        "Game content extraction/data/blind_boxes.py"
+      ],
+      "notes": "Risky state words include 半透明的 and 带有高光反光的; default blind-box outputs should not relax these risks."
+    },
+    {
+      "module": "tests",
+      "files": [
+        "Game content extraction/test_*.py"
+      ],
+      "notes": "Add data-schema and compatibility tests using the existing importlib + unittest style."
+    },
+    {
+      "module": "docs",
+      "files": [
+        "agents.md",
+        "README.md",
+        "Game content extraction/CLAUDE.md",
+        "Game content extraction/README.md",
+        ".gitignore"
+      ],
+      "notes": "Project rule requires doc sync after implementation tasks."
+    }
+  ],
+  "conflict_risk": "medium",
+  "conflict_areas": [
+    "blind_boxes.py is large static data; direct full rewrite would be high-review-risk.",
+    "Runtime and history are coupled to numeric box ids plus large/medium/small/hanging keys.",
+    "Current uncommitted workflow/spec documentation artifacts should not be overwritten.",
+    "item_states.py contains risky transparent/reflection wording that conflicts with the new default-output quality gate."
+  ],
+  "constraints": [
+    "Planning only; do not execute implementation in this workflow-plan step.",
+    "Do not break comma-based input syntax or labels for existing category overrides.",
+    "Do not migrate draw_history.json or mix item_pools with animal_pools/expression_pools.",
+    "Do not introduce Web, database, service, or third-party UI dependencies.",
+    "MVP implementation should stay limited to pilot categories: 桌面+学习, 海底+潜水, 公园+野餐.",
+    "blocked_or_risky must not enter default large/medium/small/hanging output.",
+    "After implementation, sync agents.md, Game content extraction/CLAUDE.md, README.md and .gitignore."
+  ],
+  "recommended_modules": [
+    "data_model",
+    "runtime_compatibility",
+    "pilot_content",
+    "validation_tests",
+    "documentation_sync"
+  ],
+  "source_spec": ".workflow/.spec/SPEC-2026-04-29-game-content-extraction-blind-box-library-refactor/"
+}

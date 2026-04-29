@@ -1,0 +1,30 @@
+{
+  "id": "IMPL-4",
+  "title": "Add validation tests for schema, risk leakage and compatibility",
+  "description": "Add focused unittest coverage for the new blind-box content model and legacy compatibility. Follow the existing importlib-based test style in Game content extraction/test_*.py and avoid UI automation.",
+  "depends_on": [
+    "IMPL-1",
+    "IMPL-2",
+    "IMPL-3"
+  ],
+  "files": [
+    "Game content extraction/test_blind_box_content_model.py",
+    "Game content extraction/test_clear_input_behavior.py",
+    "Game content extraction/data/blind_boxes.py",
+    "Game content extraction/内容抽取.py"
+  ],
+  "convergence": [
+    "Tests assert five-layer schema completeness for pilot categories.",
+    "Tests assert blocked_or_risky entries do not appear in large/medium/small/hanging.",
+    "Tests assert legacy BLIND_BOXES entries keep name, large, medium, small, hanging.",
+    "Tests assert old input override labels still parse.",
+    "python -B -m unittest discover -s 'Game content extraction' -p 'test_*.py' passes."
+  ],
+  "meta": {
+    "type": "tests",
+    "agent": "tdd_developer",
+    "estimated_size": "M",
+    "source_epic": "EPIC-004"
+  },
+  "status": "completed"
+}

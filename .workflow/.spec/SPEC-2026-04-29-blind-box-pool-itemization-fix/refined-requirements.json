@@ -1,0 +1,130 @@
+{
+  "session_id": "SPEC-2026-04-29-blind-box-pool-itemization-fix",
+  "phase": "1.5",
+  "generated_at": "2026-04-29T00:00:00+08:00",
+  "source": "brainstorm-handoff",
+  "discussion_rounds": 1,
+  "clarified_problem_statement": "The existing pilot blind-box content correction introduced conditional and blocked pools, but those pools contain too many small attachments and non-object visual phenomena. The specification must require every item-pool entry to be a concrete object or object group, and move non-object forbidden expressions into validation-only patterns.",
+  "confirmed_target_users": [
+    {
+      "name": "内容维护者",
+      "needs": [
+        "清楚知道每个池层只能写具体物品",
+        "有可测试的 forbidden_patterns 防止误写非物品"
+      ],
+      "pain_points": [
+        "风险池容易被当成不可用词垃圾桶",
+        "条件池容易写成小标签和附属关系"
+      ]
+    },
+    {
+      "name": "工具使用者",
+      "needs": [
+        "抽取结果和备选内容都能对应真实可见物品",
+        "不再看到折线、擦痕、阴影、气泡等不可用内容"
+      ],
+      "pain_points": [
+        "非物品内容不能用于游戏差异点",
+        "过小的条件项无法形成有效画面内容"
+      ]
+    }
+  ],
+  "confirmed_domain": "Game content extraction static blind-box item library quality patch",
+  "confirmed_features": [
+    {
+      "name": "conditional_items 物品化",
+      "description": "三类试点的 conditional_items 必须替换为中等以上体量、可单独圈选、只因场景前提才启用的完整具体物品。",
+      "acceptance_criteria": [
+        "不包含标签、卡片、扣件、贴片、边缘小附属物",
+        "每个条目都是独立物品或物品组"
+      ],
+      "edge_cases": [
+        "带有场景关系的条目可以保留，但关系不能掩盖物品本体太小的问题"
+      ],
+      "priority": "must"
+    },
+    {
+      "name": "blocked_or_risky 具体风险物约束",
+      "description": "blocked_or_risky 只保留具体但默认禁用的风险物品，不再存放视觉现象或痕迹。",
+      "acceptance_criteria": [
+        "不包含折线、擦痕、气泡、阴影、边线、碎叶点、微小污点等非物品",
+        "保留透明、反光、发光、动物本体、细绳流苏等具体风险物"
+      ],
+      "edge_cases": [
+        "动物本体是具体对象，但仍属于 blocked_or_risky，而不是 forbidden_patterns"
+      ],
+      "priority": "must"
+    },
+    {
+      "name": "forbidden_patterns 校验",
+      "description": "新增验证清单，禁止非物品模式进入任何五层物品池。",
+      "acceptance_criteria": [
+        "测试覆盖所有五层池",
+        "测试覆盖三类试点",
+        "完整 unittest 通过"
+      ],
+      "edge_cases": [
+        "关键词如 边缘 可能误伤部分合法物品，需要在实现时谨慎选择或细化规则"
+      ],
+      "priority": "must"
+    },
+    {
+      "name": "文档同步",
+      "description": "同步项目文档，明确五层池都必须是具体物品，非物品内容只作为禁用模式或测试规则。",
+      "acceptance_criteria": [
+        "更新 agents.md、README.md、Game content extraction/CLAUDE.md、Game content extraction/README.md",
+        ".gitignore 保持 workflow 输出可跟踪策略"
+      ],
+      "edge_cases": [],
+      "priority": "should"
+    }
+  ],
+  "non_functional_requirements": [
+    {
+      "type": "Reliability",
+      "details": "Validation must prevent recurrence of non-object pool entries.",
+      "measurable_criteria": "Unit tests fail when forbidden patterns appear in any pilot item pool."
+    },
+    {
+      "type": "Compatibility",
+      "details": "The correction must keep pilot box IDs and legacy runtime buckets stable.",
+      "measurable_criteria": "Boxes 15, 16, and 17 still expose name/large/medium/small/hanging."
+    }
+  ],
+  "boundary_conditions": {
+    "in_scope": [
+      "Pilot boxes 15, 16, 17",
+      "conditional_items and blocked_or_risky content replacement",
+      "forbidden pattern tests",
+      "documentation sync"
+    ],
+    "out_of_scope": [
+      "Full 20-category rewrite",
+      "Runtime UI changes",
+      "Field renaming from blocked_or_risky to blocked_objects",
+      "draw_history migration",
+      "Release packaging"
+    ],
+    "constraints": [
+      "All five pools contain concrete objects only.",
+      "Non-object forbidden expressions are validation data, not item pool entries."
+    ]
+  },
+  "integration_points": [
+    "Game content extraction/data/blind_boxes.py",
+    "Game content extraction/test_blind_box_content_model.py",
+    "Project documentation files"
+  ],
+  "key_assumptions": [
+    "The current field names can remain for this patch if their semantics are clarified.",
+    "The user wants a concrete object library, not a list of visual difference phenomena."
+  ],
+  "discussion_log": [
+    {
+      "round": 1,
+      "agent_prompt": "Brainstorm and clarify failures in conditional_items and blocked_or_risky.",
+      "user_response": "conditional_items 太小，blocked_or_risky 生成非物品现象；需要具体物品。",
+      "timestamp": "2026-04-29T00:00:00+08:00"
+    }
+  ]
+}

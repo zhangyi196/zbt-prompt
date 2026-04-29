@@ -1,0 +1,36 @@
+{
+  "perspective": "creative",
+  "ideas": [
+    {
+      "title": "把 conditional_items 改成“条件大物/条件主物”",
+      "description": "不再写标签、夹片、卡扣，而写只有在特定承载面出现时才合理的大件具体物品，例如桌面显示器支架、潜水装备挂架、折叠野餐椅。",
+      "novelty": 3,
+      "feasibility": 5,
+      "rationale": "保留条件语义，但把可用性拉回游戏差异点需要的可见体量。"
+    },
+    {
+      "title": "风险池只保留“诱人但禁用的具体物品”",
+      "description": "blocked_or_risky 只写具体物品，例如透明水杯、玻璃墨水瓶、发光台灯、反光餐刀；微小痕迹和阴影另列 forbidden_patterns。",
+      "novelty": 2,
+      "feasibility": 5,
+      "rationale": "风险池仍有审查价值，但不再混入非物品。"
+    },
+    {
+      "title": "新增 reject_patterns 作为反向校验清单",
+      "description": "把纸张边缘折线、微小擦痕、细小气泡串、海底阴影斑等放进独立禁用模式，用测试阻止它们进入任何五层物品池。",
+      "novelty": 3,
+      "feasibility": 4,
+      "rationale": "把“不可用原因”从“物品内容”里剥离出来。"
+    }
+  ],
+  "key_findings": [
+    "用户需要的是具体物品，不是差异变化描述。",
+    "条件池可以是高价值池，但必须从“附属小件”升级为“有场景前提的可见物品”。"
+  ],
+  "challenged_assumptions": [
+    {
+      "assumption": "blocked_or_risky 可以收纳所有不该默认抽的内容",
+      "challenge_result": "不成立；它只能收纳具体风险物，非物品应进入禁用模式。"
+    }
+  ]
+}

@@ -1276,3 +1276,157 @@ BLIND_BOXES = {
         ]
     }
 }
+
+
+BLIND_BOX_SCENE_ENTRIES = [
+    {"id": 1, "name_zh": "桌面+学习", "scene_hint": "书桌、文具、学习收纳、书本周边", "legacy_aliases": ["阅读休闲"], "pilot": True},
+    {"id": 2, "name_zh": "餐桌+茶歇", "scene_hint": "餐具、甜点配套、茶歇小物", "legacy_aliases": ["茶歇咖啡"], "pilot": False},
+    {"id": 3, "name_zh": "厨房+烘焙", "scene_hint": "烘焙工具、厨房操作台、食材承载物", "legacy_aliases": ["烘焙厨房"], "pilot": False},
+    {"id": 4, "name_zh": "卧室+梳妆", "scene_hint": "梳妆台、床边收纳、个人整理物", "legacy_aliases": ["梳妆护理"], "pilot": False},
+    {"id": 5, "name_zh": "浴室+洗护", "scene_hint": "洗护用品、台面收纳、毛巾配套", "legacy_aliases": [], "pilot": False},
+    {"id": 6, "name_zh": "客厅+装饰", "scene_hint": "客厅陈设、软装点缀、台面装饰", "legacy_aliases": ["家居装饰"], "pilot": False},
+    {"id": 7, "name_zh": "儿童房+玩具", "scene_hint": "儿童场景、玩具收纳、学习玩乐混合物", "legacy_aliases": [], "pilot": False},
+    {"id": 8, "name_zh": "宠物+日常", "scene_hint": "宠物用品、喂养配套、清洁收纳", "legacy_aliases": ["宠物角"], "pilot": False},
+    {"id": 9, "name_zh": "庭院+园艺", "scene_hint": "花盆、园艺工具、户外整理物", "legacy_aliases": ["门廊庭院"], "pilot": False},
+    {"id": 10, "name_zh": "门口+雨具", "scene_hint": "门垫、雨伞架、鞋具与出门配套", "legacy_aliases": ["雨天出行"], "pilot": False},
+    {"id": 11, "name_zh": "沙滩+度假", "scene_hint": "海边用品、防晒承载物、度假小件", "legacy_aliases": ["海边度假"], "pilot": False},
+    {"id": 12, "name_zh": "公园+野餐", "scene_hint": "野餐垫、餐盒、便携食物承载物", "legacy_aliases": [], "pilot": True},
+    {"id": 13, "name_zh": "营地+露营", "scene_hint": "露营桌面、便携装备、营地收纳", "legacy_aliases": [], "pilot": False},
+    {"id": 14, "name_zh": "街道+出行", "scene_hint": "通勤随身物、街边停靠点配套", "legacy_aliases": [], "pilot": False},
+    {"id": 15, "name_zh": "运动场+装备", "scene_hint": "球场或健身周边装备、收纳与承载物", "legacy_aliases": [], "pilot": False},
+    {"id": 16, "name_zh": "海底+潜水", "scene_hint": "潜水装备、海底可见器物、非动物本体", "legacy_aliases": ["海底宝藏与海洋植物"], "pilot": True},
+    {"id": 17, "name_zh": "节日+礼物", "scene_hint": "节庆包装、礼物承载、陈列装饰", "legacy_aliases": ["节庆装饰"], "pilot": False},
+    {"id": 18, "name_zh": "手作+缝纫", "scene_hint": "缝纫工具、线盒、布面承载物", "legacy_aliases": ["缝纫拼布"], "pilot": False},
+    {"id": 19, "name_zh": "手作+编织", "scene_hint": "编织工具、毛线收纳、半成品承载", "legacy_aliases": ["编织手作"], "pilot": False},
+    {"id": 20, "name_zh": "商店+零食", "scene_hint": "零食展示、包装集合、台面陈列", "legacy_aliases": [], "pilot": False},
+]
+
+
+BLIND_BOX_PILOT_BOX_IDS = {
+    "桌面+学习": 15,
+    "海底+潜水": 16,
+    "公园+野餐": 17,
+}
+
+
+BLIND_BOX_ITEM_POOL_BUNDLES = {
+    "桌面+学习": {
+        "core_items": [
+            "木质书立", "翻开的练习册", "硬壳笔记本", "桌面文件架", "双层文具盒",
+            "厚本错题册", "方形便签盒", "桌面收纳托盘", "立式书本架", "竹纹书签盒",
+            "软木课程表板", "桌角计时器", "折页单词卡盒", "木柄削笔器", "台面资料夹",
+            "书桌小白板", "网格文件篮", "硬面速写本", "桌面阅读架", "分格铅笔盒"
+        ],
+        "support_items": [
+            "橡皮收纳盒", "彩色索引贴盒", "金属书签夹", "圆筒笔杯", "直尺套盒",
+            "桌面标签夹", "课程卡片座", "订书机托盘", "便签压纸块", "小号文件夹",
+            "彩铅纸盒", "胶带切割座", "备忘卡片盒", "桌面印章盒", "书页固定夹",
+            "考试标签册", "单词卡扣盒", "作业夹板", "笔帽收纳杯", "错题标签夹"
+        ],
+        "visible_small_items": [
+            "一组彩色回形针盒", "三枚方形橡皮块", "一排索引标签片", "成组铅笔帽盒",
+            "一叠便签纸块", "三张单词卡片", "一组书签夹片", "两枚磁性压纸块",
+            "一排彩色笔套", "成组标签贴片", "三块记号小卡", "一叠迷你资料卡",
+            "两枚圆角尺片", "一组纸夹收纳格", "三枚课程贴纸块"
+        ],
+        "conditional_items": [
+            "夹在书页上的书签带", "挂在桌边的耳机架", "贴在书立侧面的课程卡",
+            "套在笔记本上的标签环", "固定在白板边缘的磁吸卡", "夹在文件架上的姓名牌",
+            "垫在书本下方的防滑垫", "扣在笔杯侧面的橡皮夹"
+        ],
+        "blocked_or_risky": [
+            "透明亚克力尺", "反光金属书签", "发光台灯", "细绳书签", "流苏书签",
+            "桌面高光镜片", "玻璃墨水瓶", "细小铅笔屑", "纸张边缘折线", "微小擦痕"
+        ]
+    },
+    "海底+潜水": {
+        "core_items": [
+            "潜水面罩盒", "黄色脚蹼", "备用氧气罐", "潜水罗盘板", "防水记录板",
+            "水下工具箱", "潜水配重带盒", "防水信号板", "潜水手套盒", "圆形压力表座",
+            "水下探照筒外壳", "潜水浮力背心", "防水样本盒", "海底标记牌", "潜水绳卷轴",
+            "防水收纳箱", "潜水装备托架", "水下测量尺板", "备用呼吸管盒", "潜水安全浮标"
+        ],
+        "support_items": [
+            "防水扣带夹", "备用面罩带", "潜水日志牌", "密封工具盒", "装备编号牌",
+            "圆角配重块", "防水指南卡", "潜水相机托座", "橡胶护腕盒", "水下采样管架",
+            "信号绳收纳盘", "潜水刀鞘", "防水标签夹", "脚蹼扣件盒", "呼吸管固定夹",
+            "浮标连接扣", "潜水手环盒", "装备清单板", "水下标尺卡", "防水密封袋"
+        ],
+        "visible_small_items": [
+            "三枚圆角配重块", "一组防水标签牌", "两只备用扣环盒", "一排装备编号片",
+            "成组密封塞块", "三张防水记录卡", "一组橡胶护垫", "两枚浮标连接扣",
+            "一排圆形压力贴片", "成组采样小管架", "三块防水标记牌", "一组脚蹼扣件",
+            "两枚安全提示牌", "一组密封盒标签", "三块水下标尺片"
+        ],
+        "conditional_items": [
+            "扣在氧气罐上的压力表", "固定在装备箱侧面的编号牌", "绑在浮标底部的安全绳卷",
+            "夹在记录板边缘的防水笔", "套在脚蹼带上的姓名牌", "挂在潜水架上的备用面罩",
+            "贴在样本盒外侧的防水标签", "卡在工具箱内格的潜水刀鞘"
+        ],
+        "blocked_or_risky": [
+            "鱼群本体", "海龟本体", "透明水母", "发光珊瑚", "反光贝壳片",
+            "细小气泡串", "漂浮细海草丝", "海底阴影斑", "水面高光", "微小沙粒"
+        ]
+    },
+    "公园+野餐": {
+        "core_items": [
+            "格纹野餐垫", "双层餐盒", "藤编食物篮", "保温水壶", "折叠餐盘架",
+            "便携餐具盒", "圆形水果盒", "帆布冷藏袋", "野餐托盘", "面包纸袋",
+            "饮料瓶收纳架", "小号折叠桌", "便当分格盒", "餐巾收纳盒", "野餐调味盒",
+            "保鲜盒组合", "杯架托盘", "三明治纸盒", "水果切块盒", "野餐用品箱"
+        ],
+        "support_items": [
+            "餐叉收纳筒", "纸杯套盒", "餐巾压块", "果酱小罐托", "面包夹板",
+            "饮料标签牌", "便携湿巾盒", "小号砧板", "食物签牌座", "餐盘分隔架",
+            "水果叉盒", "杯垫收纳夹", "甜点纸托盒", "餐具束带", "野餐清单卡",
+            "保温袋吊牌", "零食分装盒", "纸袋封口夹", "果盒固定带", "饮料杯托"
+        ],
+        "visible_small_items": [
+            "一组水果叉盒", "三块三明治切块", "一排饮料标签牌", "成组纸杯套",
+            "两只果酱小罐", "一叠餐巾纸块", "三枚食物签牌", "一组杯垫方片",
+            "两盒零食分装块", "一排餐具束带", "三块甜点纸托", "一组封口夹盒",
+            "两枚餐巾压块", "一组水果切块盒", "三张野餐清单卡"
+        ],
+        "conditional_items": [
+            "放在野餐垫角上的餐巾压块", "扣在藤篮把手上的吊牌", "插在餐盒边缘的食物签",
+            "垫在饮料瓶下的杯垫", "夹在纸袋口的封口夹", "套在餐具束上的束带",
+            "贴在保温袋外侧的姓名牌", "卡在折叠桌边的垃圾袋夹"
+        ],
+        "blocked_or_risky": [
+            "草地碎叶点", "地面细小石子", "透明塑料杯", "反光金属餐刀", "细绳挂旗",
+            "风吹纸片边缘", "昆虫本体", "远处飞鸟", "野餐垫边线", "微小污点"
+        ]
+    },
+}
+
+
+def _build_legacy_blind_box_entry(scene_name, bundle):
+    return {
+        "name": scene_name,
+        "large": list(bundle["core_items"]),
+        "medium": list(bundle["support_items"] + bundle["core_items"][:6]),
+        "small": list(bundle["visible_small_items"]),
+        "hanging": list(bundle["conditional_items"]),
+    }
+
+
+BLIND_BOX_COMPATIBILITY_MAPPING = {
+    scene_name: {
+        "box_id": BLIND_BOX_PILOT_BOX_IDS[scene_name],
+        "large_sources": ["core_items"],
+        "medium_sources": ["support_items", "core_items:first_6"],
+        "small_sources": ["visible_small_items"],
+        "hanging_sources": ["conditional_items"],
+        "excluded_sources": ["blocked_or_risky"],
+    }
+    for scene_name in BLIND_BOX_ITEM_POOL_BUNDLES
+}
+
+
+BLIND_BOX_PILOT_ENTRIES = {
+    BLIND_BOX_PILOT_BOX_IDS[scene_name]: _build_legacy_blind_box_entry(scene_name, bundle)
+    for scene_name, bundle in BLIND_BOX_ITEM_POOL_BUNDLES.items()
+}
+
+
+BLIND_BOXES.update(BLIND_BOX_PILOT_ENTRIES)

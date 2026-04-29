@@ -1,0 +1,25 @@
+{
+  "id": "IMPL-2",
+  "title": "Author three pilot category content bundles",
+  "description": "Create MVP content for 桌面+学习, 海底+潜水, 公园+野餐 using the five-layer model. Keep content realistic, common, visually clear, individually selectable, and strongly tied to the scene. Map pilot bundles into the legacy runtime view without full-library rewrite.",
+  "depends_on": [
+    "IMPL-1"
+  ],
+  "files": [
+    "Game content extraction/data/blind_boxes.py"
+  ],
+  "convergence": [
+    "桌面+学习, 海底+潜水, 公园+野餐 each have complete five-layer bundles.",
+    "visible_small_items are grouped, block-like, or clearly supported by a surface.",
+    "conditional_items include their support/hanging/context dependency in naming or comments.",
+    "blocked_or_risky contains risky or default-excluded concepts and does not appear in legacy buckets.",
+    "Legacy BLIND_BOXES remains importable and exposes all expected bucket keys."
+  ],
+  "meta": {
+    "type": "content-data",
+    "agent": "code_developer",
+    "estimated_size": "L",
+    "source_epic": "EPIC-003"
+  },
+  "status": "completed"
+}

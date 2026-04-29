@@ -1,0 +1,112 @@
+{
+  "session_id": "SPEC-2026-04-29-blind-box-pool-itemization-fix",
+  "seed_input": ".workflow/.brainstorm/BS-2026-04-29-盲盒条件风险池物品化修正/handoff-spec.json",
+  "input_type": "file",
+  "timestamp": "2026-04-29T00:00:00+08:00",
+  "mode": "interactive",
+  "complexity": "simple",
+  "depth": "standard",
+  "focus_areas": [
+    "conditional_items itemization",
+    "blocked_or_risky concrete-object constraint",
+    "forbidden pattern validation",
+    "pilot content correction",
+    "documentation sync"
+  ],
+  "spec_type": "platform",
+  "profile_note": "No platform profile file exists in spec-generator templates; base templates are used with static content-library emphasis.",
+  "iteration_count": 0,
+  "iteration_history": [],
+  "seed_analysis": {
+    "problem_statement": "Correct the blind-box pilot content model so conditional_items and blocked_or_risky only contain concrete usable objects, while non-object visual phenomena are moved to validation-only forbidden patterns.",
+    "target_users": [
+      "content maintainer",
+      "tool user",
+      "app maintainer"
+    ],
+    "domain": "desktop-tool static content library quality correction",
+    "constraints": [
+      "Do not redesign the whole blind-box taxonomy.",
+      "Do not change runtime input syntax or four-bucket output shape.",
+      "Keep the correction scoped to pilot boxes 15, 16, and 17.",
+      "Keep all item-pool entries as concrete objects or object groups.",
+      "Do not introduce web, database, service, or third-party dependencies."
+    ],
+    "dimensions": [
+      "pool semantic correction",
+      "forbidden-pattern validation",
+      "pilot data replacement",
+      "test coverage",
+      "documentation alignment"
+    ]
+  },
+  "has_codebase": true,
+  "refined_requirements_file": "refined-requirements.json",
+  "issue_ids": [],
+  "issues_created": 0,
+  "phasesCompleted": [
+    {
+      "phase": 1,
+      "name": "discovery",
+      "output_file": "spec-config.json",
+      "completed_at": "2026-04-29T00:00:00+08:00"
+    },
+    {
+      "phase": 1.5,
+      "name": "requirement-clarification",
+      "output_file": "refined-requirements.json",
+      "discussion_rounds": 1,
+      "completed_at": "2026-04-29T00:00:00+08:00"
+    },
+    {
+      "phase": 2,
+      "name": "product-brief",
+      "output_file": "product-brief.md",
+      "glossary_file": "glossary.json",
+      "completed_at": "2026-04-29T00:00:00+08:00"
+    },
+    {
+      "phase": 3,
+      "name": "requirements",
+      "output_dir": "requirements/",
+      "output_index": "requirements/_index.md",
+      "file_count": 8,
+      "completed_at": "2026-04-29T00:00:00+08:00"
+    },
+    {
+      "phase": 4,
+      "name": "architecture",
+      "output_dir": "architecture/",
+      "output_index": "architecture/_index.md",
+      "file_count": 5,
+      "completed_at": "2026-04-29T00:00:00+08:00"
+    },
+    {
+      "phase": 5,
+      "name": "epics-stories",
+      "output_dir": "epics/",
+      "output_index": "epics/_index.md",
+      "file_count": 3,
+      "mvp_epic_count": 2,
+      "total_story_count": 6,
+      "completed_at": "2026-04-29T00:00:00+08:00"
+    },
+    {
+      "phase": 6,
+      "name": "readiness-check",
+      "output_file": "readiness-report.md",
+      "summary_file": "spec-summary.md",
+      "overall_score": 95.25,
+      "gate": "Pass",
+      "completed_at": "2026-04-29T00:00:00+08:00"
+    },
+    {
+      "phase": 7,
+      "name": "issue-export",
+      "output_file": "issue-export-report.md",
+      "issues_created": 0,
+      "export_mode": "manual-ready",
+      "completed_at": "2026-04-29T00:00:00+08:00"
+    }
+  ]
+}

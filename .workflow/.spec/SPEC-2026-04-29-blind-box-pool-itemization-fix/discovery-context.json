@@ -1,0 +1,53 @@
+{
+  "session_id": "SPEC-2026-04-29-blind-box-pool-itemization-fix",
+  "generated_at": "2026-04-29T00:00:00+08:00",
+  "source_handoff": ".workflow/.brainstorm/BS-2026-04-29-盲盒条件风险池物品化修正/handoff-spec.json",
+  "relevant_files": [
+    {
+      "path": "Game content extraction/data/blind_boxes.py",
+      "relevance": "high",
+      "rationale": "Contains current pilot bundles for boxes 15/16/17 and the problematic conditional_items / blocked_or_risky entries."
+    },
+    {
+      "path": "Game content extraction/test_blind_box_content_model.py",
+      "relevance": "high",
+      "rationale": "Existing tests verify schema and blocked leakage; must be extended to reject non-object patterns in all pools."
+    },
+    {
+      "path": "agents.md",
+      "relevance": "medium",
+      "rationale": "Repository-level content rules must reflect that all five pool layers contain concrete objects only."
+    },
+    {
+      "path": "README.md",
+      "relevance": "medium",
+      "rationale": "User-facing project summary must reflect the corrected pool semantics."
+    },
+    {
+      "path": "Game content extraction/CLAUDE.md",
+      "relevance": "medium",
+      "rationale": "Tool-specific maintainer instructions must prevent recurrence."
+    },
+    {
+      "path": "Game content extraction/README.md",
+      "relevance": "medium",
+      "rationale": "Desktop-tool docs must describe corrected pilot behavior."
+    }
+  ],
+  "existing_patterns": [
+    "BLIND_BOX_ITEM_POOL_BUNDLES stores pilot five-layer pools.",
+    "BLIND_BOX_COMPATIBILITY_MAPPING excludes blocked_or_risky from default runtime buckets.",
+    "test_blind_box_content_model.py already imports data modules and validates pilot schema.",
+    "Runtime still consumes BLIND_BOXES with name/large/medium/small/hanging keys."
+  ],
+  "current_failures": [
+    "conditional_items include low-value small attachments such as labels, cards, tags, clips, and edge-mounted details.",
+    "blocked_or_risky includes non-object visual phenomena such as paper edge folds, tiny scratches, bubble strings, underwater shadow patches, grass specks, edge lines, and tiny stains.",
+    "Tests block leakage from blocked_or_risky to default buckets, but do not require blocked_or_risky itself to contain only concrete objects."
+  ],
+  "architecture_constraints": [
+    "This is a static-data correction; no runtime UI redesign is needed.",
+    "Pilot boxes 15/16/17 must remain available through existing four runtime buckets.",
+    "The correction should not rename fields in MVP, to avoid unnecessary churn."
+  ]
+}

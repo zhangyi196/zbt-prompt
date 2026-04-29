@@ -1,0 +1,28 @@
+{
+  "id": "IMPL-3",
+  "title": "Preserve runtime extraction and history compatibility",
+  "description": "Confirm and adjust runtime integration only where necessary so the blind-box extractor can consume pilot content through the existing category_info, parser override labels, output formatting, and draw_history item_pools semantics.",
+  "depends_on": [
+    "IMPL-1",
+    "IMPL-2"
+  ],
+  "files": [
+    "Game content extraction/内容抽取.py",
+    "Game content extraction/data/blind_boxes.py",
+    "Game content extraction/data/item_states.py"
+  ],
+  "convergence": [
+    "Comma-separated input still accepts blind-box numbers, animal type, and existing subcategory overrides.",
+    "category_info labels remain compatible: 大型物品, 中型物品, 散落小型物品, 悬挂物品.",
+    "History keys remain box:{box_id}:{category_key} under item_pools.",
+    "animal_pools and expression_pools are untouched.",
+    "Risky item state wording is either filtered for blind-box default output or explicitly covered by tests as a known blocked condition."
+  ],
+  "meta": {
+    "type": "runtime-compatibility",
+    "agent": "code_developer",
+    "estimated_size": "M",
+    "source_epic": "EPIC-002"
+  },
+  "status": "completed"
+}

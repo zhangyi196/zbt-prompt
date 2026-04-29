@@ -69,6 +69,10 @@ python '内容抽取.py'
 
 每个类别下建议按五层维护：`core_items` 作为核心物，`support_items` 作为配套物，`visible_small_items` 作为可见小物，`conditional_items` 作为悬挂/墙面/软布等条件物，`blocked_or_risky` 作为默认不抽的风险物。若短期不改 UI，可先把五层内容映射回现有大型 / 中型 / 小型 / 悬挂四栏。完整讨论见 `../.workflow/.brainstorm/BS-2026-04-29-优化game-content-extraction盲盒物品内容/`，规格包见 `../.workflow/.spec/SPEC-2026-04-29-game-content-extraction-blind-box-library-refactor/`。
 
+当前已新增三个试点盲盒：15 `桌面+学习`、16 `海底+潜水`、17 `公园+野餐`。这三个试点在数据层保留五层池，同时映射回现有大型 / 中型 / 小型 / 悬挂四栏；`blocked_or_risky` 不进入默认抽取。启用物品状态时，程序会过滤 `半透明`、`高光反光`、`带有光泽` 等风险状态词。
+
+补丁规格 `../.workflow/.spec/SPEC-2026-04-29-blind-box-pool-itemization-fix/` 进一步明确：五层池都只能写具体物品或物品组；`conditional_items` 应是中等以上体量的条件启用物品；`blocked_or_risky` 只保留具体风险物。折线、擦痕、气泡、阴影、边线、微小颗粒等非物品内容只作为 forbidden patterns 校验，不作为盲盒物品。
+
 ## 人物表情抽取
 
 表情工作区读取 `极性`、`具体表情`、`单人/多人`，从 `../组图 23 表情库.md` 查模板，并只把眉 / 眼 / 嘴追加到 `具体表情:` 后。前置提示词可在同一 `具体表情` 一栏给出 4 个候选类别；App 支持用 `、`、`，`、`,`、`/`、`|` 分隔候选，先校验候选都存在且极性一致，再按历史降权随机择一类别补全。每类模板分为单人 1-8、多人 1-8，强度从中等可见起步，不保留轻微档；随机模板也按历史降权选择，仍可指定编号。

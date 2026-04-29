@@ -1,0 +1,42 @@
+{
+  "session_id": "SPEC-2026-04-29-blind-box-pool-itemization-fix",
+  "generated_at": "2026-04-29T00:00:00+08:00",
+  "version": 1,
+  "terms": [
+    {
+      "term": "具体物品",
+      "definition": "可在目标图中作为独立对象被识别、放置和圈选的物品或物品组。",
+      "aliases": ["具体对象", "完整物品"],
+      "first_defined_in": "product-brief.md",
+      "category": "core"
+    },
+    {
+      "term": "条件启用物品",
+      "definition": "只有在特定承载面、挂架、空间或场景关系成立时才适合使用，但本身仍具备中等以上体量和独立可见性的具体物品。",
+      "aliases": ["conditional_items", "条件物"],
+      "first_defined_in": "product-brief.md",
+      "category": "core"
+    },
+    {
+      "term": "具体风险物",
+      "definition": "与场景相关且具体可见，但因透明、反光、发光、动物本体、细绳、流苏、软布飘带等风险默认禁用的物品。",
+      "aliases": ["blocked_or_risky", "blocked objects"],
+      "first_defined_in": "product-brief.md",
+      "category": "core"
+    },
+    {
+      "term": "非物品禁用模式",
+      "definition": "折线、擦痕、阴影、气泡、边线、微小颗粒等不可作为物品池条目的视觉现象或痕迹表达。",
+      "aliases": ["forbidden_patterns", "reject terms"],
+      "first_defined_in": "product-brief.md",
+      "category": "technical"
+    },
+    {
+      "term": "五层物品池",
+      "definition": "core_items、support_items、visible_small_items、conditional_items、blocked_or_risky 五个内容层，修正后全部只允许写具体物品。",
+      "aliases": ["五层池"],
+      "first_defined_in": "product-brief.md",
+      "category": "core"
+    }
+  ]
+}

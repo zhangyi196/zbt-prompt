@@ -1,0 +1,4 @@
+key,type,value,source
+"context_package_path","path",".process/context-package.json","session"
+"source_spec","path",".workflow/.spec/SPEC-2026-04-29-game-content-extraction-blind-box-library-refactor/","plan.json"
+"hard_constraints","array","Keep comma input;Keep four runtime buckets;No history migration;Pilot categories only;No blocked_or_risky leakage","plan.json"
