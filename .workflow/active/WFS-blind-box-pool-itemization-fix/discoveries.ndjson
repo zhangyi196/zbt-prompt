@@ -1,0 +1,4 @@
+{"task_id":"IMPL-1","type":"implementation","message":"conditional_items for boxes 15/16/17 now use medium-or-larger concrete conditionally enabled objects."}
+{"task_id":"IMPL-2","type":"implementation","message":"blocked_or_risky for boxes 15/16/17 now uses concrete risky objects only; removed non-object phenomena."}
+{"task_id":"IMPL-3","type":"verification","message":"Added forbidden non-object pattern test covering all five pilot pool layers."}
+{"task_id":"IMPL-4","type":"documentation","message":"Synchronized required docs and workflow status."}

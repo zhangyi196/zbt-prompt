@@ -1,0 +1,30 @@
+{
+  "id": "IMPL-2",
+  "title": "Replace pilot blocked_or_risky with concrete risky objects",
+  "status": "completed",
+  "owner_hint": "data-content",
+  "depends_on": ["IMPL-1"],
+  "files": [
+    "Game content extraction/data/blind_boxes.py"
+  ],
+  "objective": "Update blocked_or_risky for the three pilot scenes so it contains only concrete objects that remain excluded from default blind-box output.",
+  "requirements": [
+    "Remove non-object expressions such as folds, scratches, bubbles, shadows, highlight patches, edge lines, tiny stones, tiny sand, stains, and leaf dots.",
+    "Keep legitimate concrete risk objects such as transparent, reflective, glowing, animal-body, thin-hanging, or scale-unsafe objects.",
+    "Do not move blocked_or_risky entries into large, medium, small, or hanging buckets."
+  ],
+  "acceptance_criteria": [
+    "No bad current entries remain: 纸张边缘折线, 微小擦痕, 细小气泡串, 漂浮细海草丝, 海底阴影斑, 水面高光, 微小沙粒, 草地碎叶点, 地面细小石子, 风吹纸片边缘, 野餐垫边线, 微小污点.",
+    "Every blocked_or_risky item is a concrete object.",
+    "Existing blocked leakage test continues to pass."
+  ],
+  "verification": [
+    "Review blocked_or_risky lists manually.",
+    "Run unit tests after IMPL-3."
+  ],
+  "result": {
+    "files_modified": ["Game content extraction/data/blind_boxes.py"],
+    "acceptance_met": true,
+    "summary": "Replaced non-object blocked_or_risky entries with concrete risky objects and preserved blocked leakage exclusion."
+  }
+}

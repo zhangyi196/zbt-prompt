@@ -71,7 +71,7 @@ python '内容抽取.py'
 
 当前已新增三个试点盲盒：15 `桌面+学习`、16 `海底+潜水`、17 `公园+野餐`。这三个试点在数据层保留五层池，同时映射回现有大型 / 中型 / 小型 / 悬挂四栏；`blocked_or_risky` 不进入默认抽取。启用物品状态时，程序会过滤 `半透明`、`高光反光`、`带有光泽` 等风险状态词。
 
-补丁规格 `../.workflow/.spec/SPEC-2026-04-29-blind-box-pool-itemization-fix/` 进一步明确：五层池都只能写具体物品或物品组；`conditional_items` 应是中等以上体量的条件启用物品；`blocked_or_risky` 只保留具体风险物。折线、擦痕、气泡、阴影、边线、微小颗粒等非物品内容只作为 forbidden patterns 校验，不作为盲盒物品。
+补丁规格 `../.workflow/.spec/SPEC-2026-04-29-blind-box-pool-itemization-fix/` 已落地：五层池都只能写具体物品或物品组；`conditional_items` 应是中等以上体量的条件启用物品；`blocked_or_risky` 只保留具体风险物。折线、擦痕、气泡、阴影、边线、微小颗粒等非物品内容只作为 forbidden patterns 校验，不作为盲盒物品。
 
 ## 人物表情抽取
 

@@ -1,0 +1,20 @@
+{
+  "session_id": "WFS-blind-box-pool-itemization-fix",
+  "trigger": "context-package conflict_risk is medium",
+  "resolution_strategy": "Use tightly scoped data/test/doc edits only. Preserve all existing prior-session changes and avoid unrelated refactors.",
+  "decisions": [
+    {
+      "risk": "Dirty working tree includes previous blind-box refactor artifacts.",
+      "decision": "Treat them as baseline for this patch; do not revert or overwrite unrelated content."
+    },
+    {
+      "risk": "Forbidden pattern list could catch legitimate object names.",
+      "decision": "Use precise non-object terms from user feedback and current bad entries, such as 折线, 擦痕, 气泡, 阴影, 边线, 微小沙粒, 微小污点, 细小石子, 漂浮细海草丝, 草地碎叶点."
+    },
+    {
+      "risk": "Changing five-layer keys would break compatibility.",
+      "decision": "Keep all keys and compatibility mapping unchanged; change only list contents and tests."
+    }
+  ],
+  "status": "resolved_for_planning"
+}

@@ -1,0 +1,58 @@
+{
+  "session_id": "WFS-blind-box-pool-itemization-fix",
+  "source_spec": ".workflow/.spec/SPEC-2026-04-29-blind-box-pool-itemization-fix/",
+  "context_summary": "Small scoped data-quality patch for the existing blind-box pilot library. The implementation should update only pilot pool content and tests/docs, preserving runtime compatibility.",
+  "critical_files": [
+    "Game content extraction/data/blind_boxes.py",
+    "Game content extraction/test_blind_box_content_model.py",
+    "agents.md",
+    "README.md",
+    "Game content extraction/CLAUDE.md",
+    "Game content extraction/README.md",
+    ".gitignore"
+  ],
+  "reference_files": [
+    ".workflow/.spec/SPEC-2026-04-29-blind-box-pool-itemization-fix/spec-summary.md",
+    ".workflow/.spec/SPEC-2026-04-29-blind-box-pool-itemization-fix/requirements/_index.md",
+    ".workflow/.spec/SPEC-2026-04-29-blind-box-pool-itemization-fix/architecture/_index.md",
+    ".workflow/.spec/SPEC-2026-04-29-blind-box-pool-itemization-fix/epics/_index.md",
+    ".workflow/.brainstorm/BS-2026-04-29-盲盒条件风险池物品化修正/handoff-spec.json"
+  ],
+  "existing_patterns": [
+    "BLIND_BOX_ITEM_POOL_BUNDLES stores five-layer pilot pools.",
+    "BLIND_BOX_PILOT_BOX_IDS maps scene names to pilot box ids 15, 16, and 17.",
+    "_build_legacy_blind_box_entry maps core/support/visible_small/conditional pools back to large/medium/small/hanging.",
+    "BLIND_BOX_COMPATIBILITY_MAPPING records source fields and excludes blocked_or_risky from default output.",
+    "unittest-based tests import the tkinter module and blind box data directly."
+  ],
+  "conflict_risk": "medium",
+  "risk_factors": [
+    "Working tree already contains intentional prior-session changes related to the same feature area.",
+    "Forbidden pattern tests can become too broad and reject legitimate concrete objects if patterns are not precise.",
+    "Chinese source files may show mojibake in some shell output, so edits should preserve UTF-8 content and existing style."
+  ],
+  "implementation_constraints": [
+    "Do not change UI behavior.",
+    "Do not change runtime bucket names or input override syntax.",
+    "Do not expand scope to all 20 planned scene categories.",
+    "Do not let blocked_or_risky entries leak into BLIND_BOXES default buckets.",
+    "Use concrete object names only in all five pool arrays."
+  ],
+  "recommended_modules": [
+    {
+      "name": "pilot_pool_content_patch",
+      "files": ["Game content extraction/data/blind_boxes.py"],
+      "purpose": "Replace weak conditional/risky entries with concrete objects."
+    },
+    {
+      "name": "forbidden_pattern_regression_tests",
+      "files": ["Game content extraction/test_blind_box_content_model.py"],
+      "purpose": "Prevent non-object expressions from returning to item pools."
+    },
+    {
+      "name": "documentation_sync",
+      "files": ["agents.md", "README.md", "Game content extraction/CLAUDE.md", "Game content extraction/README.md", ".gitignore"],
+      "purpose": "Record final rule and implementation status."
+    }
+  ]
+}

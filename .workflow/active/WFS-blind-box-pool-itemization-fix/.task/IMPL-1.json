@@ -1,0 +1,32 @@
+{
+  "id": "IMPL-1",
+  "title": "Replace pilot conditional_items with conditionally enabled concrete objects",
+  "status": "completed",
+  "owner_hint": "data-content",
+  "depends_on": [],
+  "files": [
+    "Game content extraction/data/blind_boxes.py"
+  ],
+  "objective": "Update conditional_items for 桌面+学习, 海底+潜水, and 公园+野餐 so entries are medium-or-larger concrete objects that are only suitable when matching support/context is visible.",
+  "requirements": [
+    "Keep BLIND_BOX_ITEM_POOL_BUNDLES keys unchanged.",
+    "Keep pilot box ids 15, 16, and 17 unchanged.",
+    "Do not add non-object phenomena, traces, line changes, tiny labels, or edge details.",
+    "Prefer common, boundary-clear, independently circleable objects."
+  ],
+  "acceptance_criteria": [
+    "Each pilot bundle has a non-empty conditional_items list.",
+    "All conditional_items are concrete objects, not scratches, folds, bubbles, shadows, edges, stains, or tiny particles.",
+    "Items read as conditionally enabled: plausible only with a visible carrier, support, or scene context.",
+    "BLIND_BOXES runtime buckets remain large/medium/small/hanging."
+  ],
+  "verification": [
+    "Review conditional_items manually for the three pilot scenes.",
+    "Run unit tests after IMPL-3."
+  ],
+  "result": {
+    "files_modified": ["Game content extraction/data/blind_boxes.py"],
+    "acceptance_met": true,
+    "summary": "Replaced all three pilot conditional_items lists with medium-or-larger concrete conditionally enabled objects."
+  }
+}

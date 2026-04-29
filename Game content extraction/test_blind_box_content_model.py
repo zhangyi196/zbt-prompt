@@ -28,6 +28,21 @@ FIVE_LAYER_KEYS = {
     "blocked_or_risky",
 }
 
+FORBIDDEN_NON_OBJECT_PATTERNS = (
+    "折线",
+    "擦痕",
+    "气泡",
+    "阴影",
+    "边线",
+    "碎叶点",
+    "细小石子",
+    "微小沙粒",
+    "微小污点",
+    "风吹纸片边缘",
+    "漂浮细海草丝",
+    "水面高光",
+)
+
 
 class BlindBoxContentModelTests(unittest.TestCase):
     def test_scene_entries_define_twenty_categories_and_three_pilots(self):
@@ -73,6 +88,14 @@ class BlindBoxContentModelTests(unittest.TestCase):
                     default_items.update(BLIND_BOXES[box_id][key])
                 self.assertTrue(blocked_items.isdisjoint(default_items))
                 self.assertIn("blocked_or_risky", BLIND_BOX_COMPATIBILITY_MAPPING[scene_name]["excluded_sources"])
+
+    def test_pilot_item_pools_do_not_contain_non_object_patterns(self):
+        for scene_name, bundle in BLIND_BOX_ITEM_POOL_BUNDLES.items():
+            for layer_name in FIVE_LAYER_KEYS:
+                for item_name in bundle[layer_name]:
+                    with self.subTest(scene_name=scene_name, layer_name=layer_name, item_name=item_name):
+                        for pattern in FORBIDDEN_NON_OBJECT_PATTERNS:
+                            self.assertNotIn(pattern, item_name)
 
     def test_existing_input_override_syntax_accepts_pilot_box_ids(self):
         extractor = content_extractor.BlindBoxExtractor.__new__(content_extractor.BlindBoxExtractor)

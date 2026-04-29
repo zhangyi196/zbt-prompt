@@ -1,0 +1,43 @@
+{
+  "id": "IMPL-4",
+  "title": "Sync documentation and workflow status",
+  "status": "completed",
+  "owner_hint": "docs",
+  "depends_on": ["IMPL-3"],
+  "files": [
+    "agents.md",
+    "README.md",
+    "Game content extraction/CLAUDE.md",
+    "Game content extraction/README.md",
+    ".gitignore",
+    ".workflow/active/WFS-blind-box-pool-itemization-fix/TODO_LIST.md"
+  ],
+  "objective": "Update required project documentation to reflect the corrected pool semantics and mark workflow progress.",
+  "requirements": [
+    "Record that all item pools contain concrete objects only.",
+    "Describe conditional_items as visible, independently circleable, conditionally enabled objects.",
+    "Describe blocked_or_risky as concrete risky objects, while non-object phrases belong to forbidden pattern validation.",
+    "Do not churn .gitignore if no tracked cache cleanup is needed."
+  ],
+  "acceptance_criteria": [
+    "Required docs are synchronized with implementation.",
+    "TODO_LIST.md reflects completed execution status.",
+    "Verification commands and any limitations are captured in final execution notes."
+  ],
+  "verification": [
+    "Review docs for consistency with data and tests.",
+    "git status --short to confirm only intended files changed."
+  ],
+  "result": {
+    "files_modified": [
+      "agents.md",
+      "README.md",
+      "Game content extraction/CLAUDE.md",
+      "Game content extraction/README.md",
+      ".gitignore",
+      ".workflow/active/WFS-blind-box-pool-itemization-fix/TODO_LIST.md"
+    ],
+    "acceptance_met": true,
+    "summary": "Updated required docs and workflow status to record the implemented itemization correction."
+  }
+}

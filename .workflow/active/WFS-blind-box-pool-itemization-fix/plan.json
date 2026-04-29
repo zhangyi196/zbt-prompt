@@ -1,0 +1,51 @@
+{
+  "session_id": "WFS-blind-box-pool-itemization-fix",
+  "status": "completed",
+  "source_spec": ".workflow/.spec/SPEC-2026-04-29-blind-box-pool-itemization-fix/",
+  "goal": "Correct blind-box pilot conditional and risky pools so every pool entry is a concrete object, then lock the rule with tests and docs.",
+  "scope": {
+    "in": [
+      "Pilot boxes 15, 16, and 17",
+      "conditional_items content",
+      "blocked_or_risky content",
+      "forbidden pattern unit tests",
+      "required project documentation sync"
+    ],
+    "out": [
+      "All 20 category rewrite",
+      "UI changes",
+      "input syntax changes",
+      "history key changes",
+      "release/version packaging"
+    ]
+  },
+  "conflict_risk": "medium",
+  "execution_strategy": "sequential",
+  "tasks": [
+    {
+      "id": "IMPL-1",
+      "title": "Replace pilot conditional_items with conditionally enabled concrete objects",
+      "depends_on": []
+    },
+    {
+      "id": "IMPL-2",
+      "title": "Replace pilot blocked_or_risky with concrete risky objects",
+      "depends_on": ["IMPL-1"]
+    },
+    {
+      "id": "IMPL-3",
+      "title": "Add forbidden pattern regression tests",
+      "depends_on": ["IMPL-1", "IMPL-2"]
+    },
+    {
+      "id": "IMPL-4",
+      "title": "Sync documentation and workflow status",
+      "depends_on": ["IMPL-3"]
+    }
+  ],
+  "verification_commands": [
+    "python -B -m py_compile 'Game content extraction\\内容抽取.py' 'Game content extraction\\data\\blind_boxes.py'",
+    "python -B -m unittest discover -s 'Game content extraction' -p 'test_*.py'"
+  ],
+  "next_recommended_command": "$workflow-execute --resume-session=WFS-blind-box-pool-itemization-fix"
+}

@@ -20,7 +20,7 @@
 
 当前已先落地三类试点：15 `桌面+学习`、16 `海底+潜水`、17 `公园+野餐`。数据层新增 20 类入口清单、三类五层池和五层到四栏兼容映射；旧逗号输入、四栏输出和历史语义保持不变。
 
-条件池 / 风险池物品化修正规格见 `.workflow/.spec/SPEC-2026-04-29-blind-box-pool-itemization-fix/`。该补丁规格要求五层池全部只写具体物品或物品组；`conditional_items` 不再写标签、贴片、扣件等小附属物，`blocked_or_risky` 不再写折线、擦痕、气泡、阴影、边线、微小颗粒等非物品内容。
+条件池 / 风险池物品化修正已按 `.workflow/.spec/SPEC-2026-04-29-blind-box-pool-itemization-fix/` 落地。五层池全部只写具体物品或物品组；`conditional_items` 不再写标签、贴片、扣件等小附属物，`blocked_or_risky` 不再写折线、擦痕、气泡、阴影、边线、微小颗粒等非物品内容。
 
 ## 提示词维护要点
 
@@ -58,8 +58,8 @@
 - 三个试点类别：`桌面+学习`、`海底+潜水`、`公园+野餐`。
 - 质量目标：人工抽样 30 次时，明显不适合项低于 10%，且 `blocked_or_risky` 不进入默认输出。
 - Readiness 结果：`readiness-report.md` 评分 92.75 / 100，Gate 为 Pass；`issue-export-report.md` 已给出 4 个可手动创建的 Epic issue。
-- 验证覆盖：`Game content extraction/test_blind_box_content_model.py` 检查五层 schema、风险池零泄漏、试点盒四栏兼容、旧输入覆盖和物品状态风险过滤。
-- 物品化补丁：`.workflow/.spec/SPEC-2026-04-29-blind-box-pool-itemization-fix/` 已生成，Readiness 评分 95.25 / 100，后续实现应先替换三类试点条件池 / 风险池，再补 forbidden patterns 测试。
+- 验证覆盖：`Game content extraction/test_blind_box_content_model.py` 检查五层 schema、风险池零泄漏、试点盒四栏兼容、旧输入覆盖、物品状态风险过滤和非物品 forbidden patterns。
+- 物品化补丁：`.workflow/.spec/SPEC-2026-04-29-blind-box-pool-itemization-fix/` 已生成，Readiness 评分 95.25 / 100；实现会话为 `.workflow/active/WFS-blind-box-pool-itemization-fix/`，已替换三类试点条件池 / 风险池并补充 forbidden patterns 测试。
 
 当前桌面工具发布版为 `v0.1.4`，安装包为 `GameContentExtraction-Setup-v0.1.4.exe`。
 
