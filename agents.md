@@ -1,87 +1,53 @@
-每次完成执行任务后，都要同步更新 `agents.md`、`Game content extraction/agents.md`、`README.md`、`.gitignore` 文件。
-若 `.gitignore` 命中已跟踪的缓存文件或构建缓存，必须同步执行取消跟踪清理，避免再次提交到仓库。
+每次完成执行任务后，同步检查 `agents.md`、`Game content extraction/agents.md`、`README.md`、`.gitignore` 是否需要随本次变更更新；这几个文件必须保持精简，只记录稳定规则和必要入口。
+若 `.gitignore` 命中已跟踪的缓存文件或构建缓存，必须同步取消跟踪清理。
 
 # Agents Guide
 
-本仓库主要维护中文提示词规则；`Game content extraction/` 是配套本地 `tkinter` 小工具目录。优先局部修改，保持中文风格、固定输出、数量配额、自检项和既有链路。
+本仓库主要维护中文提示词规则；`Game content extraction/` 是配套本地 `tkinter` 小工具。工具细则见 `Game content extraction/agents.md`。
 
 ## 文件职责
 
-- `主图 第一步.md`：只基于 Target 先判断是否需要新增内容；若原图已经完整、拥挤或无安全新增空间，固定输出 `不需要新增物品`；只有确实需要新增时才输出 2 个盲盒类别编号、动物字段、禁用字段、补偿字段。盲盒类别已同步为 20 个 `常见场景+用途` 新目录，并带类别内容速查；维护时不得改回旧 14 类主题库。
-- `主图 第二步 .md`：候选物审核与摆放；用户给了候选就不得脑补新候选；正文优先保持“执行优先级 + 硬规则 + 固定输出”的收敛写法，减少重复表述。
-- `组图 4.md`：找不同润色；18 个差异点，九宫格每区 2 个，类型配额 3 / 6 / 3 / 3 / 3；禁灯光、明暗、反光、高光、阴影等变化。
-- `组图 23 表情前置.md`：只产出负向、正向、正负向剧情表情类别和摘要；人物块数量沿用单人 1 个、多人 2-3 个；每块 `具体表情` 一栏写 4 个同极性类别名且不得用 `[]` 包裹字段值；正负向组允许人物块极性混合。
-- `组图 23 表情库.md`：正向 25、负向 25；每类单人 8 条、多人 8 条眉/眼/嘴模板；强度从中等可见起步，不保留轻微档，只写面部。
-- `组图 23.md`：Ref-A/B 到 Target 差异迁移；当前为 v1.7.10.8 中等压缩版，固定六板块，List 1 / List 2 各 16 条；不得削弱 Ref 绑定、冷区避让、人物热区互斥、空间可放置性和禁改规则。List 1 人物贴邻热区不叠加拥挤落点；List 2 冷区无安全新增空间时，优先用已有独立小物或块状、清晰、可单独圈选的局部承载面补点，不用微型痕迹、细长线条或边缘接缝变化凑数；List 2 还必须避免左右 / 上下 / 对称位置的同对象、同类型、同句式重复。
-- `Game content extraction/`：本地小工具；维护细节见同目录 `agents.md`，使用说明见 `README.md`。
+- `主图 第一步.md`：先判断 Target 是否需要新增内容；不需要时固定输出 `不需要新增物品`；需要时输出 2 个盲盒类别编号、动物字段、禁用字段和补偿字段。盲盒类别为 20 个 `常见场景+用途` 入口，不得改回旧 14 类主题库。
+- `主图 第二步 .md`：审核和摆放候选物；用户给了候选就不得脑补新候选。
+- `组图 4.md`：找不同润色；18 个差异点，九宫格每区 2 个，禁灯光、明暗、反光、高光、阴影变化。
+- `组图 23 表情前置.md`：输出剧情表情类别；每个 `具体表情` 字段写 4 个同极性类别，字段值不得用 `[]` 包裹。
+- `组图 23 表情库.md`：人物表情模板单一事实源；正向 25、负向 25，每类单人 / 多人各 8 条。
+- `组图 23.md`：Ref-A / Ref-B 到 Target 的差异迁移；保留 Ref 绑定、冷区避让、人物热区互斥、空间可放置性和禁改规则。
 
-## 通用不变量
+## 通用硬规则
 
 - 禁止脑补不可见对象、画外空间、遮挡后区域或身份不稳定对象。
 - 差异点遵守“一圈一物一变化”或“单一不同点”。
 - 不改人物骨架、姿态、头身朝向、四肢动作或支撑关系。
-- 不做灯光、发光、明暗、阴影、高光、反光、滤光、投影、镜面成像等变化。
-- 灯具、灯罩、灯泡、蜡烛火焰等照明关联对象不得整体消失、整体移动或被替换成不发光物；只能做不改变光照关系的局部破损、缺口、裂纹、装饰替换或形状变化。
-- 不整体修改大面积背景、大物体主体或大面积表层。
-- 新增、异物植入或替换为更大物体前，必须确认 Target 中有完整可见且未被占用的可放置空间；不得为容纳新增内容缩小、移动、遮挡或重排原图主体。
+- 不做灯光、发光、明暗、阴影、高光、反光、滤光、投影、镜面成像变化。
+- 灯具、灯罩、灯泡、蜡烛火焰等照明对象不得整体消失、整体移动或替换成不发光物。
+- 新增、异物植入或替换为更大物体前，必须确认 Target 中有完整可见且未被占用的可放置空间。
 - 位置字段只定位，不写颜色、材质、纹理、风格、明暗等外观修饰。
-- `组图 23.md` 的 List 2 必须第一眼可见，禁止刻痕、细裂纹、小点、轻微磨损、细小石子等微型痕迹，也禁止踢脚线、墙角线、接缝线、边线、轮廓线、红毯 / 地毯边缘线等细长线条作为差异主体。
-- `组图 23.md` 的 List 2 同类对象默认最多 1 点；左右柱子、左右花瓶、成排椅子、同类花朵、同一地面的多个装饰块等对称物 / 成组物 / 重复陈列物按同一对象类别处理，不得复制同一修改模板换位置。
-- 小变化不得升级为灾难、阴谋、案件、长期危机或大型事故。
 - 中文文件用 UTF-8；中文路径命令使用引号或 `-LiteralPath`。
 
-## `组图 23` 链路
+## `组图 23` 要点
 
-流程：`组图 23 表情前置.md` 输出类别 -> App 可直接读取同一 `具体表情` 字段中的多候选类别并补全眉/眼/嘴 -> `组图 23.md` 按剧情适配完整差异。前置默认三组：负向组、正向组、正负向组；人物块数量沿用单人 1 个、多人 2-3 个，但每块 `具体表情` 一栏写 4 个同极性候选类别；单人时正负向组不适用，多人时每组 2-3 人且正负向组至少 1 正 1 负。前置人物块字段值不得用 `[]` 包裹，避免 App 扫描不到 `具体表情` 类别；`[证据物]` / `[目标物]` / `[对方人物]` 等占位符除外。App 支持 `、`、`，`、`,`、`/`、`|` 分隔候选，先整组校验候选都存在且极性一致，再随机选中 1 个类别写回最终结果。`组图 23.md` 只能以 Ref-A -> Ref-B 的真实可见变化为准；前置预案和用户表情描述只作参考。v1.7.10.8 现为中等压缩版，维护时优先保留硬规则；人物贴邻热区互斥和 List 2 冷区兜底仍是硬约束，List 2 兜底也必须是完整小物增减、大块图案替换、明显结构缺失或块状局部内容替换等高可见变化，并轮换对象类别、变化类型和修改句式。
+- 只能以 Ref-A -> Ref-B 的真实可见变化为准；前置预案和用户表情描述只作参考。
+- List 1 人物贴邻热区不叠加拥挤落点；同一人物若改面部表情，不得再改衣领、头发、头饰、耳饰等贴邻区域。
+- List 2 必须第一眼可见；禁止刻痕、细裂纹、小点、轻微磨损、细小石子和细长线条作为差异主体。
+- List 2 同类对象默认最多 1 点；对称物、成组物、重复陈列物按同一对象类别处理。
+- 冷区无安全新增空间时，优先用已有独立小物、块状局部承载面、完整小物增减、大块图案替换或明显结构缺失补点。
+- App 支持同一 `具体表情` 字段中的多候选类别，并按历史降权随机写回 1 个类别。
 
-人物规则：同一人物若改面部表情，不得再改衣领/领带/颈部、头发/头饰、耳饰/耳侧饰品。单人眼部回指 `[证据物]` / `[目标物]`；多人眼部可回指 `[对方人物]`，但 `[对方人物]` 不作嘴部承载物。每个人物块的 `极性` 必须匹配 `具体表情` 类别；嘴部承载物必须来自 Ref 明确可见且剧情需要的物体或状态。
-
-表情历史约定：`draw_history.json.expression_pools` 用独立计数做历史降权；类别 key 形如 `expression_category:{极性}:{单人/多人}`，模板 key 形如 `expression_template:{极性}:{单人/多人}:{具体表情}`。单人和多人模板均使用 1-8 编号；多候选 `具体表情` 和随机模板都按“使用次数越少权重越高”选择；单一类别或指定模板编号在增强成功后同样记历史。`重置全部历史` 会同时清空 `item_pools`、`animal_pools`、`expression_pools`，单独重置物品/动物按钮不影响表情历史。
-
-## `Game content extraction` 摘要
+## `Game content extraction` 要点
 
 - 四工作区：`盲盒物品/动物抽取`、`人物表情抽取`、`图像抓取`、`批量重命名`。
-- `盲盒物品/动物抽取` 工作区采用左侧配置、右侧输出的双栏布局；修改该区 UI 时优先保持输出框常驻可见，不要把结果区重新压回页面底部。
-- 盲盒物品内容库已按 `.workflow/.spec/SPEC-2026-04-29-game-content-extraction-blind-box-library-refactor/` 与 `.workflow/.spec/SPEC-2026-04-29-game-content-extraction-four-pool-refactor/` 替换为 20 个 `常见场景+用途` 入口，如 `桌面+学习`、`餐桌+茶歇`、`沙滩+度假`、`海底+潜水`。
-- 当前 20 类均使用 `core_items`、`support_items`、`visible_small_items`、`scene_expansion_items` 四池；`scene_expansion_items` 是中等以上、无图像锚点依赖、用于增加场景变化的场景扩展物。
-- `BLIND_BOX_ITEM_POOL_BUNDLES` 已覆盖全部 20 类，旧静态 `BLIND_BOXES` 内容已移除，运行时 `BLIND_BOXES` 直接由新四池内容生成；`BLIND_BOX_COMPATIBILITY_MAPPING` 继续映射回现有 `large` / `medium` / `small` / `hanging` 四栏，`hanging` 作为兼容字段保留为空，不再用细绳 / 挂饰补位；盒号 1-20 保留用于逗号输入和历史兼容，但语义已切换为新的场景+用途目录。
-- 盲盒物品写库时优先真实、常见、边界清楚、可单独圈选且场景强相关的物品；小物必须成组、块状或有明确承载；`conditional_items`、`anchor_required_items`、`blocked_or_risky` 不再作为目标内容类别，风险内容只进入 `blocked_patterns` 测试 / 校验规则。
-- `人物表情抽取` 工作区的“清空输入”只清空输入框，不清空增强结果；若“自动粘贴”开启，清空后要像盲盒区一样回填当前剪贴板文本。
-- 不改成 Web、数据库、服务端或大型工程；不引入第三方 UI 依赖。
-- `draw_history.json` 服务物品池、动物池和人物表情历史；表情历史独立写入 `expression_pools`，不得混入 `item_pools` / `animal_pools`；重命名配置仍不得接入。
-- `config.json` 只服务批量重命名。
-- 当前版本 `APP_VERSION = "0.1.4"`；GitHub Release `v0.1.4` 已上传 `GameContentExtraction-Setup-v0.1.4.exe`，大小 `14,037,509` bytes，SHA256 `e3174f9e02e3631a5859ff3e041f06408771998964f10d0967c8a3db93b04098`；安装器会显示安装路径选择页。
-- 更新检查只提示并打开 Releases 页面，不自动下载/替换 exe，不写历史；没有更高 Release 时隐藏更新按钮。旧版安装包使用无认证 GitHub API 读取 release，仓库必须保持 public，否则会收到 404 并在静默检查时隐藏按钮；无认证 API 被限流时需等待 GitHub reset 后重试。
-- 图像抓取只复制同名文件到桌面 `图像抓取/`，不移动、不改名、不删除源文件。
-- 批量重命名必须保留目标文件存在时跳过的保护逻辑。
-- 发新版先更新 `APP_VERSION` 和 `installer.iss` 输出名，再构建 exe、确认 PyInstaller 归档包含 `pyi_rth__tkinter` / `_tkinter.pyd` / `tcl86t.dll` / `tk86t.dll`，生成安装包、做启动/静默安装烟测，最后创建更高 tag。若沙箱内构建误报 `tkinter installation is broken`，用可读取 Python Tcl/Tk 目录的提权环境重建。
-
-验证：
-
-```powershell
-python -B -m py_compile 'Game content extraction\内容抽取.py'
-python -B -m py_compile 'Game content extraction\image_fetcher_ui.py' 'Game content extraction\file_batch_renamer.py'
-python -B '.workflow\active\WFS-game-content-expression-window\.process\verify_expression.py'
-python -B -m unittest discover -s 'Game content extraction' -p 'test_*.py'
-```
+- UI 只用原生 `tkinter/ttk`；不改成 Web、数据库、服务端或大型工程；不引入第三方 UI 依赖。
+- 盲盒数据事实源为 `Game content extraction/data/blind_boxes.py`；当前为 20 个 `常见场景+用途` 入口和四池模型。
+- 四池固定为 `core_items`、`support_items`、`visible_small_items`、`scene_expansion_items`，运行时兼容 `large` / `medium` / `small` / `hanging` 四栏。
+- `conditional_items`、`anchor_required_items`、`blocked_or_risky` 不再作为目标内容类别；风险内容只进入 `blocked_patterns`。
+- `draw_history.json` 服务物品、动物和表情历史；表情只写 `expression_pools`；`config.json` 只服务批量重命名。
+- 图像抓取只复制文件；批量重命名必须保留目标文件存在时跳过的保护逻辑。
 
 ## 修改检查
 
-修改前读目标文件的角色、输入、输出和核心约束；修改中只动相关段落；修改后检查数量、格式、禁区、承载关系、固定输出和自检是否一致。涉及表情链路时，同步检查 `组图 23 表情库.md`、`组图 23 表情前置.md`、`组图 23.md` 与 App 接入关系。
+修改前读目标文件的角色、输入、输出和核心约束；修改中只动相关段落；修改后检查数量、格式、禁区、承载关系、固定输出和自检是否一致。涉及 App 逻辑时同步查看 `Game content extraction/agents.md`。
 
-## 仓库源码打包发布
+## 发布
 
-## 盲盒物品库重构 Spec
-
-- `.workflow/.spec/SPEC-2026-04-29-game-content-extraction-blind-box-library-refactor/spec-summary.md` 已完成 spec-generator 全链路规格包，覆盖 product brief、requirements、architecture、epics、readiness 与 issue export。
-- `.workflow/.spec/SPEC-2026-04-29-blind-box-pool-itemization-fix/spec-summary.md` 是对条件池 / 风险池的补丁规格，Readiness 评分 95.25 / 100，Gate 为 Pass；执行会话见 `.workflow/active/WFS-blind-box-pool-itemization-fix/`。
-- `.workflow/.spec/SPEC-2026-04-29-game-content-extraction-four-pool-refactor/spec-summary.md` 是最新四类内容池规格，Readiness 评分 96.5 / 100，Gate 为 Pass；执行会话 `.workflow/active/WFS-game-content-four-pool-refactor/` 已完成。
-- 规格方向已将盲盒物品库重构收敛为 20 个 `常见场景+用途` 入口、四类内容池与四栏兼容映射；TLV4 执行会话 `.workflow/.team/TLV4-2026-04-29-blind-box-content-replace/` 已将旧内容库全量替换为新内容，并移除旧静态盲盒物品池。
-- 当前 20 个盒号均兼容现有逗号输入、四栏勾选和 `draw_history.json.item_pools` 历史 key；新增测试文件为 `Game content extraction/test_blind_box_content_model.py`。
-- 写库验收沿用“真实、常见、边界清楚、可单独圈选、强场景相关”；`visible_small_items` 必须成组、块状或有明确承载，`scene_expansion_items` 必须中等以上且不依赖图像已有对象；`test_blind_box_content_model.py` 已改为四池 schema 与 blocked patterns 回归校验。
-- 质量目标：人工抽样 30 次时，明显不适合项低于 10%，且风险内容不得进入默认抽取结果。
-
-- 仓库源码打包到 GitHub Release 时，使用保留目录结构的 zip 资产，不直接上传文件夹。
-- 推荐 source-bundle tag：`v0.1.4-source-YYYYMMDD`；该命名规范化后仍为当前正式桌面版本，不会误触发 App 更新提示。
-- 推荐 source-bundle 资产名：`zbt-prompt-v0.1.4-source-YYYYMMDD.zip`。
-- 仅当发布桌面工具新版本时，才提升 `APP_VERSION`、安装包名和正式 `v0.1.x` tag。
+源码包使用保留目录结构的 zip 资产，推荐 `v0.1.4-source-YYYYMMDD` / `zbt-prompt-v0.1.4-source-YYYYMMDD.zip`。只有发布桌面工具新版本时，才提升 `APP_VERSION`、安装包名和正式 `v0.1.x` tag。
