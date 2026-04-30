@@ -40,8 +40,8 @@
 - 四工作区：`盲盒物品/动物抽取`、`人物表情抽取`、`图像抓取`、`批量重命名`。
 - UI 只用原生 `tkinter/ttk`；不改成 Web、数据库、服务端或大型工程；不引入第三方 UI 依赖。
 - 盲盒数据事实源为 `Game content extraction/data/blind_boxes.py`；当前为 20 个 `常见场景+用途` 入口和四池模型。
-- 四池固定为 `core_items`、`support_items`、`visible_small_items`、`scene_expansion_items`，运行时兼容 `large` / `medium` / `small` / `hanging` 四栏，`hanging` 当前为空兼容桶；写库时禁止靠 `收纳盒`、`整理篮`、`展示架`、`托座`、`分装盒` 等尾词批量扩写。
-- 四池分工：`core_items` 写主题核心主体物，`support_items` 写配套工具物，`visible_small_items` 写成组可见小物，`scene_expansion_items` 保留历史字段名但语义为可放置中型单物，不再写 `组合`；细则见 `Game content extraction/data/agents.md` 和 `Game content extraction/agents.md`。
+- 四池固定为 `core_items`、`support_items`、`visible_small_items`、`scene_expansion_items`，运行时兼容 `large` / `medium` / `small` / `hanging` 四栏，`hanging` 当前为空兼容桶；写库时禁止靠 `收纳盒`、`整理篮`、`展示架`、`托座`、`分装盒`、`组合` 等尾词批量扩写。
+- 四池分工：`core_items` 写主题核心主体物，`support_items` 写配套工具物，`visible_small_items` 写成组可见小物，`scene_expansion_items` 保留历史字段名但语义为可放置中型单物，不再写 `组合`；生成时先按真实物品族分布选物，再检查反模板规则和尾词配额，避免 `功能词 + 板/盘/垫/盒/包/册/卷` 成片造词；细则见 `Game content extraction/data/agents.md` 和 `Game content extraction/agents.md`。
 - `conditional_items`、`anchor_required_items`、`blocked_or_risky` 不再作为目标内容类别；风险内容只进入 `blocked_patterns`。
 - `draw_history.json` 服务物品、动物和表情历史；表情只写 `expression_pools`；`config.json` 只服务批量重命名。
 - 图像抓取只复制文件；批量重命名必须保留目标文件存在时跳过的保护逻辑。
