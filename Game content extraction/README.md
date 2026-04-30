@@ -71,9 +71,9 @@ python '内容抽取.py'
 
 仓库根目录 `主图 第一步.md` 已同步同一套 20 类盲盒编号、每类物品速查和场景硬约束，用于第一步只输出类别编号、动物字段、禁用字段和补偿字段。
 
-每个类别下按四类内容池维护：`core_items` 作为核心物，`support_items` 作为配套物，`visible_small_items` 作为可见小物，`scene_expansion_items` 作为场景扩展物。运行时继续把四池内容映射回现有大型 / 中型 / 小型 / 悬挂四栏，其中悬挂栏保留为空兼容桶。最新讨论见 `../.workflow/.brainstorm/BS-2026-04-29-重新定义conditional-items-blocked-or-risky/`，规格包见 `../.workflow/.spec/SPEC-2026-04-29-game-content-extraction-four-pool-refactor/`。
+每个类别下按四类内容池维护：`core_items` 写主题核心主体物，`support_items` 写配套工具物，`visible_small_items` 写成组可见小物，`scene_expansion_items` 写 2-3 个真实物品构成的中尺度组合。运行时继续把四池内容映射回现有大型 / 中型 / 小型 / 悬挂四栏，其中悬挂栏保留为空兼容桶。最新讨论见 `../.workflow/.brainstorm/BS-2026-04-29-重新定义conditional-items-blocked-or-risky/`，规格包见 `../.workflow/.spec/SPEC-2026-04-29-game-content-extraction-four-pool-refactor/`。
 
-当前 20 个盲盒盒号均已按四类内容池重构，旧静态盲盒物品内容已从数据文件移除；抽取物品直接来自新的四池内容，并继续映射回现有大型 / 中型 / 小型 / 悬挂四栏。盒号 1-20 保留用于逗号输入和历史兼容，但语义已切换为新的场景+用途目录。启用物品状态时，程序会过滤 `半透明`、`高光反光`、`带有光泽` 等风险状态词。
+当前 20 个盲盒盒号均已按四类内容池重构，旧静态盲盒物品内容已从数据文件移除；抽取物品直接来自新的四池内容，并继续映射回现有大型 / 中型 / 小型 / 悬挂四栏。写库时不得靠 `收纳盒`、`整理篮`、`展示架`、`托座`、`分装盒` 等尾词矩阵凑数，`scene_expansion_items` 里的 `组合` 尾词除外。盒号 1-20 保留用于逗号输入和历史兼容，但语义已切换为新的场景+用途目录。启用物品状态时，程序会过滤 `半透明`、`高光反光`、`带有光泽` 等风险状态词。
 
 四类内容池规格 `../.workflow/.spec/SPEC-2026-04-29-game-content-extraction-four-pool-refactor/` 已落地；全量替换执行会话见 `../.workflow/.team/TLV4-2026-04-29-blind-box-content-replace/`。后续不再使用 `conditional_items`、`anchor_required_items`、`blocked_or_risky` 作为目标内容类别；风险内容只作为 `blocked_patterns` 校验，不作为盲盒物品。
 
