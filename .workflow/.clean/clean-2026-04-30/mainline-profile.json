@@ -1,0 +1,43 @@
+﻿{
+    "coreModules":  [
+                        ".workflow/active",
+                        ".workflow/.spec",
+                        "agents.md",
+                        "\".workflow/.spec",
+                        "\".workflow/.brainstorm",
+                        "Game content extraction/CLAUDE.md",
+                        "\"Game content extraction/build",
+                        "README.md",
+                        ".gitignore",
+                        "Game content extraction/README.md",
+                        "\"\\347\\273\\204\\345\\233\\276 23.md\"",
+                        "Game content extraction/data",
+                        ".workflow/.team",
+                        "\"Game content extraction/\\345\\206\\205\\345\\256\\271\\346\\212\\275\\345\\217\\226.py\"",
+                        ".workflow/.analysis",
+                        ".workflow/.brainstorm",
+                        ".workflow/.debug",
+                        "\"\\347\\273\\204\\345\\233\\276 23 \\350\\241\\250\\346\\203\\205\\345\\211\\215\\347\\275\\256.md\"",
+                        ".workflow/.csv-wave",
+                        "Game content extraction/agents.md"
+                    ],
+    "activeFiles":  [
+
+                    ],
+    "activeBranches":  [
+                           "main"
+                       ],
+    "staleThreshold":  {
+                           "sessions":  7,
+                           "branches":  30,
+                           "documents":  14
+                       },
+    "isGitRepo":  true,
+    "timestamp":  "2026-04-30T16:00:29.381Z",
+    "protectedRecentSessions":  [
+                                    ".workflow/.team/TLV4-2026-04-30-blind-box-item-quality",
+                                    ".workflow/.brainstorm/BS-2026-04-30-scene-expansion-items-small",
+                                    ".workflow/.spec/SPEC-2026-04-30-blind-box-medium-scene-fragments",
+                                    ".workflow/active/WFS-blind-box-medium-scene-fragments"
+                                ]
+}

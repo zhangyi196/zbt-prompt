@@ -1,4 +1,4 @@
-每次完成会话后，同步检查 `agents.md`、`Game content extraction/agents.md`、`README.md`、`.gitignore` 是否需要随本次变更更新；这几个文件必须保持精简，只记录稳定规则和必要入口。
+每次完成会话后，同步检查根目录 `agents.md`、`README.md`、`.gitignore`，以及涉及工具时的 `Game content extraction/agents.md`、`Game content extraction/README.md` 是否需要随本次变更更新；这些文件必须保持精简，只记录稳定规则和必要入口。
 若 `.gitignore` 命中已跟踪的缓存文件或构建缓存，必须同步取消跟踪清理。
 
 # Agents Guide
@@ -39,7 +39,7 @@
 - 四工作区：`盲盒物品/动物抽取`、`人物表情抽取`、`图像抓取`、`批量重命名`。
 - UI 只用原生 `tkinter/ttk`；不改成 Web、数据库、服务端或大型工程；不引入第三方 UI 依赖。
 - 盲盒数据事实源为 `Game content extraction/data/blind_boxes.py`；当前为 20 个 `常见场景+用途` 入口和四池模型。
-- 四池固定为 `core_items`、`support_items`、`visible_small_items`、`scene_expansion_items`，运行时兼容 `large` / `medium` / `small` / `hanging` 四栏；写库时禁止靠 `收纳盒`、`整理篮`、`展示架`、`托座`、`分装盒` 等尾词批量扩写，`scene_expansion_items` 的 `组合` 尾词除外。
+- 四池固定为 `core_items`、`support_items`、`visible_small_items`、`scene_expansion_items`，运行时兼容 `large` / `medium` / `small` / `hanging` 四栏，`hanging` 当前为空兼容桶；写库时禁止靠 `收纳盒`、`整理篮`、`展示架`、`托座`、`分装盒` 等尾词批量扩写，`scene_expansion_items` 的 `组合` 尾词除外。
 - 四池分工：`core_items` 写主题核心主体物，`support_items` 写配套工具物，`visible_small_items` 写成组可见小物，`scene_expansion_items` 写 2-3 个真实物品构成的中尺度组合；细则见 `Game content extraction/agents.md`。
 - `conditional_items`、`anchor_required_items`、`blocked_or_risky` 不再作为目标内容类别；风险内容只进入 `blocked_patterns`。
 - `draw_history.json` 服务物品、动物和表情历史；表情只写 `expression_pools`；`config.json` 只服务批量重命名。
@@ -51,4 +51,4 @@
 
 ## 发布
 
-源码包使用保留目录结构的 zip 资产，推荐 `v0.1.4-source-YYYYMMDD` / `zbt-prompt-v0.1.4-source-YYYYMMDD.zip`。只有发布桌面工具新版本时，才提升 `APP_VERSION`、安装包名和正式 `v0.1.x` tag。
+源码包使用保留目录结构的 zip 资产，推荐发布标识 `source-YYYYMMDD` 和资产名 `zbt-prompt-source-YYYYMMDD.zip`；不要把源码包标识当作桌面工具正式版本号。只有发布桌面工具新版本时，才提升 `APP_VERSION`、安装包名和正式 `v0.1.x` tag。

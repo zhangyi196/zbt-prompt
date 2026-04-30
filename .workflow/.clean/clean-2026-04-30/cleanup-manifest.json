@@ -1,0 +1,39 @@
+{
+  "generated_at": "2026-04-30T16:03:07.3056908+08:00",
+  "discoveries": {
+    "stale_sessions": [
+      {
+        "path": ".workflow/.debug/DBG-2026-04-21-update-check-release-button",
+        "age_days": 9,
+        "reason": "Single-file debug scratch session last touched on 2026-04-21, with no nested updates or git references in the last 7 days.",
+        "risk": "low"
+      },
+      {
+        "path": ".workflow/.debug/DBG-2026-04-21-installed-exe-no-tkinter",
+        "age_days": 9,
+        "reason": "Debug session last touched on 2026-04-21, including an installer test snapshot, with no nested updates or git references in the last 7 days.",
+        "risk": "low"
+      }
+    ],
+    "drifted_documents": [],
+    "dead_code": []
+  },
+  "summary": {
+    "total_items": 2,
+    "by_category": {
+      "stale_sessions": 2,
+      "drifted_documents": 0,
+      "dead_code": 0
+    },
+    "by_risk": {
+      "low": 2,
+      "medium": 0,
+      "high": 0
+    }
+  },
+  "notes": [
+    "Excluded .workflow/active/WFS-game-content-expression-window because a nested file was updated on 2026-04-27 and git references exist within the last 7 days.",
+    "Protected current work scopes from mainline-profile.json and the repo instructions were not considered cleanup candidates.",
+    "No conservative drifted_documents or standalone dead_code candidates were found beyond the stale debug sessions."
+  ]
+}

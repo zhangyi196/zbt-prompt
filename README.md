@@ -32,13 +32,13 @@
 - 提示词保持中文风格、固定输出、数量配额、自检项和既有链路。
 - `组图 23.md` 保留 Ref 绑定、人物热区互斥、冷区兜底、空间可放置性和灯具照明关系约束。
 - 新增、异物植入或替换为更大物体前，必须确认 Target 中有完整可见、未被占用且不会挤压原主体的空间。
-- `agents.md`、`Game content extraction/agents.md`、`README.md`、`.gitignore` 必须保持精简，只记录稳定规则和必要入口。
+- 根目录 `agents.md`、`README.md`、`.gitignore`，以及工具目录 `Game content extraction/agents.md`、`Game content extraction/README.md` 必须保持精简，只记录稳定规则和必要入口。
 
 ## 发布
 
 源码包使用保留目录结构的 zip 资产，推荐：
 
-- tag：`v0.1.4-source-YYYYMMDD`
-- 资产名：`zbt-prompt-v0.1.4-source-YYYYMMDD.zip`
+- 发布标识：`source-YYYYMMDD`
+- 资产名：`zbt-prompt-source-YYYYMMDD.zip`
 
 桌面工具当前发布版为 `v0.1.4`，安装包 `GameContentExtraction-Setup-v0.1.4.exe`。桌面工具版本、安装包和更新检查以 `Game content extraction/` 下文档为准。

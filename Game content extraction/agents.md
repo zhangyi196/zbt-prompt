@@ -1,4 +1,4 @@
-每次完成会话后，同步检查 `agents.md`、`README.md`、`.gitignore` 是否需要随本次变更更新；这些文件必须保持精简，只记录稳定规则和必要入口。
+每次完成会话后，同步检查本目录 `agents.md`、`README.md`，以及根目录 `agents.md`、`README.md`、`.gitignore` 是否需要随本次变更更新；这些文件必须保持精简，只记录稳定规则和必要入口。
 若 `.gitignore` 命中已跟踪的缓存文件或构建缓存，必须同步取消跟踪清理。
 
 # Game Content Extraction Guide
@@ -80,9 +80,10 @@
 ```powershell
 python -B -m py_compile '内容抽取.py'
 python -B -m py_compile 'image_fetcher_ui.py' 'file_batch_renamer.py'
-python -B '..\.workflow\active\WFS-game-content-expression-window\.process\verify_expression.py'
 python -B -m unittest discover -s . -p 'test_*.py'
 ```
+
+若 `.workflow\active\WFS-game-content-expression-window\.process\verify_expression.py` 仍存在，改表情逻辑后可额外运行该验收脚本。
 
 ## 打包
 

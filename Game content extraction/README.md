@@ -1,4 +1,4 @@
-每次完成执行任务后，都要同步更新 `agents.md`、`README.md`、`.gitignore` 文件。
+每次完成执行任务后，都要同步检查本目录 `agents.md`、`README.md`，以及根目录 `agents.md`、`README.md`、`.gitignore` 是否需要更新。
 若 `.gitignore` 命中已跟踪的缓存文件或构建缓存，必须同步执行取消跟踪清理，避免再次提交到仓库。
 
 # 游戏内容抽取工具
@@ -159,11 +159,16 @@ https://api.github.com/repos/zhangyi196/zbt-prompt/releases?per_page=20
 ```powershell
 python -B -m py_compile 'Game content extraction\内容抽取.py'
 python -B -m py_compile 'Game content extraction\image_fetcher_ui.py' 'Game content extraction\file_batch_renamer.py'
-python -B '.workflow\active\WFS-game-content-expression-window\.process\verify_expression.py'
 python -B -m unittest discover -s 'Game content extraction' -p 'test_*.py'
 ```
 
-预期输出：
+若 `.workflow\active\WFS-game-content-expression-window\.process\verify_expression.py` 仍存在，改表情逻辑后可额外运行：
+
+```powershell
+python -B '.workflow\active\WFS-game-content-expression-window\.process\verify_expression.py'
+```
+
+该脚本预期输出：
 
 ```text
 expression acceptance checks passed

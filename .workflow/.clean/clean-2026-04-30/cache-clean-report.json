@@ -1,0 +1,24 @@
+{
+  "timestamp": "2026-04-30T16:09:48.4850419+08:00",
+  "scope": "Game content extraction",
+  "results": {
+    "deleted_files": [
+      "Game content extraction/data/__pycache__/blind_boxes.cpython-313.pyc",
+      "Game content extraction/data/__pycache__/__init__.cpython-313.pyc",
+      "Game content extraction/__pycache__/test_blind_box_content_model.cpython-313.pyc",
+      "Game content extraction/__pycache__/内容抽取.cpython-313.pyc"
+    ],
+    "deleted_empty_dirs": [
+      "Game content extraction/data/__pycache__",
+      "Game content extraction/__pycache__"
+    ],
+    "failed": [],
+    "skipped": []
+  },
+  "summary": {
+    "deleted_files": 4,
+    "deleted_empty_dirs": 2,
+    "failed": 0,
+    "skipped": 0
+  }
+}

@@ -1,0 +1,30 @@
+﻿{
+    "timestamp":  "2026-04-30T16:04:27.693Z",
+    "results":  {
+                    "staged":  [
+                                   {
+                                       "path":  ".workflow/.debug/DBG-2026-04-21-update-check-release-button",
+                                       "trashPath":  "F:\\vscode projects\\zbt prompt\\.workflow\\.clean\\clean-2026-04-30\\.trash\\workflow_.debug_DBG-2026-04-21-update-check-release-button"
+                                   },
+                                   {
+                                       "path":  ".workflow/.debug/DBG-2026-04-21-installed-exe-no-tkinter",
+                                       "trashPath":  "F:\\vscode projects\\zbt prompt\\.workflow\\.clean\\clean-2026-04-30\\.trash\\workflow_.debug_DBG-2026-04-21-installed-exe-no-tkinter"
+                                   }
+                               ],
+                    "deleted":  [
+                                    ".workflow/.debug/DBG-2026-04-21-update-check-release-button",
+                                    ".workflow/.debug/DBG-2026-04-21-installed-exe-no-tkinter"
+                                ],
+                    "failed":  [
+
+                               ],
+                    "skipped":  [
+
+                                ]
+                },
+    "summary":  {
+                    "deleted":  2,
+                    "failed":  0,
+                    "skipped":  0
+                }
+}
