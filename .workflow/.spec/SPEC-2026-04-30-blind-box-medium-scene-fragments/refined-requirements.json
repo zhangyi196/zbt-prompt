@@ -1,0 +1,158 @@
+{
+  "session_id": "SPEC-2026-04-30-blind-box-medium-scene-fragments",
+  "phase": "1.5",
+  "generated_at": "2026-04-30T00:00:00+08:00",
+  "source": "brainstorm-handoff",
+  "discussion_rounds": 0,
+  "clarified_problem_statement": "Rewrite scene_expansion_items for all 20 blind-box scenes so the pool represents medium-scale scene fragments rather than large furniture/storage objects, generic containers, or tiny cards/labels.",
+  "confirmed_target_users": [
+    {
+      "name": "Prompt maintainer",
+      "needs": [
+        "Stable content rules that prevent future drift back to oversized or undersized objects.",
+        "Clear pool boundaries among core_items, support_items, visible_small_items, and scene_expansion_items."
+      ],
+      "pain_points": [
+        "Large furniture terms create placement burden.",
+        "Container and card alternatives blur pool semantics."
+      ]
+    },
+    {
+      "name": "Game content extraction tool maintainer",
+      "needs": [
+        "Data changes that preserve existing runtime contracts and tests.",
+        "Concrete acceptance checks for data quality."
+      ],
+      "pain_points": [
+        "Changing pool semantics can accidentally require UI or runtime logic changes.",
+        "Manual list editing can break uniqueness or count invariants."
+      ]
+    }
+  ],
+  "confirmed_domain": "Blind-box item content data library",
+  "confirmed_features": [
+    {
+      "name": "Medium-scale scene fragment content model",
+      "description": "Define scene_expansion_items around activity results, medium task surfaces, setup surfaces, grouped arrays, and complete/partial outcomes.",
+      "acceptance_criteria": [
+        "The spec defines five allowed item families for scene_expansion_items.",
+        "The spec defines scale boundaries that reject both oversized furniture and tiny card/label subjects.",
+        "The model explains how scene_expansion_items differs from core_items, support_items, and visible_small_items."
+      ],
+      "edge_cases": [
+        "Information terms like label or price can appear only when upgraded into a larger board, surface, array, or outcome.",
+        "Some medium carrier objects may remain only as rare exceptions, not the pool backbone."
+      ],
+      "priority": "must"
+    },
+    {
+      "name": "All-scene data rewrite",
+      "description": "Rewrite scene_expansion_items for all 20 scenes while preserving 50 unique items per scene.",
+      "acceptance_criteria": [
+        "Every scene has exactly 50 unique scene_expansion_items.",
+        "No scene_expansion_items list uses large furniture/storage terms as the primary pattern.",
+        "No scene_expansion_items list uses tiny card/label/ticket terms as standalone primary subjects."
+      ],
+      "edge_cases": [
+        "Chinese synonyms may imply the same disallowed scale even when exact blacklist terms do not match.",
+        "Duplicates may arise after replacing similar large terms."
+      ],
+      "priority": "must"
+    },
+    {
+      "name": "Content-quality validation",
+      "description": "Extend or add tests/checks that guard structural invariants and the new content-quality constraints.",
+      "acceptance_criteria": [
+        "Existing unittest suite passes.",
+        "Quality checks detect large furniture/storage subjects in scene_expansion_items.",
+        "Quality checks detect tiny card/label/ticket subjects used as standalone scene_expansion_items."
+      ],
+      "edge_cases": [
+        "Allowed upgraded forms such as 价格板 or 记录板 must not be falsely rejected.",
+        "Existing blocked patterns for light/reflection/tiny traces remain enforced."
+      ],
+      "priority": "should"
+    },
+    {
+      "name": "Documentation synchronization",
+      "description": "Update stable maintainer documentation if the implementation accepts the new scene_expansion_items semantics.",
+      "acceptance_criteria": [
+        "Game content extraction/agents.md states the medium-scale scene fragment rule succinctly.",
+        "agents.md, README.md, and .gitignore are checked and updated only if necessary.",
+        "Documentation remains concise and does not duplicate full item lists."
+      ],
+      "edge_cases": [
+        "主图 第一步.md should not change unless category IDs or category semantics change.",
+        "README.md should not change unless user-facing behavior changes."
+      ],
+      "priority": "should"
+    }
+  ],
+  "non_functional_requirements": [
+    {
+      "type": "Reliability",
+      "details": "Data rewrite must preserve runtime compatibility and draw-history keys.",
+      "measurable_criteria": "All existing blind-box content model tests pass."
+    },
+    {
+      "type": "Maintainability",
+      "details": "New content rules must be simple enough for future list maintenance.",
+      "measurable_criteria": "Documentation contains concise allowed families, disallowed subject categories, and examples."
+    },
+    {
+      "type": "Usability",
+      "details": "Generated item names must remain clear Chinese concrete objects that are first-eye visible and independently circleable.",
+      "measurable_criteria": "Manual review of pilot scenes confirms no ambiguous, too-large, or too-small primary subjects."
+    }
+  ],
+  "boundary_conditions": {
+    "in_scope": [
+      "Rewrite scene_expansion_items for 20 scenes.",
+      "Add or extend data quality tests for the new scale boundaries.",
+      "Synchronize concise maintainer documentation."
+    ],
+    "out_of_scope": [
+      "Adding a fifth pool.",
+      "Changing scene IDs, category names, or runtime compatibility mapping.",
+      "Changing tkinter UI, draw history behavior, animal pools, expression pools, image fetching, or renaming features."
+    ],
+    "constraints": [
+      "Four-pool schema remains fixed.",
+      "Each pool remains 50 unique items.",
+      "Chinese content remains UTF-8.",
+      "Do not rely on light, reflection, transparency, glowing, thin-line, or micro-trace differences."
+    ]
+  },
+  "integration_points": [
+    "BLIND_BOX_ITEM_POOL_BUNDLES",
+    "BLIND_BOXES runtime view",
+    "BLIND_BOX_COMPATIBILITY_MAPPING",
+    "BlindBoxExtractor output generation",
+    "Game content extraction/agents.md maintainer rules"
+  ],
+  "key_assumptions": [
+    "User accepts the latest brainstorm direction: medium-scale scene fragments.",
+    "The runtime mapping can stay unchanged even though scene_expansion_items names become less furniture-like.",
+    "The implementation can use manual or generated list editing as long as tests enforce count and uniqueness."
+  ],
+  "discussion_log": [
+    {
+      "round": 1,
+      "agent_prompt": "Brainstorm scene_expansion_items alternatives that are smaller than carts/cabinets/racks.",
+      "user_response": "Boxes and baskets blur pool boundaries.",
+      "timestamp": "2026-04-30T00:00:00+08:00"
+    },
+    {
+      "round": 2,
+      "agent_prompt": "Refine to non-container scene fragments.",
+      "user_response": "Avoid too-small content such as small cards.",
+      "timestamp": "2026-04-30T00:00:00+08:00"
+    },
+    {
+      "round": 3,
+      "agent_prompt": "Create spec handoff.",
+      "user_response": "Current optimization is acceptable; write as spec handoff.",
+      "timestamp": "2026-04-30T00:00:00+08:00"
+    }
+  ]
+}

@@ -1,0 +1,109 @@
+{
+  "critical_files": [
+    {
+      "path": "Game content extraction/data/blind_boxes.py",
+      "reason": "Primary implementation target. Touch points are `_build_legacy_blind_box_entry`, all 20 `scene_expansion_items` lists inside `BLIND_BOX_ITEM_POOL_BUNDLES`, and the derived `BLIND_BOX_COMPATIBILITY_MAPPING` / `BLIND_BOXES` contract that must stay shape-compatible."
+    },
+    {
+      "path": "Game content extraction/test_blind_box_content_model.py",
+      "reason": "Primary regression gate. Existing tests already enforce 20 scenes, four-pool schema, 50 unique items per pool, runtime bucket compatibility, and blocked-pattern filtering; this file is the correct place to add large-subject and tiny-subject quality checks."
+    },
+    {
+      "path": "Game content extraction/agents.md",
+      "reason": "Stable maintainer rule source for the local tool. It already documents four-pool blind-box authoring and must be the first documentation sync target if the medium-scale scene fragment model is accepted in implementation."
+    },
+    {
+      "path": "agents.md",
+      "reason": "Repository-level guardrails require post-change sync checks for stable rules and file responsibilities. Update only if the new fourth-pool rule needs a repo-wide note."
+    },
+    {
+      "path": "README.md",
+      "reason": "Top-level user-facing entry document. It should only change if the accepted fourth-pool semantics alter the maintainer-facing library description or entry guidance."
+    },
+    {
+      "path": ".gitignore",
+      "reason": "Must be checked after implementation per repo rules; update only if the task introduces new generated cache/build artifacts or exposes tracked cache files that now match ignore rules."
+    },
+    {
+      "path": ".workflow/.spec/SPEC-2026-04-30-blind-box-medium-scene-fragments/product-brief.md",
+      "reason": "Best source for the formal semantic target: medium-scale scene fragments that are larger than cards/labels but smaller than cabinets/carts/racks, while preserving the four-pool contract."
+    },
+    {
+      "path": ".workflow/.team/TLV4-2026-04-30-blind-box-item-quality/artifacts/REVIEW-001-report.md",
+      "reason": "Recent review evidence for failure modes to avoid: generated small accessories leaking into `scene_expansion_items`, incomplete pool-boundary cleanup, and hard-to-review runtime rewrites."
+    }
+  ],
+  "patterns": [
+    "`BLIND_BOX_ITEM_POOL_BUNDLES` is the single source of truth for blind-box content; runtime `BLIND_BOXES` is derived from it rather than authored separately.",
+    "`scene_expansion_items` currently flows directly into runtime `large` via `_build_legacy_blind_box_entry`, so fourth-pool names must remain independently placeable and visibly substantial.",
+    "Every scene bundle uses the fixed four-pool schema: `core_items`, `support_items`, `visible_small_items`, `scene_expansion_items`.",
+    "Each pool is expected to contain exactly 50 unique UTF-8 strings for every one of the 20 scenes.",
+    "`BLIND_BOX_COMPATIBILITY_MAPPING` is uniform for every scene: `large_sources` includes `core_items` and `scene_expansion_items`, `medium_sources` includes `support_items` plus `core_items:first_6`, `small_sources` uses `visible_small_items`, and `hanging_sources` stays empty.",
+    "Current regression tests are pure `unittest` and import the real module/constants directly; new quality checks should follow that same style instead of adding a separate validation framework.",
+    "Repository guidance requires concise stable-doc sync after implementation, not spec-detail duplication; `Game content extraction/agents.md` is the preferred place for fourth-pool rule wording.",
+    "Recent review artifacts show a rejected pattern: import-time/generated rewrites that hide the effective runtime data and make `scene_expansion_items` drift toward small accessories."
+  ],
+  "dependencies": [
+    "Runtime blind-box output depends on `Game content extraction/data/blind_boxes.py` exposing stable `BLIND_BOXES` entries keyed by existing numeric box ids.",
+    "The local extractor logic depends on the legacy bucket names remaining exactly `name`, `large`, `medium`, `small`, and `hanging`.",
+    "Regression confidence depends on extending `Game content extraction/test_blind_box_content_model.py` rather than introducing a new test harness.",
+    "Documentation sync depends first on `Game content extraction/agents.md`, with follow-up checks for `agents.md`, `README.md`, and `.gitignore`.",
+    "The accepted semantic baseline depends on the current spec set under `.workflow/.spec/SPEC-2026-04-30-blind-box-medium-scene-fragments/`, especially the product brief, requirements, and architecture docs.",
+    "Conflict assessment depends on prior active sessions that already touched the same data/test/docs surface, especially `WFS-game-content-four-pool-refactor` and `WFS-blind-box-pool-itemization-fix`."
+  ],
+  "integration_points": [
+    {
+      "module": "rules",
+      "path": ".workflow/.spec/SPEC-2026-04-30-blind-box-medium-scene-fragments/product-brief.md",
+      "description": "Defines the formal medium-scale scene fragment model, including the boundary against oversized furniture/storage subjects and undersized card/label/ticket subjects."
+    },
+    {
+      "module": "data_rewrite",
+      "path": "Game content extraction/data/blind_boxes.py",
+      "description": "Rewrite all 20 `scene_expansion_items` arrays in-place while preserving scene ids, pool keys, 50-item uniqueness, and the derived runtime compatibility view."
+    },
+    {
+      "module": "runtime_compatibility",
+      "path": "Game content extraction/data/blind_boxes.py",
+      "description": "Keep `_build_legacy_blind_box_entry`, `BLIND_BOX_COMPATIBILITY_MAPPING`, and `BLIND_BOXES` behavior stable so the extractor still consumes the same four runtime buckets."
+    },
+    {
+      "module": "tests",
+      "path": "Game content extraction/test_blind_box_content_model.py",
+      "description": "Add pool-quality assertions for large-subject and tiny-subject detection on `scene_expansion_items`, plus any needed boundary checks against the other three pools."
+    },
+    {
+      "module": "docs",
+      "path": "Game content extraction/agents.md",
+      "description": "Sync the stable fourth-pool rule succinctly after implementation; then check `agents.md`, `README.md`, and `.gitignore` for necessary but minimal updates."
+    }
+  ],
+  "conflict_risk": "medium",
+  "conflict_areas": [
+    "Active workflow history already includes `WFS-game-content-four-pool-refactor` and `WFS-blind-box-pool-itemization-fix`, both of which modify `Game content extraction/data/blind_boxes.py`, `Game content extraction/test_blind_box_content_model.py`, and the same doc set.",
+    "`blind_boxes.py` is a large static data file, so full-list rewrites are easy to mis-review and should stay sequential rather than parallel with other content tasks.",
+    "The current working tree contains untracked current-session workflow/spec/team directories; they are intentional planning artifacts and should not be cleaned up or overwritten.",
+    "Recent quality-review artifacts report a rejected approach where effective `scene_expansion_items` values were rewritten/generated at import time, making source literals diverge from runtime behavior.",
+    "Because `scene_expansion_items` feeds runtime `large`, any boundary mistake will surface as user-visible extraction quality regressions even if structural tests still pass."
+  ],
+  "constraints": [
+    "Do not change the 20 scene entries, scene ids, or the four pool keys.",
+    "Do not change `BLIND_BOX_COMPATIBILITY_MAPPING` public source mapping or the `BLIND_BOXES` runtime shape.",
+    "Every scene pool must remain exactly 50 unique UTF-8 strings.",
+    "`scene_expansion_items` must be rewritten as medium-scale scene fragments: not cabinets/carts/racks/desks and similar oversized furniture/storage subjects, and not standalone cards/labels/tickets/bookmarks/price tags and similar tiny subjects.",
+    "Preserve the existing local `tkinter` tool architecture; no UI, database, service, or third-party dependency changes are in scope.",
+    "Keep changes data-only plus regression tests and minimal stable-doc sync; do not alter animal pools, expression logic, image fetching, renaming, history semantics, or release versioning.",
+    "Use the existing `unittest` style for quality gates and keep error feedback maintainable for future editors.",
+    "After implementation, check `Game content extraction/agents.md`, `agents.md`, `README.md`, and `.gitignore`; update only what is necessary and keep those files concise.",
+    "Do not overwrite unrelated uncommitted or generated workflow artifacts from other sessions."
+  ],
+  "recommended_modules": [
+    "rules",
+    "data_rewrite",
+    "tests",
+    "docs"
+  ],
+  "_metadata": {
+    "timestamp": "2026-04-30T00:00:00+08:00"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "id": "IMPL-2",
+  "title": "Rewrite all 20 scene_expansion_items lists",
+  "description": "Rewrite every fourth-pool list inside Game content extraction/data/blind_boxes.py so all 20 scene_expansion_items collections become medium-scale scene fragments. Preserve scene IDs, scene names, four-pool keys, 50 unique UTF-8 strings per pool, and the derived BLIND_BOXES plus BLIND_BOX_COMPATIBILITY_MAPPING contract.",
+  "status": "completed",
+  "depends_on": [
+    "IMPL-1"
+  ],
+  "files": [
+    "Game content extraction/data/blind_boxes.py"
+  ],
+  "acceptance_criteria": [
+    "20 scene_expansion_items lists are rewritten in place for all 20 scene bundles in BLIND_BOX_ITEM_POOL_BUNDLES.",
+    "Each rewritten list still contains exactly 50 unique UTF-8 strings, and 0 scene IDs, scene names, or pool keys are added, removed, or renamed.",
+    "0 fourth-pool entries remain as oversized furniture/storage subjects such as cabinets, carts, racks, shelves, desks, counters, booths, wardrobes, or their Chinese equivalents unless IMPL-1 marked an explicit allowed exception.",
+    "0 fourth-pool entries remain as standalone tiny information subjects such as cards, labels, tickets, bookmarks, price tags, or stickers unless IMPL-1 marked them as upgraded larger information surfaces."
+  ],
+  "verification": [
+    "python -B -m py_compile 'Game content extraction\\data\\blind_boxes.py'",
+    "python -B -m unittest discover -s 'Game content extraction' -p 'test_*.py'  # after the rewrite, remaining failures should only reflect unfinished IMPL-3 assertions"
+  ],
+  "convergence": {
+    "produces": [
+      "One complete source rewrite of all 20 fourth-pool lists",
+      "No runtime-shape changes outside the rewritten scene_expansion_items content"
+    ],
+    "ready_for": [
+      "IMPL-3 can finalize and execute the regression suite against the completed data rewrite"
+    ]
+  },
+  "meta": {
+    "type": "feature",
+    "agent": "@code-developer",
+    "module": "Game content extraction",
+    "risk": "medium",
+    "execution_order": 2
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "id": "IMPL-4",
+  "title": "Sync stable docs and close the review loop",
+  "description": "After data and tests pass, update the durable maintainer guidance for the medium-scene-fragment fourth-pool rule and review the root entry files for concise sync. Game content extraction/agents.md is the primary rule source; agents.md, README.md, and .gitignore should only change if the new implementation introduces a stable rule update or a real cache-tracking correction.",
+  "status": "completed",
+  "depends_on": [
+    "IMPL-3"
+  ],
+  "files": [
+    "Game content extraction/agents.md",
+    "agents.md",
+    "README.md",
+    ".gitignore"
+  ],
+  "acceptance_criteria": [
+    "1 primary maintainer rule source is updated first: Game content extraction/agents.md documents the accepted medium-scene-fragment fourth-pool rule in concise stable wording.",
+    "3 root files are checked for sync: agents.md, README.md, and .gitignore; only files that need a stable-rule or tracked-cache correction are edited.",
+    "1 execution summary records the final verification commands/results at .workflow/active/WFS-blind-box-medium-scene-fragments/.process/EXECUTION_SUMMARY.md and confirms that unrelated workflow artifacts were not modified."
+  ],
+  "verification": [
+    "python -B -m py_compile 'Game content extraction\\内容抽取.py' 'Game content extraction\\data\\blind_boxes.py'",
+    "python -B -m unittest discover -s 'Game content extraction' -p 'test_*.py'",
+    "git status --short"
+  ],
+  "convergence": {
+    "produces": [
+      "Stable maintainer guidance aligned with the implemented fourth-pool model",
+      "A clean review checkpoint at .process/EXECUTION_SUMMARY.md for workflow execution closure"
+    ],
+    "ready_for": [
+      "Session can be closed or handed to workflow-execute once docs are synced and the working tree only shows intended files"
+    ]
+  },
+  "meta": {
+    "type": "docs",
+    "agent": "@code-developer",
+    "module": "Game content extraction",
+    "risk": "low",
+    "execution_order": 4
+  }
+}

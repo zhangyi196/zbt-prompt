@@ -1,0 +1,7 @@
+key,type,value,source
+goal,string,"Rewrite blind-box scene_expansion_items as medium-scale scene fragments while preserving four-pool compatibility, adding quality checks, and syncing stable docs.",plan.json
+recommended_execution,string,sequential,plan.json
+critical_files,array,"Game content extraction/data/blind_boxes.py;Game content extraction/test_blind_box_content_model.py;Game content extraction/agents.md;agents.md;README.md;.gitignore",plan.json
+constraints,array,"Do not add a fifth pool;Do not change scene IDs, category names, runtime extraction logic, animal pools, expression pools, image fetching, or renaming behavior;Keep four pool keys unchanged and keep 50 unique UTF-8 strings per pool;Use a single-owner sequential edit for blind_boxes.py",plan.json
+context_package_path,path,.process/context-package.json,session
+discoveries_path,path,discoveries.ndjson,session

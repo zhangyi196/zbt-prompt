@@ -1,0 +1,41 @@
+{
+  "session_id": "WFS-blind-box-medium-scene-fragments",
+  "source_spec": ".workflow/.spec/SPEC-2026-04-30-blind-box-medium-scene-fragments/",
+  "task_ids": [
+    "IMPL-1",
+    "IMPL-2",
+    "IMPL-3",
+    "IMPL-4"
+  ],
+  "recommended_execution": "sequential",
+  "complexity": "medium",
+  "shared_context": {
+    "goal": "Rewrite blind-box scene_expansion_items as medium-scale scene fragments while preserving four-pool compatibility, adding quality checks, and syncing stable docs.",
+    "conflict_risk": "medium",
+    "critical_files": [
+      "Game content extraction/data/blind_boxes.py",
+      "Game content extraction/test_blind_box_content_model.py",
+      "Game content extraction/agents.md",
+      "agents.md",
+      "README.md",
+      ".gitignore"
+    ],
+    "epics": [
+      "EPIC-001 rule baseline and compatibility contract",
+      "EPIC-002 full scene_expansion_items rewrite",
+      "EPIC-003 quality boundary and regression gates",
+      "EPIC-004 doc sync and maintainer review"
+    ],
+    "constraints": [
+      "Do not add a fifth pool.",
+      "Do not change scene IDs, category names, runtime extraction logic, animal pools, expression pools, image fetching, or renaming behavior.",
+      "Keep four pool keys unchanged and keep 50 unique UTF-8 strings per pool.",
+      "Use a single-owner sequential edit for blind_boxes.py.",
+      "Update Game content extraction/agents.md first, then check agents.md, README.md, and .gitignore only if needed."
+    ],
+    "verification_commands": [
+      "python -B -m py_compile 'Game content extraction\\内容抽取.py' 'Game content extraction\\data\\blind_boxes.py'",
+      "python -B -m unittest discover -s 'Game content extraction' -p 'test_*.py'"
+    ]
+  }
+}

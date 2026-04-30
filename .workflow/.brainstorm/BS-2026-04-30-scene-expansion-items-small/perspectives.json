@@ -1,0 +1,28 @@
+{
+  "session_id": "BS-2026-04-30-scene-expansion-items-small",
+  "topic": "scene_expansion_items 小型化替代方向",
+  "convergent_themes": [
+    "用小型场景锚点替代大件家具。",
+    "候选物必须块状、可见、可单独圈选。",
+    "避免 柜、车、落地架、工作台、棚 等高占地词。",
+    "保留四池结构，先通过内容策略解决问题。"
+  ],
+  "conflicting_views": [
+    {
+      "topic": "是否完全去掉中型承载物",
+      "creative": "可以大胆去家具化。",
+      "pragmatic": "建议保留少量提篮/整理箱/托盘，避免 large 栏失去层次。",
+      "systematic": "用配额控制更稳。"
+    }
+  ],
+  "top_candidates": [
+    "场景证据卡/牌/夹",
+    "托盘/垫板/操作板",
+    "小盒/匣/罐/分隔格",
+    "补给包/收纳包/束带套",
+    "小型承载座"
+  ],
+  "_metadata": {
+    "timestamp": "2026-04-30T00:00:00+08:00"
+  }
+}

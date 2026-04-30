@@ -1,0 +1,35 @@
+{
+  "id": "IMPL-1",
+  "title": "Freeze medium-scene-fragment rules and runtime contract",
+  "description": "Update the existing blind-box unittest suite with reusable medium-scale scene fragment rule helpers and sample-level checks before any 20-scene data rewrite. This task should encode allowed fourth-pool semantics, oversized-subject exclusions, tiny-subject exclusions, and upgraded information-surface exceptions without enabling full-list assertions that would intentionally fail against the current data.",
+  "status": "completed",
+  "depends_on": [],
+  "files": [
+    "Game content extraction/test_blind_box_content_model.py"
+  ],
+  "acceptance_criteria": [
+    "1 reusable rule baseline exists in the unittest file and covers 4 rule groups: allowed medium-scene fragments, forbidden oversized subjects, forbidden tiny subjects, upgraded information-surface exceptions.",
+    "Helper/sample-level tests pass against representative allowed and forbidden examples.",
+    "Existing structural/runtime tests remain green before the full rewrite starts; full-list data assertions are deferred to IMPL-3."
+  ],
+  "verification": [
+    "python -B -m unittest discover -s 'Game content extraction' -p 'test_*.py'",
+    "rg -n \"scene_expansion|large|medium|small|hanging\" 'Game content extraction/test_blind_box_content_model.py'"
+  ],
+  "convergence": {
+    "produces": [
+      "A stable rule baseline for fourth-pool content",
+      "A green-suite baseline before data rewrite"
+    ],
+    "ready_for": [
+      "IMPL-2 can begin once the test file defines the boundary vocabulary without making the suite red"
+    ]
+  },
+  "meta": {
+    "type": "test-gen",
+    "agent": "@code-developer",
+    "module": "Game content extraction",
+    "risk": "medium",
+    "execution_order": 1
+  }
+}

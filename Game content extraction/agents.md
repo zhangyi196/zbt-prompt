@@ -40,7 +40,7 @@
 - `BLIND_BOXES`：运行时四栏兼容视图。
 - `BLIND_BOX_COMPATIBILITY_MAPPING`：四池到 `large` / `medium` / `small` / `hanging` 的映射，`hanging` 当前为空兼容桶。
 
-写库验收：核心物一眼可识别、边界清楚、可单独圈选；小物必须成组、块状或有明确承载；场景扩展物必须中等以上且无需画面已有对象成立；不依赖光影、反射、透明、发光、细线或微型痕迹。`conditional_items`、`anchor_required_items`、`blocked_or_risky` 不再作为候选池，风险内容只进 `blocked_patterns`。
+写库验收：核心物一眼可识别、边界清楚、可单独圈选；小物必须成组、块状或有明确承载；`scene_expansion_items` 必须是中尺度场景片段，优先写组合板、分区垫、托盘、操作面、记录面等可见承载内容，不写推车、抽屉柜、陈列架、货架、书桌、柜台等大型家具 / 存储主体，也不写小卡片、标签、票卡、贴纸、价格签等过小信息件；不依赖光影、反射、透明、发光、细线或微型痕迹。`conditional_items`、`anchor_required_items`、`blocked_or_risky` 不再作为候选池，风险内容只进 `blocked_patterns`。
 
 若改变盒号语义，必须同步 `../主图 第一步.md`。回归测试以 `test_blind_box_content_model.py` 为准。
 

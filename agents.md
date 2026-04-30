@@ -40,6 +40,7 @@
 - UI 只用原生 `tkinter/ttk`；不改成 Web、数据库、服务端或大型工程；不引入第三方 UI 依赖。
 - 盲盒数据事实源为 `Game content extraction/data/blind_boxes.py`；当前为 20 个 `常见场景+用途` 入口和四池模型。
 - 四池固定为 `core_items`、`support_items`、`visible_small_items`、`scene_expansion_items`，运行时兼容 `large` / `medium` / `small` / `hanging` 四栏。
+- `scene_expansion_items` 写中尺度场景片段，禁止退回推车、抽屉柜、陈列架等大型主体，也禁止小卡片、标签、票卡、贴纸、价格签等过小信息件。
 - `conditional_items`、`anchor_required_items`、`blocked_or_risky` 不再作为目标内容类别；风险内容只进入 `blocked_patterns`。
 - `draw_history.json` 服务物品、动物和表情历史；表情只写 `expression_pools`；`config.json` 只服务批量重命名。
 - 图像抓取只复制文件；批量重命名必须保留目标文件存在时跳过的保护逻辑。

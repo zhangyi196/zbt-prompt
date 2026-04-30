@@ -1,0 +1,5 @@
+id,status,files_modified,tests_passed,acceptance_met,summary_path,error
+IMPL-1,completed,Game content extraction/test_blind_box_content_model.py,true,true,.summaries/IMPL-1-summary.md,
+IMPL-2,completed,Game content extraction/data/blind_boxes.py;.workflow/active/WFS-blind-box-medium-scene-fragments/.process/rewrite_scene_expansion_items.py,true,true,.summaries/IMPL-2-summary.md,
+IMPL-3,completed,Game content extraction/test_blind_box_content_model.py,true,true,.summaries/IMPL-3-summary.md,
+IMPL-4,completed,Game content extraction/agents.md;agents.md;README.md;.workflow/active/WFS-blind-box-medium-scene-fragments/.process/EXECUTION_SUMMARY.md,true,true,.summaries/IMPL-4-summary.md,

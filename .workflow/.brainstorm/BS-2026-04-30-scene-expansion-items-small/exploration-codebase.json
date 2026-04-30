@@ -1,0 +1,69 @@
+{
+  "project_type": "python-tkinter-data-library",
+  "topic": "scene_expansion_items 小型化替代方向",
+  "relevant_files": [
+    {
+      "path": "Game content extraction/data/blind_boxes.py",
+      "relevance": "primary data source",
+      "summary": "Defines 20 blind-box scene entries, four item pools, compatibility mapping, and runtime BLIND_BOXES."
+    },
+    {
+      "path": "Game content extraction/test_blind_box_content_model.py",
+      "relevance": "contract tests",
+      "summary": "Asserts each scene has four pool keys, each pool has 50 unique items, and scene_expansion_items feeds runtime large."
+    },
+    {
+      "path": "Game content extraction/agents.md",
+      "relevance": "local content rules",
+      "summary": "Requires scene expansion items to be recognizable, bounded, independently circleable, and not dependent on light/reflection/transparent/tiny traces."
+    }
+  ],
+  "existing_patterns": [
+    {
+      "pattern": "scene_expansion_items -> runtime large",
+      "files": ["Game content extraction/data/blind_boxes.py", "Game content extraction/test_blind_box_content_model.py"],
+      "description": "The compatibility layer treats core_items and scene_expansion_items as large runtime items."
+    },
+    {
+      "pattern": "fixed 20 scenes x 4 pools x 50 unique items",
+      "files": ["Game content extraction/test_blind_box_content_model.py"],
+      "description": "Any implementation must preserve pool names and item counts unless tests and docs are intentionally updated."
+    },
+    {
+      "pattern": "large-object suffix repetition",
+      "files": ["Game content extraction/data/blind_boxes.py"],
+      "description": "Many scene_expansion_items repeat suffixes like 柜, 车, 置物架, 分层架, 桌, 台, 箱."
+    }
+  ],
+  "architecture_constraints": [
+    "Do not modify source files in this brainstorming session.",
+    "If later implemented, keep BLIND_BOX_ITEM_POOL_BUNDLES schema stable unless intentionally refactoring tests and docs.",
+    "Avoid candidates containing blocked visual patterns such as 透明, 反光, 发光, 微小, 细线, 阴影."
+  ],
+  "recent_sessions": [
+    {
+      "session_id": "WFS-blind-box-pool-itemization-fix",
+      "status": "completed",
+      "note": "Relevant previous work on blind-box pool correction."
+    },
+    {
+      "session_id": "WFS-game-content-blind-box-library-refactor",
+      "status": "completed",
+      "note": "Established 20 scenes and current library structure."
+    },
+    {
+      "session_id": "WFS-game-content-four-pool-refactor",
+      "status": "completed",
+      "note": "Established four-pool model."
+    }
+  ],
+  "key_findings": [
+    "The user-visible problem is amplified because scene_expansion_items are part of runtime large items.",
+    "The current pool heavily uses furniture/storage infrastructure nouns, which creates placement burden.",
+    "A safer replacement direction is medium-small, blocky scene anchors: trays, boxes, card stands, labels, pads, kits, pouches, bundles."
+  ],
+  "_metadata": {
+    "timestamp": "2026-04-30T00:00:00+08:00",
+    "exploration_scope": "read-only brainstorm"
+  }
+}

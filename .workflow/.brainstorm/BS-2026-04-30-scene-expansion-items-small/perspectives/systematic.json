@@ -1,0 +1,39 @@
+{
+  "perspective": "systematic",
+  "ideas": [
+    {
+      "title": "五族群配额模型",
+      "description": "每个 scene_expansion_items 由 10 个托盘/垫板、10 个盒匣罐、10 个卡牌夹座、10 个套包束带、10 个场景专属小锚点组成。",
+      "novelty": 3,
+      "feasibility": 4,
+      "rationale": "能避免重复堆砌同一后缀，并保持场景差异。"
+    },
+    {
+      "title": "三层尺寸定义",
+      "description": "区分 visible_small_items 的散落组、support_items 的工具/托座、scene_expansion_items 的完整小锚点。",
+      "novelty": 3,
+      "feasibility": 4,
+      "rationale": "解决四池语义边界，否则小型化会和已有池混杂。"
+    },
+    {
+      "title": "场景模板生成表",
+      "description": "为 20 场景分别定义专属名词根，例如学习=课程/讲义/书签，茶歇=杯垫/茶包/点心，潜水=采样/罗盘/记录。",
+      "novelty": 3,
+      "feasibility": 5,
+      "rationale": "能稳定生成大量不重复且贴合场景的小型物。"
+    }
+  ],
+  "key_findings": [
+    "最重要的是重建池之间的语义边界。",
+    "可用通用物品族群 + 场景专属词根组合生成候选。"
+  ],
+  "challenged_assumptions": [
+    "全池替换不应只做字符串替换；需要维护场景根词和尺寸语义。"
+  ],
+  "open_questions": [
+    "后续是否要为三种尺寸语义写入文档，防止未来维护者误放大件？"
+  ],
+  "_metadata": {
+    "timestamp": "2026-04-30T00:00:00+08:00"
+  }
+}

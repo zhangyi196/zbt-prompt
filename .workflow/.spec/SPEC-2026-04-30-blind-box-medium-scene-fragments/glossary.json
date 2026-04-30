@@ -1,0 +1,70 @@
+{
+  "session_id": "SPEC-2026-04-30-blind-box-medium-scene-fragments",
+  "generated_at": "2026-04-30T11:37:25.7949092+08:00",
+  "version": 1,
+  "terms": [
+    {
+      "term": "medium-scale scene fragment",
+      "definition": "A scene-expanding subject larger than a card or label and smaller than a cabinet, cart, rack, or worktable, with a clear boundary and first-eye visibility.",
+      "aliases": [
+        "mid-scale scene unit"
+      ],
+      "first_defined_in": "product-brief.md",
+      "category": "core"
+    },
+    {
+      "term": "scene_expansion_items",
+      "definition": "The fourth pool in the blind-box bundle, used for medium-scale scene fragments such as activity results, task surfaces, grouped arrays, and finished or half-finished outcomes.",
+      "aliases": [
+        "scene expansion pool"
+      ],
+      "first_defined_in": "product-brief.md",
+      "category": "core"
+    },
+    {
+      "term": "four-pool schema",
+      "definition": "The fixed bundle structure with core_items, support_items, visible_small_items, and scene_expansion_items, with exactly 50 unique entries per pool.",
+      "aliases": [
+        "four-pool contract"
+      ],
+      "first_defined_in": "product-brief.md",
+      "category": "technical"
+    },
+    {
+      "term": "upgraded information surface",
+      "definition": "A valid medium-scale carrier created by upgrading an information token such as a price, label, number, or record into a board, page group, layout surface, or record surface.",
+      "aliases": [
+        "information carrier surface"
+      ],
+      "first_defined_in": "product-brief.md",
+      "category": "core"
+    },
+    {
+      "term": "grouped visible array",
+      "definition": "A clearly bounded arrangement or zone formed by multiple visible objects that can be treated as one independently circleable scene fragment.",
+      "aliases": [
+        "visible grouped array"
+      ],
+      "first_defined_in": "product-brief.md",
+      "category": "core"
+    },
+    {
+      "term": "first-eye visible object",
+      "definition": "An object or zone that can be recognized immediately without relying on light, reflection, transparency, glow, thin lines, or micro traces.",
+      "aliases": [
+        "immediately visible subject"
+      ],
+      "first_defined_in": "product-brief.md",
+      "category": "business"
+    },
+    {
+      "term": "runtime compatibility view",
+      "definition": "The preserved BLIND_BOXES output shape with large, medium, small, and hanging columns derived from the four-pool data source.",
+      "aliases": [
+        "compatibility output view"
+      ],
+      "first_defined_in": "product-brief.md",
+      "category": "technical"
+    }
+  ]
+}

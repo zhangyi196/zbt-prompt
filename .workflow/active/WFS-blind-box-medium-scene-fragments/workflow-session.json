@@ -1,0 +1,8 @@
+{
+  "session_id": "WFS-blind-box-medium-scene-fragments",
+  "status": "completed",
+  "created_at": "2026-04-30T00:00:00+08:00",
+  "task_description": "Implement SPEC-2026-04-30-blind-box-medium-scene-fragments: rewrite blind-box scene_expansion_items as medium-scale scene fragments while preserving four-pool compatibility, adding quality checks, and syncing stable docs.",
+  "source_spec": ".workflow/.spec/SPEC-2026-04-30-blind-box-medium-scene-fragments/spec-summary.md",
+  "planning_mode": "workflow-plan"
+}

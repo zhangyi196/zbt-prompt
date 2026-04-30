@@ -1,0 +1,39 @@
+{
+  "perspective": "pragmatic",
+  "ideas": [
+    {
+      "title": "后缀替换规则",
+      "description": "建立大件后缀到小件后缀的替换表：柜->盒/匣/罐，车->提篮/补给包，架->托座/立夹，桌/台->垫板/操作板。",
+      "novelty": 2,
+      "feasibility": 5,
+      "rationale": "最容易批量改写，且能保持 50 条数量约束。"
+    },
+    {
+      "title": "危险后缀黑名单",
+      "description": "后续实现时检测 scene_expansion_items 中的 柜、车、落地、工作台、货架、书架、棚 等词。",
+      "novelty": 2,
+      "feasibility": 5,
+      "rationale": "能防止库再次漂回大件。"
+    },
+    {
+      "title": "少量中型锚点配额",
+      "description": "每场景允许 5-8 个提篮、整理箱、托盘等中型锚点，其余改小。",
+      "novelty": 3,
+      "feasibility": 4,
+      "rationale": "完全小型化可能让大型物栏弱化，配额能保持层次。"
+    }
+  ],
+  "key_findings": [
+    "测试只关心结构、数量、唯一性和 blocked patterns；内容小型化本身不需要改 UI 或运行逻辑。",
+    "后续实现应重点维护每池 50 条唯一项。"
+  ],
+  "challenged_assumptions": [
+    "不需要先改映射到 medium；内容命名即可显著改善。"
+  ],
+  "open_questions": [
+    "是否要同步更新 agents.md 中“中等以上”的表述，改为“中小型场景锚点也可接受”？"
+  ],
+  "_metadata": {
+    "timestamp": "2026-04-30T00:00:00+08:00"
+  }
+}

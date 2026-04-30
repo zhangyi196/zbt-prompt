@@ -1,0 +1,107 @@
+{
+  "session_id": "SPEC-2026-04-30-blind-box-medium-scene-fragments",
+  "seed_input": ".workflow/.brainstorm/BS-2026-04-30-scene-expansion-items-small/spec-handoff.md",
+  "input_type": "file",
+  "timestamp": "2026-04-30T00:00:00+08:00",
+  "mode": "interactive",
+  "complexity": "moderate",
+  "depth": "standard",
+  "focus_areas": [
+    "content quality",
+    "four-pool data contract",
+    "scene_expansion_items semantics",
+    "testability",
+    "documentation sync"
+  ],
+  "spec_type": "library",
+  "iteration_count": 0,
+  "iteration_history": [],
+  "seed_analysis": {
+    "problem_statement": "The blind-box data library's scene_expansion_items pool uses too many large furniture/storage objects and previous smaller alternatives risked becoming boxes, baskets, or tiny cards; the pool needs a precise medium-scale scene fragment model.",
+    "target_users": [
+      "Prompt maintainer",
+      "Game content extraction tool maintainer",
+      "Downstream prompt user selecting blind-box items"
+    ],
+    "domain": "Chinese prompt content data library for a local tkinter extraction tool",
+    "constraints": [
+      "Keep the existing 20 scene categories and IDs.",
+      "Keep the four-pool schema: core_items, support_items, visible_small_items, scene_expansion_items.",
+      "Keep each pool at 50 unique items.",
+      "Do not change UI, runtime mapping, animal data, expression data, or extraction history behavior.",
+      "Avoid large furniture/storage subjects, container-like replacements, and tiny card/label subjects.",
+      "Synchronize stable rules to Game content extraction/agents.md if implementation accepts the new semantic model."
+    ],
+    "dimensions": [
+      "Medium-scale item semantics",
+      "Pool boundary clarity",
+      "Data integrity and uniqueness",
+      "Regression tests and content-quality checks",
+      "Documentation and prompt-rule alignment"
+    ]
+  },
+  "has_codebase": true,
+  "refined_requirements_file": "refined-requirements.json",
+  "issue_ids": [],
+  "issues_created": 0,
+  "phasesCompleted": [
+    {
+      "phase": 0,
+      "name": "specification-study",
+      "output_file": "spec-config.json",
+      "completed_at": "2026-04-30T00:00:00+08:00"
+    },
+    {
+      "phase": 1,
+      "name": "discovery",
+      "output_file": "spec-config.json",
+      "completed_at": "2026-04-30T00:00:00+08:00"
+    },
+    {
+      "phase": 1.5,
+      "name": "requirement-clarification",
+      "output_file": "refined-requirements.json",
+      "discussion_rounds": 0,
+      "completed_at": "2026-04-30T00:00:00+08:00"
+    },
+    {
+      "phase": 2,
+      "name": "product-brief",
+      "output_file": "product-brief.md",
+      "completed_at": "2026-04-30T11:37:25.7949092+08:00"
+    },
+    {
+      "phase": 3,
+      "name": "requirements",
+      "output_dir": "requirements/",
+      "output_index": "requirements/_index.md",
+      "file_count": 11,
+      "completed_at": "2026-04-30T13:10:00+08:00"
+    },
+    {
+      "phase": 4,
+      "name": "architecture",
+      "output_dir": "architecture/",
+      "output_index": "architecture/_index.md",
+      "file_count": 8,
+      "completed_at": "2026-04-30T14:20:00+08:00"
+    },
+    {
+      "phase": 5,
+      "name": "epics-stories",
+      "output_dir": "epics/",
+      "output_index": "epics/_index.md",
+      "file_count": 5,
+      "completed_at": "2026-04-30T15:20:00+08:00"
+    },
+    {
+      "phase": 6,
+      "name": "readiness-check",
+      "output_file": "readiness-report.md",
+      "summary_file": "spec-summary.md",
+      "readiness_score": 91,
+      "gate": "Pass",
+      "completed_at": "2026-04-30T16:00:00+08:00"
+    }
+  ]
+}

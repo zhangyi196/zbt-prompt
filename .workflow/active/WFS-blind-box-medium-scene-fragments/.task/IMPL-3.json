@@ -1,0 +1,37 @@
+{
+  "id": "IMPL-3",
+  "title": "Finish quality gates and run regression verification",
+  "description": "Enable the full-list scene_expansion_items regression assertions in the existing unittest file and execute the verification commands against the rewritten data. The task should validate oversized-subject exclusion, tiny-subject exclusion, pool-boundary separation, 20x50 uniqueness, and legacy runtime compatibility without introducing a new test harness.",
+  "status": "completed",
+  "depends_on": [
+    "IMPL-2"
+  ],
+  "files": [
+    "Game content extraction/test_blind_box_content_model.py"
+  ],
+  "acceptance_criteria": [
+    "1 existing unittest file covers 5 regression dimensions: oversized-subject exclusion, tiny-subject exclusion, pool-boundary separation, 20x50 uniqueness, runtime compatibility.",
+    "0 failures remain in python -B -m unittest discover -s 'Game content extraction' -p 'test_*.py'.",
+    "1 compile sanity pass succeeds for both Game content extraction/data/blind_boxes.py and Game content extraction/内容抽取.py."
+  ],
+  "verification": [
+    "python -B -m py_compile 'Game content extraction\\内容抽取.py' 'Game content extraction\\data\\blind_boxes.py'",
+    "python -B -m unittest discover -s 'Game content extraction' -p 'test_*.py'"
+  ],
+  "convergence": {
+    "produces": [
+      "A passing regression suite for the rewritten fourth-pool data",
+      "Explicit proof that the runtime compatibility contract still holds"
+    ],
+    "ready_for": [
+      "IMPL-4 can sync stable docs once compile and unittest checks both pass"
+    ]
+  },
+  "meta": {
+    "type": "test-fix",
+    "agent": "@code-developer",
+    "module": "Game content extraction",
+    "risk": "medium",
+    "execution_order": 3
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "session_id": "BS-2026-04-30-scene-expansion-items-small",
+  "title": "scene_expansion_items 中号场景片段化",
+  "source_brainstorm": ".workflow/.brainstorm/BS-2026-04-30-scene-expansion-items-small/brainstorm.md",
+  "spec_markdown": ".workflow/.brainstorm/BS-2026-04-30-scene-expansion-items-small/spec-handoff.md",
+  "status": "ready_for_implementation_planning",
+  "scope": {
+    "primary_file": "Game content extraction/data/blind_boxes.py",
+    "possible_doc_updates": [
+      "Game content extraction/agents.md",
+      "agents.md",
+      "README.md",
+      ".gitignore"
+    ],
+    "non_goals": [
+      "Do not add a fifth pool.",
+      "Do not change runtime compatibility mapping.",
+      "Do not change UI or extraction logic.",
+      "Do not change scene ids or category semantics."
+    ]
+  },
+  "content_model": {
+    "name": "中号场景片段池",
+    "recommended_families": [
+      "活动结果物",
+      "中号任务面",
+      "铺垫界面物",
+      "成组阵列物",
+      "完整成果物"
+    ],
+    "recommended_subject_suffixes": [
+      "板",
+      "垫",
+      "布",
+      "展开页",
+      "拼图板",
+      "操作面",
+      "记录板",
+      "步骤板",
+      "检查板",
+      "提示板",
+      "阵列",
+      "成果盘",
+      "组合盘",
+      "底板",
+      "排列组"
+    ],
+    "avoid_as_primary_subject": [
+      "柜",
+      "车",
+      "推车",
+      "整理车",
+      "收纳柜",
+      "边柜",
+      "抽屉柜",
+      "落地",
+      "落地架",
+      "陈列架",
+      "展示柜",
+      "货架",
+      "书架",
+      "桌",
+      "工作台",
+      "作业台",
+      "棚",
+      "凳",
+      "小卡",
+      "卡片",
+      "标签",
+      "签",
+      "价格签",
+      "编号牌",
+      "铭牌",
+      "名牌",
+      "小票",
+      "书签",
+      "票卡",
+      "单枚",
+      "单张"
+    ]
+  },
+  "acceptance": [
+    "20 scenes remain defined.",
+    "Each pool remains 50 unique items.",
+    "Four-pool schema remains unchanged.",
+    "scene_expansion_items avoid large furniture/storage subjects.",
+    "scene_expansion_items avoid tiny card/label/ticket subjects.",
+    "Existing unittest suite passes.",
+    "Game content extraction/agents.md is updated if stable rule wording changes."
+  ],
+  "recommended_workflow": "workflow-plan or workflow-lite-plan",
+  "_metadata": {
+    "created_at": "2026-04-30T00:00:00+08:00"
+  }
+}

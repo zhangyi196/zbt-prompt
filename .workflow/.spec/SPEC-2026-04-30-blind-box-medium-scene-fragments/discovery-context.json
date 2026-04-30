@@ -1,0 +1,56 @@
+{
+  "relevant_files": [
+    {
+      "path": "Game content extraction/data/blind_boxes.py",
+      "relevance": "high",
+      "rationale": "Primary data source defining BLIND_BOX_SCENE_ENTRIES, BLIND_BOX_ITEM_POOL_BUNDLES, runtime BLIND_BOXES, and compatibility mapping."
+    },
+    {
+      "path": "Game content extraction/test_blind_box_content_model.py",
+      "relevance": "high",
+      "rationale": "Regression suite enforcing 20 scene entries, four-pool schema, 50 unique items per pool, compatibility mapping, and blocked pattern checks."
+    },
+    {
+      "path": "Game content extraction/agents.md",
+      "relevance": "high",
+      "rationale": "Local maintainer rules for blind-box data, including write-library acceptance criteria and document sync expectations."
+    },
+    {
+      "path": "agents.md",
+      "relevance": "medium",
+      "rationale": "Repository-level stable rules and file responsibility guide."
+    },
+    {
+      "path": "主图 第一步.md",
+      "relevance": "medium",
+      "rationale": "Prompt entry tied to blind-box category IDs; only needs updates if category semantics or IDs change."
+    }
+  ],
+  "existing_patterns": [
+    "BLIND_BOX_ITEM_POOL_BUNDLES is the authoritative four-pool data source.",
+    "BLIND_BOXES is derived from core_items + scene_expansion_items for runtime large items.",
+    "Tests expect exactly 50 unique strings in every pool for every scene.",
+    "Documentation says scene expansion items must be recognizable, bounded, independently circleable, and not dependent on light/reflection/transparent/tiny traces."
+  ],
+  "architecture_constraints": [
+    "Data-only change preferred; avoid changing UI or runtime extraction logic.",
+    "Do not change category IDs or four-pool keys.",
+    "Risk words and quality rules should be enforceable by tests or lightweight checks where possible.",
+    "Chinese content files must remain UTF-8."
+  ],
+  "integration_points": [
+    "BlindBoxExtractor consumes BLIND_BOXES runtime view.",
+    "Compatibility mapping documents large/medium/small/hanging sources.",
+    "draw_history.json histories are keyed by runtime box/category and should remain compatible."
+  ],
+  "tech_stack": {
+    "languages": ["Python"],
+    "frameworks": ["tkinter", "unittest"],
+    "data_format": ["Python lists/dicts"],
+    "databases": []
+  },
+  "_metadata": {
+    "exploration_type": "spec-discovery",
+    "timestamp": "2026-04-30T00:00:00+08:00"
+  }
+}

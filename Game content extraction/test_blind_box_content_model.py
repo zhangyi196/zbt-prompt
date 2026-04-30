@@ -55,8 +55,137 @@ BLOCKED_ITEM_PATTERNS = (
     "微小",
 )
 
+MEDIUM_SCENE_FRAGMENT_ALLOWED_PATTERNS = (
+    "板",
+    "垫",
+    "盘",
+    "盆",
+    "桶",
+    "盒",
+    "包",
+    "卷",
+    "册",
+    "页",
+    "图",
+    "组合",
+    "阵列",
+    "样本",
+    "半成品",
+    "拼贴",
+    "布面",
+    "毯面",
+    "席面",
+    "托盘",
+    "分区",
+    "套组",
+    "包裹",
+    "操作面",
+    "展示面",
+    "记录面",
+)
+
+OVERSIZED_SCENE_EXPANSION_PATTERNS = (
+    "推车",
+    "整理车",
+    "周转车",
+    "餐车",
+    "置物车",
+    "收纳柜",
+    "抽屉柜",
+    "文件柜",
+    "储物柜",
+    "边柜",
+    "衣柜",
+    "展示柜",
+    "陈列柜",
+    "书柜",
+    "货架",
+    "落地架",
+    "陈列架",
+    "展示架",
+    "收纳架",
+    "书报架",
+    "报刊架",
+    "置物架",
+    "书架",
+    "边桌",
+    "书桌",
+    "工作台",
+    "操作台",
+)
+
+TINY_SCENE_EXPANSION_PATTERNS = (
+    "小卡片",
+    "卡片",
+    "标签",
+    "价格签",
+    "编号牌",
+    "铭牌",
+    "名牌",
+    "小票",
+    "票卡",
+    "书签",
+    "贴纸",
+    "贴签",
+    "签条",
+    "单张",
+    "单枚",
+)
+
+UPGRADED_INFORMATION_SURFACE_PATTERNS = (
+    "信息展示板",
+    "菜单展示板",
+    "课程记录板",
+    "标签排版板",
+    "导览说明板",
+    "流程说明板",
+)
+
+
+def _contains_any(item_name, patterns):
+    return any(pattern in item_name for pattern in patterns)
+
+
+def _is_upgraded_information_surface(item_name):
+    return _contains_any(item_name, UPGRADED_INFORMATION_SURFACE_PATTERNS)
+
+
+def _is_medium_scene_fragment_item(item_name):
+    if _contains_any(item_name, OVERSIZED_SCENE_EXPANSION_PATTERNS):
+        return False
+    if _contains_any(item_name, TINY_SCENE_EXPANSION_PATTERNS) and not _is_upgraded_information_surface(item_name):
+        return False
+    return _contains_any(item_name, MEDIUM_SCENE_FRAGMENT_ALLOWED_PATTERNS)
+
 
 class BlindBoxContentModelTests(unittest.TestCase):
+    def test_scene_expansion_rule_baseline_accepts_medium_fragments(self):
+        accepted_items = (
+            "课程记录板",
+            "茶歇摆放垫",
+            "烘焙步骤板",
+            "编织半成品垫",
+            "标签排版板",
+        )
+
+        for item_name in accepted_items:
+            with self.subTest(item_name=item_name):
+                self.assertTrue(_is_medium_scene_fragment_item(item_name))
+
+    def test_scene_expansion_rule_baseline_rejects_wrong_scale_examples(self):
+        rejected_items = (
+            "学习资料推车",
+            "桌面抽屉柜",
+            "甜点陈列架",
+            "课程小卡片",
+            "单张价格签",
+            "零食贴纸",
+        )
+
+        for item_name in rejected_items:
+            with self.subTest(item_name=item_name):
+                self.assertFalse(_is_medium_scene_fragment_item(item_name))
+
     def test_scene_entries_define_twenty_categories_and_pilot_markers(self):
         self.assertEqual(len(BLIND_BOX_SCENE_ENTRIES), 20)
 
@@ -90,6 +219,27 @@ class BlindBoxContentModelTests(unittest.TestCase):
                 with self.subTest(scene_name=scene_name, pool=key):
                     self.assertEqual(len(bundle[key]), 50)
                     self.assertEqual(len(bundle[key]), len(set(bundle[key])))
+
+    def test_scene_expansion_items_keep_medium_scene_fragment_boundary(self):
+        for scene_name, bundle in BLIND_BOX_ITEM_POOL_BUNDLES.items():
+            for item_name in bundle["scene_expansion_items"]:
+                with self.subTest(scene_name=scene_name, item_name=item_name):
+                    self.assertTrue(_is_medium_scene_fragment_item(item_name))
+                    self.assertFalse(_contains_any(item_name, OVERSIZED_SCENE_EXPANSION_PATTERNS))
+                    if _contains_any(item_name, TINY_SCENE_EXPANSION_PATTERNS):
+                        self.assertTrue(_is_upgraded_information_surface(item_name))
+
+    def test_scene_expansion_items_do_not_duplicate_other_pool_entries(self):
+        for scene_name, bundle in BLIND_BOX_ITEM_POOL_BUNDLES.items():
+            scene_items = set(bundle["scene_expansion_items"])
+            other_pool_items = (
+                set(bundle["core_items"])
+                | set(bundle["support_items"])
+                | set(bundle["visible_small_items"])
+            )
+
+            with self.subTest(scene_name=scene_name):
+                self.assertFalse(scene_items & other_pool_items)
 
     def test_runtime_entries_keep_four_bucket_contract_for_all_twenty_boxes(self):
         self.assertEqual(

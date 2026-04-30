@@ -1,0 +1,35 @@
+{
+  "resolved_at": "2026-04-30T00:00:00+08:00",
+  "conflict_risk": "medium",
+  "accepted_strategy": "sequential-single-owner-plan",
+  "conflicts": [
+    {
+      "area": "Game content extraction/data/blind_boxes.py",
+      "severity": "medium",
+      "description": "Large static data file has been touched by recent blind-box workflows and is easy to mis-review during a full 20-scene rewrite.",
+      "strategy": "Plan data rewrite as a single sequential implementation task after rules/tests are established; do not parallelize edits to this file.",
+      "impact": "Lower merge/conflict risk and easier review of all 20 scene_expansion_items lists."
+    },
+    {
+      "area": "Game content extraction/test_blind_box_content_model.py",
+      "severity": "medium",
+      "description": "New quality checks must extend existing structural tests without destabilizing current compatibility assertions.",
+      "strategy": "Plan test additions before data rewrite, using existing unittest style and explicit allow/deny semantics.",
+      "impact": "Creates a clear failing target before or alongside the data rewrite."
+    },
+    {
+      "area": "Documentation sync",
+      "severity": "low",
+      "description": "Stable docs must be updated only after data and tests settle, and must remain concise.",
+      "strategy": "Plan docs as final task after tests pass; update Game content extraction/agents.md first, then check root agents.md, README.md, and .gitignore.",
+      "impact": "Avoids duplicating temporary spec detail in stable repository entry docs."
+    },
+    {
+      "area": "Untracked workflow artifacts",
+      "severity": "low",
+      "description": "Working tree contains untracked workflow/spec/team directories from current and adjacent planning work.",
+      "strategy": "Do not clean, stage, or overwrite unrelated workflow artifacts in implementation tasks.",
+      "impact": "Preserves parallel-session safety."
+    }
+  ]
+}

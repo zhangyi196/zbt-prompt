@@ -1,0 +1,74 @@
+{
+  "session_id": "BS-2026-04-30-scene-expansion-items-small",
+  "topic": "scene_expansion_items 小型化替代方向",
+  "completed": "2026-04-30T00:00:00+08:00",
+  "total_rounds": 4,
+  "top_ideas": [
+    {
+      "title": "中号场景片段池",
+      "description": "将 scene_expansion_items 从大件家具池改写为活动结果、中号任务面、铺垫界面、成组阵列、完整成果物，并禁止小卡片/小标签作为主体。",
+      "score": 10,
+      "novelty": 4,
+      "feasibility": 4,
+      "key_strengths": ["不改结构", "降低放置压力", "避开盒篮混淆", "避开小卡片过小"],
+      "main_challenges": ["需要重写 20 场景各 50 条内容", "需要把信息类物品升级为板面或阵列"],
+      "next_steps": ["制定中号五族群", "先试改 3 个 pilot 场景", "人工检查尺寸与池间边界"]
+    },
+    {
+      "title": "中号五族群配额模型",
+      "description": "按活动结果物、中号任务面、铺垫界面物、成组阵列物、完整成果物分配每场景 50 条。",
+      "score": 8,
+      "novelty": 3,
+      "feasibility": 4,
+      "key_strengths": ["避免重复", "便于批量生成", "避免盒篮化", "避免卡片化"],
+      "main_challenges": ["需要为 20 场景定义专属词根"],
+      "next_steps": ["为每场景列 8-12 个专属词根", "生成样例再人工筛掉过小项"]
+    },
+    {
+      "title": "大件后缀黑名单",
+      "description": "把柜、车、落地、工作台、货架、书架、棚等词列为 scene_expansion_items 的强降权或禁止后缀。",
+      "score": 8,
+      "novelty": 2,
+      "feasibility": 5,
+      "key_strengths": ["易验证", "防回归", "与现有测试兼容"],
+      "main_challenges": ["黑名单只能防错，不能自动生成好内容"],
+      "next_steps": ["补一个内容质量测试或检查脚本", "同步文档规则"]
+    }
+  ],
+  "parked_ideas": [
+    "新增 scene_anchor_items 第五池",
+    "将 scene_expansion_items 从 runtime large 映射到 medium"
+  ],
+  "key_insights": [
+    "用户反感的是空间占用、家具感，以及盒篮类物品和其他池的边界不清。",
+    "scene_expansion_items 的好方向是中号场景片段，而不是收纳容器、小卡片或散落碎片。",
+    "小卡片、小标签、单枚价格签等信息物只能作为更大主体上的附属细节。",
+    "后续实现应同步考虑 agents.md 对“中等以上”的描述是否需要微调。"
+  ],
+  "recommendations": {
+    "primary": "采用中号场景片段池，先用 3 个 pilot 场景验证：桌面+学习、公园+野餐、海底+潜水。",
+    "alternatives": [
+      "先只替换命中 柜/车/桌/棚 的条目，风险低但改善不彻底。",
+      "直接全量重写 20 场景，效果最好但需要更强校验。"
+    ]
+  },
+  "follow_up": [
+    {
+      "type": "validate",
+      "summary": "选 3 个 pilot 场景，人工确认小型候选方向。"
+    },
+    {
+      "type": "implement",
+      "summary": "重写 scene_expansion_items，避免以盒、篮、提篮、收纳类容器或小卡片、小标签作为主干，保持每场景 50 条唯一项和测试通过。"
+    },
+    {
+      "type": "document",
+      "summary": "如接受新语义，同步 Game content extraction/agents.md 中场景扩展物定义。"
+    }
+  ],
+  "user_review": {
+    "top_idea_feedback": "当前替换的盒，提篮这种内容我认为跟其他几种物品有点分不开区别",
+    "scale_feedback": "不能有太小的内容，例如小卡片内容",
+    "resulting_adjustment": "降低容器类替代物优先级，并把非容器化场景片段进一步修正为中号场景片段。"
+  }
+}
