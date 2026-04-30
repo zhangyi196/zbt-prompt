@@ -13,6 +13,7 @@
 - `组图 23 表情前置.md`：输出剧情表情类别；每个 `具体表情` 字段写 4 个同极性类别，字段值不得用 `[]` 包裹。
 - `组图 23 表情库.md`：人物表情模板单一事实源；正向 25、负向 25，每类单人 / 多人各 8 条。
 - `组图 23.md`：Ref-A / Ref-B 到 Target 的差异迁移；保留 Ref 绑定、冷区避让、人物热区互斥、空间可放置性和禁改规则。
+- `Game content extraction/data/agents.md`：盲盒四池物品写库规则；面向找不同候选，要求真实可见、单点差异、可圈选和尺度合适。
 
 ## 通用硬规则
 
@@ -39,8 +40,8 @@
 - 四工作区：`盲盒物品/动物抽取`、`人物表情抽取`、`图像抓取`、`批量重命名`。
 - UI 只用原生 `tkinter/ttk`；不改成 Web、数据库、服务端或大型工程；不引入第三方 UI 依赖。
 - 盲盒数据事实源为 `Game content extraction/data/blind_boxes.py`；当前为 20 个 `常见场景+用途` 入口和四池模型。
-- 四池固定为 `core_items`、`support_items`、`visible_small_items`、`scene_expansion_items`，运行时兼容 `large` / `medium` / `small` / `hanging` 四栏，`hanging` 当前为空兼容桶；写库时禁止靠 `收纳盒`、`整理篮`、`展示架`、`托座`、`分装盒` 等尾词批量扩写，`scene_expansion_items` 的 `组合` 尾词除外。
-- 四池分工：`core_items` 写主题核心主体物，`support_items` 写配套工具物，`visible_small_items` 写成组可见小物，`scene_expansion_items` 写 2-3 个真实物品构成的中尺度组合；细则见 `Game content extraction/agents.md`。
+- 四池固定为 `core_items`、`support_items`、`visible_small_items`、`scene_expansion_items`，运行时兼容 `large` / `medium` / `small` / `hanging` 四栏，`hanging` 当前为空兼容桶；写库时禁止靠 `收纳盒`、`整理篮`、`展示架`、`托座`、`分装盒` 等尾词批量扩写。
+- 四池分工：`core_items` 写主题核心主体物，`support_items` 写配套工具物，`visible_small_items` 写成组可见小物，`scene_expansion_items` 保留历史字段名但语义为可放置中型单物，不再写 `组合`；细则见 `Game content extraction/data/agents.md` 和 `Game content extraction/agents.md`。
 - `conditional_items`、`anchor_required_items`、`blocked_or_risky` 不再作为目标内容类别；风险内容只进入 `blocked_patterns`。
 - `draw_history.json` 服务物品、动物和表情历史；表情只写 `expression_pools`；`config.json` 只服务批量重命名。
 - 图像抓取只复制文件；批量重命名必须保留目标文件存在时跳过的保护逻辑。

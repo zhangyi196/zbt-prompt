@@ -10,6 +10,7 @@
 - `组图 23 表情前置.md`：剧情表情类别前置规则。
 - `组图 23 表情库.md`：人物表情模板库。
 - `组图 23.md`：Ref-A / Ref-B 到 Target 的差异迁移规则。
+- `Game content extraction/data/agents.md`：盲盒四池物品写库规则。
 - `Game content extraction/`：本地工具，说明见 [Game content extraction/README.md](Game%20content%20extraction/README.md)。
 
 ## 盲盒内容库
@@ -23,9 +24,9 @@
 
 运行时继续映射到 `large` / `medium` / `small` / `hanging` 四栏，`hanging` 当前为空兼容桶。`conditional_items`、`anchor_required_items`、`blocked_or_risky` 不再作为目标内容类别；风险内容只进入 `blocked_patterns` 测试 / 校验规则。
 
-四池写库规则见 `agents.md` 和 `Game content extraction/agents.md`：核心物写主题主体，配套物写工具，小物写成组可见小物，场景扩展写 2-3 个真实物品构成的中尺度组合；不得靠 `收纳盒`、`整理篮`、`展示架` 等尾词矩阵凑数。
+四池写库规则见 `Game content extraction/data/agents.md`、`agents.md` 和 `Game content extraction/agents.md`：核心物写主题主体，配套物写工具，小物写成组可见小物，`scene_expansion_items` 保留历史字段名但按可放置中型单物维护，不再写 `组合`；不得靠 `收纳盒`、`整理篮`、`展示架` 等尾词矩阵凑数。
 
-日常维护以 `Game content extraction/data/blind_boxes.py`、`Game content extraction/test_blind_box_content_model.py` 和 `Game content extraction/agents.md` 为准；历史规格保留在 `.workflow/.spec/`。
+日常维护以 `Game content extraction/data/agents.md`、`Game content extraction/data/blind_boxes.py`、`Game content extraction/test_blind_box_content_model.py` 和 `Game content extraction/agents.md` 为准；历史规格保留在 `.workflow/.spec/`。
 
 ## 维护要点
 
