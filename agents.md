@@ -12,7 +12,7 @@
 - `组图 4.md`：18 个找不同差异点，九宫格每区 2 个，禁灯光 / 明暗 / 反光 / 阴影变化。
 - `组图 23.md`：Ref-A / Ref-B 到 Target 的差异迁移，保留 Ref 绑定、人物热区互斥、冷区避让和空间可放置性。
 - `组图 23 表情前置.md`、`组图 23 表情库.md`：人物表情类别和模板事实源。
-- `Game content extraction/data/agents.md`：盲盒四池物品写库细则，改 `blind_boxes.py` 前先读。
+- `Game content extraction/data/agents.md`、`Game content extraction/data/审查规则.md`、`Game content extraction/data/修改规则.md`：盲盒四池写库、内容审查和审查后替换细则，改 `blind_boxes.py` 前先读。
 
 ## 全局硬规则
 
@@ -28,6 +28,7 @@
 ## 盲盒要点
 
 - 数据事实源：`Game content extraction/data/blind_boxes.py`；当前为 20 个 `常见场景+用途` 入口。
+- 修改盲盒物品库时先用 `Game content extraction/data/审查规则.md` 发现问题，再按 `Game content extraction/data/修改规则.md` 替换；替换必须解决视觉本体重复、场景常识错位和同模板凑数的根因。
 - 四池固定为 `core_items`、`support_items`、`visible_small_items`、`scene_expansion_items`，运行时兼容 `large` / `medium` / `small` / `hanging`。
 - 每池固定 50 条且池内唯一；`visible_small_items` 必须把微小物升级为一盒、一包、一筒、一盘、一套、一卷、一束、一叠、一册、一排等可见单位。
 - `scene_expansion_items` 保留历史字段名，实际按可放置中型单物维护；不得写 `组合`，必须去核心化，避免第一池核心物的同义、材质、大小或形状变体。
