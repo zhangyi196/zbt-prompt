@@ -29,8 +29,12 @@
 
 - 数据事实源：`Game content extraction/data/blind_boxes.py`；当前为 20 个 `常见场景+用途` 入口。
 - 四池固定为 `core_items`、`support_items`、`visible_small_items`、`scene_expansion_items`，运行时兼容 `large` / `medium` / `small` / `hanging`。
-- `scene_expansion_items` 保留历史字段名，实际按可放置中型单物维护；不得写 `组合`，且必须去核心化。
-- 写库时先按真实物品族选物，再检查尾词配额和雷同密度；禁止 `收纳盒`、`展示架`、`托座`、`分装盒`、`xxx清洁刷`、`xxx袋` 等模板凑数。
+- 每池固定 50 条且池内唯一；`visible_small_items` 必须把微小物升级为一盒、一包、一筒、一盘、一套、一卷、一束、一叠、一册、一排等可见单位。
+- `scene_expansion_items` 保留历史字段名，实际按可放置中型单物维护；不得写 `组合`，必须去核心化，避免第一池核心物的同义、材质、大小或形状变体。
+- 第四池优先写辅助中型实体，如抽取器、托盘、夹、筒、篮、垫、桶、小设备、清洁维护物；不得写大型家具、过小配件、裸露标签卡片，也不得用 `功能词 + 板/盘/垫/盒/包/册/卷` 临时造词。
+- 写库时先按真实物品族选物，再检查尾词配额和雷同密度；禁止 `收纳盒`、`整理篮`、`展示架`、`托座`、`分装盒`、`xxx清洁刷`、`xxx密封袋`、`xxx晾干架`、`xxx袋` 等模板凑数。
+- 默认面向欧美 / 国际化找不同用户；除非类别明确要求，不写强中式、强地域或强课程体系绑定物品。
+- 修改盲盒内容后运行 `Game content extraction/test_blind_box_content_model.py`，并额外检查四池数量、重复、第四池跨池重叠、禁词、尾词配额、连续尾词和同模板密度。
 - `conditional_items`、`anchor_required_items`、`blocked_or_risky` 不再作为目标内容类别；风险内容只进入 `blocked_patterns`。
 
 ## 工具要点

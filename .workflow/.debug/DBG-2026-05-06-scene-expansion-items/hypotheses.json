@@ -1,0 +1,31 @@
+{
+  "iteration": 3,
+  "timestamp": "2026-05-06T15:45:00+08:00",
+  "hypotheses": [
+    {
+      "id": "H1",
+      "description": "scene_expansion_items 数据本身缺失",
+      "status": "rejected",
+      "verdict_reason": "四池事实源和运行时兼容视图都保留了第四池内容"
+    },
+    {
+      "id": "H2",
+      "description": "内容抽取.py 仍绑定旧兼容桶，第四池没有真实抽取入口",
+      "status": "confirmed",
+      "verdict_reason": "category_info 和 _extract_box_items 仅消费 large/medium/small/hanging；修复为直连四池后问题消失"
+    },
+    {
+      "id": "H3",
+      "description": "历史池或冷却逻辑过滤了第四池内容",
+      "status": "rejected",
+      "verdict_reason": "直接复现表明旧 large 桶仍可命中第四池项，说明并非抽样器吞掉数据"
+    }
+  ],
+  "corrections": [
+    {
+      "wrong_assumption": "第四池数据没有进入运行时",
+      "corrected_to": "第四池进入了运行时兼容桶，但没有被抽取工作区直接使用",
+      "reason": "BLIND_BOXES 仍把 scene_expansion_items 合并进 large"
+    }
+  ]
+}

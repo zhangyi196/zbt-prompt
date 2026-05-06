@@ -13,7 +13,7 @@ import webbrowser
 from datetime import datetime
 from pathlib import Path
 from data.animals import ANIMALS
-from data.blind_boxes import BLIND_BOXES
+from data.blind_boxes import BLIND_BOXES, BLIND_BOX_ITEM_POOL_BUNDLES
 from data.item_states import ITEM_STATE_GROUPS, ITEM_STATE_GROUP_WEIGHTS
 
 APP_VERSION = "0.1.4"
@@ -52,10 +52,10 @@ class BlindBoxExtractor:
 
 
         self.category_info = [
-            ("large", "大型物品"),
-            ("medium", "中型物品"),
-            ("small", "散落小型物品"),
-            ("hanging", "悬挂物品"),
+            ("core_items", "核心物品"),
+            ("support_items", "配套物品"),
+            ("visible_small_items", "散落小型物品"),
+            ("scene_expansion_items", "场景扩展物"),
         ]
 
         self.animal_info = [
@@ -64,14 +64,10 @@ class BlindBoxExtractor:
             ("动物痕迹", "动物痕迹"),
         ]
 
-        self.input_override_targets = {
-            label: ("category", key) for key, label in self.category_info
-        }
-        self.input_override_targets.update({
-            label: ("animal", key) for key, label in self.animal_info
-        })
-        
+        self.input_override_targets = self._build_input_override_targets()
+
         self.blind_boxes = BLIND_BOXES
+        self.blind_box_item_pool_bundles = BLIND_BOX_ITEM_POOL_BUNDLES
         self.animals = ANIMALS
         runtime_dir = (
             os.path.dirname(sys.executable)
@@ -260,6 +256,24 @@ class BlindBoxExtractor:
     def _make_animal_pool_key(self, animal_type, category_key):
         return f"animal:{animal_type}:{category_key}"
 
+    def _build_input_override_targets(self):
+        override_targets = {}
+        category_aliases = {
+            "core_items": ("大型物品", "large"),
+            "support_items": ("中型物品", "medium"),
+            "visible_small_items": ("small",),
+            "scene_expansion_items": ("场景扩展物品", "scene_expansion_items"),
+        }
+
+        for key, label in self.category_info:
+            for alias in (label, key, *category_aliases.get(key, ())):
+                override_targets[alias] = ("category", key)
+
+        for key, label in self.animal_info:
+            override_targets[label] = ("animal", key)
+
+        return override_targets
+
     def _get_or_init_pool_state(self, pool_group, pool_key, items):
         pool_state = pool_group.setdefault(
             pool_key,
@@ -356,6 +370,27 @@ class BlindBoxExtractor:
             pool_state["seen_in_cycle"] = []
 
         return selected_items
+
+    def _get_box_item_sources(self, box):
+        category_keys = [key for key, _ in self.category_info]
+        if all(key in box for key in category_keys):
+            return {key: list(box.get(key, [])) for key in category_keys}
+
+        scene_name = box.get("name")
+        bundle = self.blind_box_item_pool_bundles.get(scene_name)
+        if isinstance(bundle, dict):
+            return {key: list(bundle.get(key, [])) for key in category_keys}
+
+        legacy_key_map = {
+            "core_items": "large",
+            "support_items": "medium",
+            "visible_small_items": "small",
+            "scene_expansion_items": "hanging",
+        }
+        return {
+            key: list(box.get(legacy_key_map[key], []))
+            for key in category_keys
+        }
 
     def _show_output_message(self, message):
         self.output_text.delete(1.0, tk.END)
@@ -844,7 +879,7 @@ class BlindBoxExtractor:
             ttk.Checkbutton(row_frame, text=label, variable=var).pack(side=tk.LEFT, padx=(0, 14))
 
             ttk.Label(row_frame, text="数量:").pack(side=tk.LEFT)
-            default_count = 1 if key != "medium" else 2
+            default_count = 2 if key == "support_items" else 1
             spin_var = tk.IntVar(value=default_count)
             self.category_spin_vars[key] = spin_var
             tk.Spinbox(
@@ -1204,7 +1239,7 @@ class BlindBoxExtractor:
                 continue
 
             raise ValueError(
-                "输入格式错误，请输入“数字,动物类型,子类指令”，例如：1,5,地面动物,无大型物品,中型物品+1"
+                "输入格式错误，请输入“数字,动物类型,子类指令”，例如：1,5,地面动物,无核心物品,场景扩展物+1"
             )
 
         if not numbers:
@@ -1232,6 +1267,7 @@ class BlindBoxExtractor:
     def _extract_box_items(self, box_id, box, use_state, enabled_map, count_map):
         lines = []
         item_pools = self.draw_history["item_pools"]
+        item_sources = self._get_box_item_sources(box)
         for key, _ in self.category_info:
             if not enabled_map[key]:
                 continue
@@ -1239,7 +1275,12 @@ class BlindBoxExtractor:
             if count <= 0:
                 continue
             pool_key = self._make_item_pool_key(box_id, key)
-            items = self._draw_from_history_pool(item_pools, pool_key, box[key], count)
+            items = self._draw_from_history_pool(
+                item_pools,
+                pool_key,
+                item_sources.get(key, []),
+                count,
+            )
             lines.extend(self._format_item(item, use_state) for item in items)
         return lines
 

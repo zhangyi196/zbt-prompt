@@ -317,31 +317,88 @@ class BlindBoxContentModelTests(unittest.TestCase):
     def test_existing_input_override_syntax_accepts_new_runtime_box_ids(self):
         extractor = content_extractor.BlindBoxExtractor.__new__(content_extractor.BlindBoxExtractor)
         extractor.blind_boxes = BLIND_BOXES
+        extractor.blind_box_item_pool_bundles = BLIND_BOX_ITEM_POOL_BUNDLES
         extractor.animals = {"地面动物": {}, "空中动物": {}, "水中动物": {}}
         extractor.category_info = [
-            ("large", "大型物品"),
-            ("medium", "中型物品"),
-            ("small", "散落小型物品"),
-            ("hanging", "悬挂物品"),
+            ("core_items", "核心物品"),
+            ("support_items", "配套物品"),
+            ("visible_small_items", "散落小型物品"),
+            ("scene_expansion_items", "场景扩展物"),
         ]
         extractor.animal_info = [
             ("动物本体", "动物本体"),
             ("动物用品", "动物用品"),
             ("动物痕迹", "动物痕迹"),
         ]
-        extractor.input_override_targets = {
-            label: ("category", key) for key, label in extractor.category_info
-        }
-        extractor.input_override_targets.update({
-            label: ("animal", key) for key, label in extractor.animal_info
-        })
+        extractor.input_override_targets = extractor._build_input_override_targets()
 
-        numbers, animal_type, overrides = extractor._parse_input("1,无大型物品,中型物品+1")
+        numbers, animal_type, overrides = extractor._parse_input("1,无大型物品,场景扩展物+1")
 
         self.assertEqual(numbers, [1])
         self.assertEqual(animal_type, "无动物")
-        self.assertIn("large", overrides["category"]["disabled"])
-        self.assertEqual(overrides["category"]["count_delta"]["medium"], 1)
+        self.assertIn("core_items", overrides["category"]["disabled"])
+        self.assertEqual(overrides["category"]["count_delta"]["scene_expansion_items"], 1)
+
+    def test_box_item_sources_prefer_four_pool_bundle(self):
+        extractor = content_extractor.BlindBoxExtractor.__new__(content_extractor.BlindBoxExtractor)
+        extractor.category_info = [
+            ("core_items", "核心物品"),
+            ("support_items", "配套物品"),
+            ("visible_small_items", "散落小型物品"),
+            ("scene_expansion_items", "场景扩展物"),
+        ]
+        extractor.blind_box_item_pool_bundles = BLIND_BOX_ITEM_POOL_BUNDLES
+
+        box = BLIND_BOXES[1]
+        sources = extractor._get_box_item_sources(box)
+        bundle = BLIND_BOX_ITEM_POOL_BUNDLES[box["name"]]
+
+        self.assertEqual(sources["core_items"], bundle["core_items"])
+        self.assertEqual(sources["scene_expansion_items"], bundle["scene_expansion_items"])
+        self.assertNotEqual(sources["scene_expansion_items"], box["hanging"])
+
+    def test_extract_box_items_can_draw_scene_expansion_items(self):
+        extractor = content_extractor.BlindBoxExtractor.__new__(content_extractor.BlindBoxExtractor)
+        extractor.category_info = [
+            ("core_items", "核心物品"),
+            ("support_items", "配套物品"),
+            ("visible_small_items", "散落小型物品"),
+            ("scene_expansion_items", "场景扩展物"),
+        ]
+        extractor.blind_box_item_pool_bundles = BLIND_BOX_ITEM_POOL_BUNDLES
+        extractor.draw_history = {
+            "version": 2,
+            "item_pools": {},
+            "animal_pools": {},
+            "expression_pools": {},
+        }
+        extractor._format_item = lambda item, _use_state: item
+
+        box = BLIND_BOXES[1]
+        bundle = BLIND_BOX_ITEM_POOL_BUNDLES[box["name"]]
+        enabled_map = {
+            "core_items": False,
+            "support_items": False,
+            "visible_small_items": False,
+            "scene_expansion_items": True,
+        }
+        count_map = {
+            "core_items": 0,
+            "support_items": 0,
+            "visible_small_items": 0,
+            "scene_expansion_items": 1,
+        }
+
+        lines = extractor._extract_box_items(
+            1,
+            box,
+            False,
+            enabled_map,
+            count_map,
+        )
+
+        self.assertEqual(len(lines), 1)
+        self.assertIn(lines[0], bundle["scene_expansion_items"])
 
     def test_risky_item_states_are_filtered(self):
         extractor = content_extractor.BlindBoxExtractor.__new__(content_extractor.BlindBoxExtractor)

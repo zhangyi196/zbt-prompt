@@ -69,7 +69,7 @@ python '内容抽取.py'
 
 盲盒物品库已替换为 20 个 `常见场景+用途` 入口，并与仓库根目录 `主图 第一步.md` 的盒号保持同步。盒号 1-20 保留用于逗号输入和历史兼容；物品直接来自 `data/blind_boxes.py` 的四池内容。
 
-每个类别固定维护 `core_items`、`support_items`、`visible_small_items`、`scene_expansion_items` 四池，并继续映射回大型 / 中型 / 小型 / 悬挂四栏，悬挂栏为空兼容桶。`scene_expansion_items` 按去核心化的可放置中型单物维护，不再写 `组合`；写库时检查反模板、尾词配额和雷同密度，避免尾词矩阵和同物品族换前缀凑数。详细规则见 `data/agents.md`。
+每个类别固定维护 `core_items`、`support_items`、`visible_small_items`、`scene_expansion_items` 四池。`内容抽取.py` 的抽取工作区现在直接对应这四池，方便单独验证第四池；`BLIND_BOXES` 仍保留大型 / 中型 / 小型 / 悬挂四栏兼容视图，悬挂栏为空兼容桶。`scene_expansion_items` 按去核心化的可放置中型单物维护，不再写 `组合`；写库时检查反模板、尾词配额和雷同密度，避免尾词矩阵和同物品族换前缀凑数。详细规则见 `data/agents.md`。
 
 `conditional_items`、`anchor_required_items`、`blocked_or_risky` 不再作为目标内容类别；风险内容只作为 `blocked_patterns` 校验。启用物品状态时，程序会过滤 `半透明`、`高光反光`、`带有光泽` 等风险状态词。
 

@@ -38,7 +38,7 @@
 
 - `BLIND_BOX_SCENE_ENTRIES`：20 个 `场景+用途` 入口。
 - `BLIND_BOX_ITEM_POOL_BUNDLES`：四池模型，固定为 `core_items`、`support_items`、`visible_small_items`、`scene_expansion_items`。
-- `BLIND_BOXES`：运行时四栏兼容视图。
+- `BLIND_BOXES`：运行时四栏兼容视图；`内容抽取.py` 抽取工作区应优先直连四池事实源，不要把第四池重新并回空的 `hanging` 兼容桶。
 - `BLIND_BOX_COMPATIBILITY_MAPPING`：四池到 `large` / `medium` / `small` / `hanging` 的映射，`hanging` 当前为空兼容桶。
 
 写库验收：每池 50 条且池内唯一；条目必须是真实可见、单点差异、边界清楚、可单独圈选的物品或成单位物品集合，禁止靠 `收纳盒`、`整理篮`、`展示架`、`托座`、`分装盒`、`组合` 等尾词批量扩写，也要拦住 `xxx清洁刷`、`xxx袋`、`xxx架` 等同物品族换前缀凑数。同一基础对象不得在同一类别四池机械重复；若数量不足，优先扩展不同物品族，不用同质尾词凑数。生成时先按真实物品族选物，再检查反模板规则、尾词配额和雷同密度，避免 `功能词 + 板/盘/垫/盒/包/册/卷` 成片造词。禁止依赖光影、透明感、反光、高光、发光、细线或微型痕迹作为识别点；普通杯、瓶、罐可以写，但不得强调透明或反光特征。`conditional_items`、`anchor_required_items`、`blocked_or_risky` 不再作为候选池，风险内容只进 `blocked_patterns`。
