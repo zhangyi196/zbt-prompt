@@ -81,6 +81,7 @@ MEDIUM_SCENE_FRAGMENT_ALLOWED_PATTERNS = (
     "历",
     "词典",
     "录音笔",
+    "显微镜",
     "书立",
     "笔袋",
     "笔筒",
