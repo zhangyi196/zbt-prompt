@@ -56,8 +56,6 @@ BLOCKED_ITEM_PATTERNS = (
 )
 
 MEDIUM_SCENE_FRAGMENT_ALLOWED_PATTERNS = (
-    "板",
-    "垫",
     "盘",
     "盆",
     "桶",
@@ -175,6 +173,8 @@ def _is_medium_scene_fragment_item(item_name):
         return False
     if _contains_any(item_name, TINY_SCENE_EXPANSION_PATTERNS) and not _is_upgraded_information_surface(item_name):
         return False
+    if _is_upgraded_information_surface(item_name):
+        return True
     return _contains_any(item_name, MEDIUM_SCENE_FRAGMENT_ALLOWED_PATTERNS)
 
 
@@ -182,10 +182,10 @@ class BlindBoxContentModelTests(unittest.TestCase):
     def test_scene_expansion_rule_baseline_accepts_medium_fragments(self):
         accepted_items = (
             "课程记录板",
-            "茶歇摆放垫",
-            "烘焙步骤板",
-            "编织半成品垫",
             "标签排版板",
+            "潜点日志册",
+            "折叠水桶",
+            "桌面小钟",
         )
 
         for item_name in accepted_items:
