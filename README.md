@@ -8,6 +8,7 @@
 - `prompts/group-image/`：组图 AI 提示词目录，含专属 `agents.md`、`组图 4.md`、`组图 23.md`、`组图 23 表情前置.md`。
 - `组图 23 表情库.md`：人物表情模板库，保留根目录固定位置供提示词和工具共用。
 - `Game content extraction/data/agents.md`：盲盒四池物品写库规则。
+- `Game content extraction/data/全局重复词定位清单.md`：跨类别高频重复词与位置索引。
 - `Game content extraction/`：本地工具，说明见 [Game content extraction/README.md](Game%20content%20extraction/README.md)。
 
 ## 盲盒内容库

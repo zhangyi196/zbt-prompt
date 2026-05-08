@@ -14,7 +14,7 @@
 
 核心功能不依赖 Web、数据库或服务端。更新检查启动后静默执行，只有发现新版时才显示右上角 `发现新版本` 按钮。
 
-维护规则见本目录 [agents.md](agents.md)；盲盒物品写库规则见 [data/agents.md](data/agents.md)，一轮修改完成后的人工复查见 [data/复查清单.md](data/复查清单.md)；全仓提示词规则见上级目录 [agents.md](../agents.md)。
+维护规则见本目录 [agents.md](agents.md)；盲盒物品写库规则见 [data/agents.md](data/agents.md)，一轮修改完成后的人工复查见 [data/复查清单.md](data/复查清单.md)，跨类别重复词定位见 [data/全局重复词定位清单.md](data/全局重复词定位清单.md)；全仓提示词规则见上级目录 [agents.md](../agents.md)。
 
 ## 下载
 

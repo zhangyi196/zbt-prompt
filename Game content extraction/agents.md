@@ -12,7 +12,7 @@
 - `data/animals.py`、`data/item_states.py`：动物池和物品状态词。
 - `draw_history.json`：物品、动物和表情历史；表情只写 `expression_pools`。
 - `config.json`：批量重命名参数；不得接入抽取历史。
-- `data/agents.md`、`data/审查规则.md`、`data/审查文件.md`、`data/审查文件/{类别} 审查文档.md`、`data/修改规则.md`、`data/复查清单.md`：盲盒写库、审查、修改和收尾复查规则；改盲盒内容前先读。
+- `data/agents.md`、`data/审查规则.md`、`data/审查文件.md`、`data/审查文件/{类别} 审查文档.md`、`data/修改规则.md`、`data/复查清单.md`、`data/全局重复词定位清单.md`：盲盒写库、审查、修改、全局重复词定位和收尾复查规则；改盲盒内容前先读。
 - `内容抽取.spec`、`installer.iss`：打包配置。
 
 ## UI 约束
