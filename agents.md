@@ -3,15 +3,17 @@
 
 # Agents Guide
 
-本仓库维护中文提示词规则；`Game content extraction/` 是配套本地 `tkinter` 工具，工具细则见 `Game content extraction/agents.md`。
+本仓库维护中文提示词规则与配套桌面工具；根目录 `agents.md` 只做总导航，主图提示词细则收敛在 `prompts/main-image/agents.md`，`Game content extraction/` 工具细则见 `Game content extraction/agents.md`。
 
 ## 入口
 
-- `主图 第一步.md`：判断 Target 是否需要新增内容；需要时只输出盲盒类别编号、动物字段、禁用字段和补偿字段。
-- `主图 第二步 .md`：审核和摆放候选物；用户给了候选就不得脑补新候选。
-- `组图 4.md`：18 个找不同差异点，九宫格每区 2 个。
-- `组图 23.md`：Ref-A / Ref-B 到 Target 的差异迁移。
-- `组图 23 表情前置.md`、`组图 23 表情库.md`：人物表情事实源。
+- `prompts/main-image/agents.md`：主图 AI 提示词总入口。
+- `prompts/main-image/主图 第一步.md`：判断 Target 是否需要新增内容；需要时只输出盲盒类别编号、动物字段、禁用字段和补偿字段。
+- `prompts/main-image/主图 第二步 .md`：审核和摆放候选物；用户给了候选就不得脑补新候选。
+- `prompts/group-image/agents.md`：组图 AI 提示词总入口。
+- `prompts/group-image/组图 4.md`：18 个找不同差异点，九宫格每区 2 个。
+- `prompts/group-image/组图 23.md`：Ref-A / Ref-B 到 Target 的差异迁移。
+- `prompts/group-image/组图 23 表情前置.md`、`组图 23 表情库.md`：人物表情前置规则与事实源；其中表情库固定留在根目录。
 - `Game content extraction/data/agents.md`、`审查规则.md`、`审查文件.md`、`审查文件/{类别} 审查文档.md`、`修改规则.md`：盲盒数据和审查 / 修改规则；改 `blind_boxes.py` 前先读。
 
 ## 全局硬规则
@@ -31,8 +33,9 @@
 - 盲盒修改必须先审查、后替换：先按 `审查规则.md` 和对应类别审查文档定位问题，再按 `修改规则.md` 落库。
 - 四池固定为 `core_items`、`support_items`、`visible_small_items`、`scene_expansion_items`；每池固定 50 条且池内唯一。
 - `visible_small_items` 只写升级后的可见单位，如一盒、一包、一筒、一盘、一套、一卷、一束、一叠、一册、一排。
-- `scene_expansion_items` 虽保留历史字段名，实际按“场景补充中型物”维护：先是前台自然单物，再看中型边界；不得把它写成抽取器、支架、分区盒、托盘、收纳壳，`说明词 + 板 / 垫 / 盘 / 盒 / 册` 这类弱本体，或 `记录 / 说明 / 参考 + 本 / 册 / 牌` 这类抽象职能文书的堆叠池。
+- `scene_expansion_items` 虽保留历史字段名，实际按“场景补充中型物”维护：以单个前台自然中型实物为主，全池只允许极少量简单组合，最多 5 条且每条最多 3 个内容；不得把它写成抽取器、支架、分区盒、托盘、收纳壳，也不要滑向架子类、箱子类、柜子类常规扩写，或 `说明词 + 板 / 垫 / 盘 / 盒 / 册` 这类弱本体、`记录 / 说明 / 参考 + 本 / 册 / 牌` 这类抽象职能文书堆叠池。
 - 修改目标不是换词，而是解决根因：视觉本体重复、场景错位、模板化、跨池扩写、伪多样性。
+- 若一轮替换只是把旧坏家族换成另一条 `xx板 / xx架 / xx器 / xx机 / xx本 / xx册` 弱模板链，视为假修复，必须继续重做。
 - 收尾复查必须额外检查同后缀家族是否成串，例如 `xx布包 / xx工具包 / xx防尘袋 / xx提篮`；不能只过测试、不看读感。
 - 默认面向欧美 / 国际化用户；除非类别明确要求，不写强中式、强地域或强课程体系绑定物品。
 - 修改盲盒内容后运行 `Game content extraction/test_blind_box_content_model.py`，并额外检查四池数量、重复、第四池跨池重叠、禁词、尾词配额和模板密度。
@@ -46,5 +49,6 @@
 ## 修改与发布
 
 - 修改前先读目标文件职责和对应规则文档；修改中只动相关段落；修改后做回归验证。
+- 根目录 `agents.md` 只保留稳定规则和入口；主图执行细则写在 `prompts/main-image/agents.md`，工具执行细则写在 `Game content extraction/agents.md`。
 - 涉及 App 逻辑时同步查看 `Game content extraction/agents.md`。
 - 源码包推荐发布标识 `source-YYYYMMDD`、资产名 `zbt-prompt-source-YYYYMMDD.zip`；只有发布桌面工具新版本时，才提升 `APP_VERSION`、安装包名和正式 `v0.1.x` tag。
