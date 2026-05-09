@@ -22,7 +22,7 @@
 
 运行时继续映射到 `large` / `medium` / `small` / `hanging` 四栏，`hanging` 当前为空兼容桶。`conditional_items`、`anchor_required_items`、`blocked_or_risky` 不再作为目标内容类别；风险内容只进入 `blocked_patterns` 测试 / 校验规则。
 
-四池写库细则以 `Game content extraction/data/agents.md` 为准：核心物写主题主体，配套物写工具，小物写成组可见单位，`scene_expansion_items` 以去核心化的中型实物为主，只允许极少量简单组合；生成时检查反模板、尾词配额和雷同密度，避免把第四池写成架子/箱子/支架扩写池，或继续靠尾词矩阵和同物品族换前缀凑数；若主词未变，只是在前面补场景词 / 口味词 / 材质词，也按未修复处理。
+四池写库细则以 `Game content extraction/data/agents.md` 为准：核心物写主题主体，配套物写工具，小物写成组可见单位，`scene_expansion_items` 以去核心化的中型实物为主，只允许极少量简单组合；统一目标是让名字先让人看见主体物、第一眼能成像，必要时才在内容清楚可见时补成“可见内容 + 主体物”；同时避免把第四池写成架子/箱子/支架扩写池，或继续靠尾词矩阵和同物品族换前缀凑数；若主词未变，只是在前面补场景词 / 口味词 / 材质词，也按未修复处理。
 
 日常维护以 `Game content extraction/data/agents.md`、`Game content extraction/data/blind_boxes.py`、`Game content extraction/test_blind_box_content_model.py` 和 `Game content extraction/agents.md` 为准；历史规格保留在 `.workflow/.spec/`。
 
