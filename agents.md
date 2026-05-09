@@ -9,7 +9,7 @@
 
 - `prompts/main-image/agents.md`：主图 AI 提示词总入口。
 - `prompts/main-image/主图 第一步.md`：判断 Target 是否需要新增内容；需要时只输出盲盒类别编号、动物字段、禁用字段和补偿字段。
-- `prompts/main-image/主图 第二步 .md`：审核和摆放候选物；用户给了候选就不得脑补新候选。
+- `prompts/main-image/主图 第二步 .md`：审核和摆放候选物；用户给了候选就不得脑补新候选，默认按稳定承载面上的可见物体处理。
 - `prompts/group-image/agents.md`：组图 AI 提示词总入口。
 - `prompts/group-image/组图 4.md`：18 个找不同差异点，九宫格每区 2 个。
 - `prompts/group-image/组图 23.md`：Ref-A / Ref-B 到 Target 的差异迁移。
