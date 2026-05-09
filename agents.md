@@ -45,6 +45,7 @@
 ## 工具总则
 
 - `Game content extraction/` 只用原生 `tkinter/ttk`；不改成 Web、数据库、服务端或大型工程。
+- `Game content extraction/` 的开发、验证和打包默认使用项目内解释器 `Game content extraction/.venv/Scripts/python.exe`，避免缺少 `tkinter`、Tcl 或 Tk。
 - `draw_history.json` 服务物品、动物和表情历史；表情只写 `expression_pools`。
 - 图像抓取只复制文件；批量重命名必须保留“目标文件已存在则跳过”的保护逻辑。
 
@@ -53,4 +54,6 @@
 - 修改前先读目标文件职责和对应规则文档；修改中只动相关段落；修改后做回归验证。
 - 根目录 `agents.md` 只保留稳定规则和入口；主图执行细则写在 `prompts/main-image/agents.md`，工具执行细则写在 `Game content extraction/agents.md`。
 - 涉及 App 逻辑时同步查看 `Game content extraction/agents.md`。
+- `Game content extraction/build/`、`Game content extraction/dist/` 和 `Game content extraction/release/*.exe` 属于本地构建产物，默认保持忽略；若 `.gitignore` 命中已跟踪文件，需同步取消跟踪。
+- 桌面工具安装包固定输出到 `Game content extraction/release/`；发布前先确认本地安装包名、版本号和 Release 资产一致。
 - 源码包推荐发布标识 `source-YYYYMMDD`、资产名 `zbt-prompt-source-YYYYMMDD.zip`；只有发布桌面工具新版本时，才提升 `APP_VERSION`、安装包名和正式 `v0.1.x` tag。

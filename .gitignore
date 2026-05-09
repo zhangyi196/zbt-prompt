@@ -32,6 +32,10 @@ ComfyUI_*.bmp
 
 # Local packaging scratch
 .release-assets/
+Game content extraction/build/
+Game content extraction/dist/
+Game content extraction/release/*.exe
+Game content extraction/release/smoke-install/
 
 # Failed/interrupted history tests
 Game content extraction/_tmp_history_test_*/

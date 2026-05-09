@@ -10,6 +10,7 @@
 - `Game content extraction/data/agents.md`：盲盒四池物品写库规则。
 - `Game content extraction/data/全局重复词定位清单.md`：跨类别高频重复词与位置索引。
 - `Game content extraction/`：本地工具，说明见 [Game content extraction/README.md](Game%20content%20extraction/README.md)。
+- `.vscode/settings.json`：工作区 Python 解释器固定到 `Game content extraction/.venv/Scripts/python.exe`。
 
 ## 盲盒内容库
 
@@ -40,4 +41,4 @@
 - 发布标识：`source-YYYYMMDD`
 - 资产名：`zbt-prompt-source-YYYYMMDD.zip`
 
-桌面工具当前发布版为 `v0.1.4`，安装包 `GameContentExtraction-Setup-v0.1.4.exe`。桌面工具版本、安装包和更新检查以 `Game content extraction/` 下文档为准。
+桌面工具开发、验证和打包默认走项目内 `Game content extraction/.venv/`。本地构建缓存 `Game content extraction/build/`、`Game content extraction/dist/` 和安装包产物 `Game content extraction/release/*.exe` 默认保持忽略。安装包固定输出到 `Game content extraction/release/`，当前发布版为 `v0.1.4`，安装包 `GameContentExtraction-Setup-v0.1.4.exe`。桌面工具版本、安装包和更新检查细节以 `Game content extraction/` 下文档为准。
