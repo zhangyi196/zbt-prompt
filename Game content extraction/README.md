@@ -18,12 +18,11 @@
 
 ## 下载
 
-当前发布版：`v0.1.5`（仅用于检查更新测试，功能与 `v0.1.4` 保持一致）
+当前用于检查更新测试的版本对：`v0.1.4 -> v0.1.5`。两者功能保持一致，主要用于验证安装包内更新流程。
 
-- Release 页面：<https://github.com/zhangyi196/zbt-prompt/releases/tag/v0.1.5>
-- 安装包：`GameContentExtraction-Setup-v0.1.5.exe`
-- 大小：`14,042,322` bytes
-- SHA256：`35d9610c0b1d43b11f8417d492e640aaef0457f1a0e855cdd81114ac32cd1d5c`
+- Release 页面：<https://github.com/zhangyi196/zbt-prompt/releases>
+- 测试安装包：`GameContentExtraction-Setup-v0.1.4.exe`、`GameContentExtraction-Setup-v0.1.5.exe`
+- 具体文件大小、SHA256 和最新测试资产以 Releases 页面为准。
 - 安装器会显示安装路径选择页，可修改默认安装目录。
 
 ## 运行
@@ -144,9 +143,9 @@ https://api.github.com/repos/zhangyi196/zbt-prompt/releases/latest
 https://api.github.com/repos/zhangyi196/zbt-prompt/releases?per_page=20
 ```
 
-当前版本写在 `内容抽取.py` 的 `APP_VERSION`。检查更新只比较 GitHub Release 版本并打开发布页，不自动下载、覆盖或重启。没有高于当前版本的 Release 时，按钮保持为 `检查更新`，用户仍可手动重试。
+当前版本写在 `内容抽取.py` 的 `APP_VERSION`。检查更新会比较 GitHub Release 版本；发现更高版本且 Release 提供可用的安装包元数据时，程序会下载对应安装包并校验元数据，确认无误后提示用户是否继续安装更新。用户确认后会先清理 PyInstaller 单文件进程带给子进程的 DLL / `_PYI_*` 运行时环境，再启动安装程序，并退出当前应用让安装继续完成。若只能确认有新版本、但拿不到可直接下载的安装包元数据，则会提示打开 GitHub Releases 页面手动查看。没有高于当前版本的 Release 时，按钮保持为 `检查更新`，用户仍可手动重试。
 
-更新检查优先使用无认证 GitHub API，release 所在仓库需要保持 public。若仓库切回 private，旧版安装包会收到 404，静默检查不会弹窗，但用户仍可手动点击按钮重试；若遇到 GitHub 无认证限流 `403/429`，程序会回退到 `https://github.com/zhangyi196/zbt-prompt/releases/latest` 的重定向结果继续判断最新版本，只有回退也失败时才提示手动去 Releases 页面查看。
+更新检查优先使用无认证 GitHub API，release 所在仓库需要保持 public。若仓库切回 private，旧版安装包会收到 404，静默检查不会弹窗，但用户仍可手动点击按钮重试；若遇到 GitHub 无认证限流 `403/429`，程序会回退到 `https://github.com/zhangyi196/zbt-prompt/releases/latest` 的重定向结果继续判断最新版本。该回退通常只能拿到最新 tag 或页面地址；如果 GitHub 没有同时暴露可下载的安装包元数据，程序就会退化为提示手动打开 Releases 页面查看。
 
 发布新版时：更新 `APP_VERSION` 和 `installer.iss` 输出名 -> 构建 exe -> 检查 exe 归档包含 `tkinter` / `_tkinter` / Tcl / Tk -> 生成安装包 -> 做启动/静默安装烟测 -> 创建更高 tag（如 `v0.1.4`）并上传安装包。
 
@@ -190,6 +189,6 @@ pyi-archive_viewer 'dist\内容抽取.exe' --list | Select-String -Pattern 'tkin
 - 不把人物表情接入 `item_pools` / `animal_pools`。
 - 图像抓取只复制文件。
 - 批量重命名必须保留目标文件存在时跳过的保护逻辑。
-- 检查更新不写历史、不自动替换 exe。
+- 检查更新不写历史；允许下载安装包并启动安装器，但不要在运行中直接替换 exe。
 - `data/` 只放数据，不加入 UI、抽样逻辑或历史保存逻辑。
 - 改表情逻辑后运行回归脚本；改 UI 后至少运行 `py_compile`，环境允许时手动检查四个工作区。

@@ -1,0 +1,61 @@
+{
+  "iteration": 1,
+  "timestamp": "2026-05-09T16:00:00+08:00",
+  "hypotheses": [
+    {
+      "id": "H1",
+      "description": "GitHub v0.1.5 is not actually the latest release exposed to the client",
+      "status": "rejected",
+      "evidence": {
+        "releases_latest_tag": "v0.1.5",
+        "releases_list_first_tag": "v0.1.5"
+      }
+    },
+    {
+      "id": "H2",
+      "description": "The rebuilt v0.1.4 installer asset is secretly embedding APP_VERSION 0.1.5",
+      "status": "rejected",
+      "evidence": {
+        "embedded_app_version": "0.1.4"
+      }
+    },
+    {
+      "id": "H3",
+      "description": "The rebuilt v0.1.4 installer asset should detect v0.1.5 correctly under the current update-check logic",
+      "status": "confirmed",
+      "evidence": {
+        "forced_runtime_result": {
+          "status": "update_available",
+          "current_version": "0.1.4",
+          "latest_version": "0.1.5"
+        }
+      }
+    },
+    {
+      "id": "H4",
+      "description": "The user's local runtime is not the same binary as the current GitHub v0.1.4 asset",
+      "status": "rejected",
+      "evidence": {
+        "note": "User successfully reproduced update detection and reached installer-based upgrade flow, so the launched v0.1.4 binary matches the rebuilt asset closely enough for update detection."
+      }
+    },
+    {
+      "id": "H5",
+      "description": "The rebuilt v0.1.5 executable is itself corrupted and cannot start even outside the installer flow",
+      "status": "rejected",
+      "evidence": {
+        "direct_launch_result": "build-machine direct launch succeeds"
+      }
+    },
+    {
+      "id": "H6",
+      "description": "The frozen updater leaks PyInstaller DLL search state and environment into the installer, which then relaunches the new frozen app under a poisoned runtime environment",
+      "status": "confirmed",
+      "evidence": {
+        "user_error": "Failed to load Python DLL after installer-based upgrade from running frozen app",
+        "official_guidance": "PyInstaller common issues docs recommend clearing SetDllDirectoryW before launching external programs from a frozen Windows app",
+        "fix": "sanitize DLL search path, PATH, _PYI_* variables, _MEIPASS2, and bundled TCL/TK environment before os.startfile(installer)"
+      }
+    }
+  ]
+}

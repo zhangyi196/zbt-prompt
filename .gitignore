@@ -36,6 +36,10 @@ Game content extraction/build/
 Game content extraction/dist/
 Game content extraction/release/*.exe
 Game content extraction/release/smoke-install/
+Game content extraction/release/smoke-install-*/
+Game content extraction/release/extract-*/
+Game content extraction/release/debug-*/
+Game content extraction/installer.v*-test.iss
 
 # Failed/interrupted history tests
 Game content extraction/_tmp_history_test_*/

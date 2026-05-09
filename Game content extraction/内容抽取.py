@@ -7,9 +7,12 @@ import re
 import shutil
 import sys
 import threading
+import tempfile
 import urllib.error
 import urllib.request
 import webbrowser
+import hashlib
+import ctypes
 from datetime import datetime
 from pathlib import Path
 from data.animals import ANIMALS
@@ -22,6 +25,8 @@ UPDATE_RELEASES_LIST_API_URL = "https://api.github.com/repos/zhangyi196/zbt-prom
 UPDATE_RELEASES_URL = "https://github.com/zhangyi196/zbt-prompt/releases"
 UPDATE_RELEASES_LATEST_URL = "https://github.com/zhangyi196/zbt-prompt/releases/latest"
 UPDATE_REQUEST_TIMEOUT_SECONDS = 8
+UPDATE_DOWNLOAD_TIMEOUT_SECONDS = 60
+UPDATE_DOWNLOAD_CHUNK_SIZE = 1024 * 128
 
 
 class BlindBoxExtractor:
@@ -104,6 +109,7 @@ class BlindBoxExtractor:
         self.update_button = None
         self.update_button_visible = False
         self.update_check_in_progress = False
+        self.update_download_in_progress = False
         self.latest_update_result = None
         self.setup_ui()
         self._setup_renamer_config_listeners()
@@ -641,6 +647,9 @@ class BlindBoxExtractor:
             self.update_button_visible = True
 
     def _on_update_button_click(self):
+        if self.update_download_in_progress:
+            return
+
         if self.latest_update_result and self.latest_update_result.get("status") == "update_available":
             self._show_update_available_dialog(self.latest_update_result)
             return
@@ -718,6 +727,11 @@ class BlindBoxExtractor:
             "tag_name": latest_tag or latest_version,
             "html_url": final_url,
             "body": "",
+            "_manual_update_only": True,
+            "manual_update_reason": (
+                "GitHub API 当前不可用，回退到 Releases 页面后只能确认最新版本，"
+                "无法直接获取安装包元数据，请手动打开 Releases 页面下载更新。"
+            ),
         }
 
     def _fetch_latest_release(self):
@@ -778,6 +792,20 @@ class BlindBoxExtractor:
         compare_result = self._compare_versions(APP_VERSION, latest_version)
 
         if compare_result < 0:
+            installer_asset, installer_error = self._extract_installer_asset(
+                payload,
+                latest_version=latest_version,
+                latest_tag=latest_tag,
+            )
+            manual_update_reason = None
+            manual_update_required = bool(
+                payload.get("_manual_update_only") and installer_asset is None
+            )
+            if installer_asset is None:
+                manual_update_reason = (
+                    str(payload.get("manual_update_reason") or "").strip()
+                    or installer_error
+                )
             return {
                 "status": "update_available",
                 "current_version": APP_VERSION,
@@ -785,6 +813,10 @@ class BlindBoxExtractor:
                 "latest_tag": latest_tag,
                 "notes": release_notes,
                 "url": release_url,
+                "installer_asset": installer_asset,
+                "installer_error": installer_error,
+                "manual_update_required": manual_update_required,
+                "manual_update_reason": manual_update_reason,
             }
 
         return {
@@ -817,16 +849,358 @@ class BlindBoxExtractor:
 
     def _show_update_available_dialog(self, result):
         notes = self._summarize_release_notes(result.get("notes", ""))
+        installer_asset = result.get("installer_asset")
+        if installer_asset:
+            message = (
+                f"发现新版本：{result['latest_version']}\n"
+                f"当前版本：{result['current_version']}\n"
+                f"安装包：{installer_asset['name']}\n\n"
+                f"{notes}\n\n下载完成后将启动安装程序并关闭当前应用。是否继续？"
+            )
+            if messagebox.askyesno("检查更新", message):
+                self._begin_installer_update(result)
+            return
+
+        manual_update_reason = (
+            result.get("manual_update_reason")
+            or result.get("installer_error")
+            or "未找到可用的 Windows 安装包资源。"
+        )
         message = (
             f"发现新版本：{result['latest_version']}\n"
             f"当前版本：{result['current_version']}\n\n"
-            f"{notes}\n\n是否打开 GitHub Releases 页面？"
+            f"{notes}\n\n当前只能手动更新："
+            f"{manual_update_reason}\n\n"
+            f"是否打开 GitHub Releases 页面手动查看？"
         )
         if messagebox.askyesno("检查更新", message):
             self._open_update_page(result.get("url"))
 
     def _open_update_page(self, url=None):
         webbrowser.open(url or UPDATE_RELEASES_URL)
+
+    def _begin_installer_update(self, result):
+        if self.update_download_in_progress:
+            return
+
+        self.update_download_in_progress = True
+        if self.update_button and self.update_button_visible:
+            self.update_button.configure(text="下载更新...", state=tk.DISABLED)
+
+        thread = threading.Thread(
+            target=lambda: self._download_and_launch_update(result),
+            daemon=True,
+        )
+        thread.start()
+
+    def _download_and_launch_update(self, result):
+        try:
+            installer_path = self._download_update_installer(result)
+            self._launch_update_installer(installer_path)
+        except Exception as exc:  # noqa: BLE001 - update flow should surface a clear error.
+            try:
+                self.root.after(0, lambda: self._handle_installer_update_failure(str(exc)))
+            except tk.TclError:
+                pass
+            return
+
+        try:
+            self.root.after(0, self._exit_for_installer_update)
+        except tk.TclError:
+            pass
+
+    def _download_update_installer(self, result):
+        installer_asset = result.get("installer_asset")
+        if not isinstance(installer_asset, dict):
+            raise ValueError(result.get("installer_error") or "未找到可用的安装包资源。")
+
+        download_url = str(installer_asset.get("download_url") or "").strip()
+        if not download_url:
+            raise ValueError("安装包缺少下载地址。")
+
+        asset_name = self._sanitize_update_asset_name(
+            installer_asset.get("name"),
+            result.get("latest_version"),
+        )
+        update_dir = Path(tempfile.gettempdir()) / "zbt-update"
+        update_dir.mkdir(parents=True, exist_ok=True)
+        final_path = update_dir / asset_name
+        partial_path = update_dir / f"{asset_name}.download"
+
+        request = urllib.request.Request(
+            download_url,
+            headers={
+                "Accept": "application/octet-stream",
+                "User-Agent": f"GameContentExtractor/{APP_VERSION}",
+            },
+        )
+
+        try:
+            with urllib.request.urlopen(request, timeout=UPDATE_DOWNLOAD_TIMEOUT_SECONDS) as response:
+                with partial_path.open("wb") as file_handle:
+                    shutil.copyfileobj(response, file_handle, length=UPDATE_DOWNLOAD_CHUNK_SIZE)
+        except urllib.error.HTTPError as exc:
+            raise ValueError(f"下载安装包时 GitHub 返回 HTTP {exc.code}") from exc
+        except urllib.error.URLError as exc:
+            raise ValueError(f"无法下载安装包：{exc.reason}") from exc
+        except OSError as exc:
+            raise ValueError(f"无法保存安装包：{exc}") from exc
+
+        try:
+            self._validate_downloaded_installer(partial_path, installer_asset)
+            os.replace(partial_path, final_path)
+        finally:
+            if partial_path.exists():
+                partial_path.unlink()
+
+        return final_path
+
+    def _validate_downloaded_installer(self, installer_path, installer_asset):
+        expected_size = installer_asset.get("size")
+        if isinstance(expected_size, int) and expected_size >= 0:
+            actual_size = installer_path.stat().st_size
+            if actual_size != expected_size:
+                raise ValueError(
+                    f"安装包大小校验失败：期望 {expected_size} 字节，实际 {actual_size} 字节。"
+                )
+
+        digest_value = str(installer_asset.get("digest") or "").strip()
+        if not digest_value:
+            return
+
+        algorithm, expected_digest = self._parse_asset_digest(digest_value)
+        hasher = hashlib.new(algorithm)
+        with installer_path.open("rb") as file_handle:
+            while True:
+                chunk = file_handle.read(UPDATE_DOWNLOAD_CHUNK_SIZE)
+                if not chunk:
+                    break
+                hasher.update(chunk)
+
+        actual_digest = hasher.hexdigest().lower()
+        if actual_digest != expected_digest.lower():
+            raise ValueError("安装包摘要校验失败，下载文件可能已损坏或已被更改。")
+
+    def _parse_asset_digest(self, digest_value):
+        algorithm, separator, expected_digest = digest_value.partition(":")
+        if not separator:
+            algorithm = "sha256"
+            expected_digest = digest_value
+
+        normalized_algorithm = algorithm.strip().lower().replace("-", "")
+        normalized_digest = expected_digest.strip().lower()
+        if not normalized_algorithm or not normalized_digest:
+            raise ValueError("GitHub Release 安装包摘要信息格式无效。")
+
+        try:
+            hashlib.new(normalized_algorithm)
+        except ValueError as exc:
+            raise ValueError(f"不支持的安装包摘要算法：{algorithm}") from exc
+
+        return normalized_algorithm, normalized_digest
+
+    def _sanitize_environment_for_external_process_launch(self):
+        if sys.platform == "win32":
+            try:
+                ctypes.windll.kernel32.SetDllDirectoryW(None)
+            except (AttributeError, OSError):
+                pass
+
+        meipass = getattr(sys, "_MEIPASS", None)
+        if not meipass:
+            for variable_name in ("_MEIPASS2",):
+                os.environ.pop(variable_name, None)
+            for variable_name in tuple(os.environ):
+                if variable_name.startswith("_PYI_"):
+                    os.environ.pop(variable_name, None)
+            return
+
+        sanitized_root = os.path.normcase(os.path.abspath(str(meipass)))
+        path_value = os.environ.get("PATH", "")
+        if path_value:
+            filtered_entries = [
+                entry
+                for entry in path_value.split(os.pathsep)
+                if entry and not self._is_path_inside_directory(entry, sanitized_root)
+            ]
+            os.environ["PATH"] = os.pathsep.join(filtered_entries)
+
+        for variable_name in ("TCL_LIBRARY", "TK_LIBRARY", "_MEIPASS2"):
+            variable_value = os.environ.get(variable_name)
+            if variable_name == "_MEIPASS2" or self._is_path_inside_directory(
+                variable_value,
+                sanitized_root,
+            ):
+                os.environ.pop(variable_name, None)
+
+        for variable_name in tuple(os.environ):
+            if variable_name.startswith("_PYI_"):
+                os.environ.pop(variable_name, None)
+
+    def _is_path_inside_directory(self, candidate_path, directory_path):
+        if not candidate_path or not directory_path:
+            return False
+
+        try:
+            normalized_candidate = os.path.normcase(os.path.abspath(str(candidate_path)))
+            normalized_directory = os.path.normcase(os.path.abspath(str(directory_path)))
+            return os.path.commonpath([normalized_candidate, normalized_directory]) == normalized_directory
+        except (OSError, ValueError):
+            return False
+
+    def _launch_update_installer(self, installer_path):
+        try:
+            self._sanitize_environment_for_external_process_launch()
+            os.startfile(str(installer_path))
+        except OSError as exc:
+            raise ValueError(f"无法启动安装程序：{exc}") from exc
+
+    def _exit_for_installer_update(self):
+        try:
+            self.root.destroy()
+        except tk.TclError:
+            pass
+
+    def _handle_installer_update_failure(self, message):
+        self.update_download_in_progress = False
+        self._show_update_button()
+        messagebox.showwarning("检查更新", f"下载或启动安装包失败：{message}")
+
+    def _select_installer_asset_metadata(self, assets, latest_version=None, latest_tag=None):
+        if not isinstance(assets, list):
+            return None
+
+        candidates = []
+        for asset in assets:
+            if not isinstance(asset, dict):
+                continue
+
+            asset_name = str(asset.get("name") or "").strip()
+            download_url = str(asset.get("browser_download_url") or "").strip()
+            suffix = Path(asset_name).suffix.lower()
+            if suffix not in {".exe", ".msi"} or not download_url:
+                continue
+
+            version_match = self._classify_installer_asset_version(
+                asset_name,
+                latest_version,
+                latest_tag,
+            )
+            if version_match == "mismatch":
+                continue
+
+            candidates.append(
+                (
+                    self._score_installer_asset(
+                        asset_name,
+                        suffix,
+                        latest_version=latest_version,
+                        latest_tag=latest_tag,
+                        version_match=version_match,
+                    ),
+                    asset_name.lower(),
+                    asset,
+                )
+            )
+
+        if not candidates:
+            return None
+
+        candidates.sort(key=lambda item: (item[0], item[1]), reverse=True)
+        return candidates[0][2]
+
+    def _extract_installer_asset(self, payload, latest_version=None, latest_tag=None):
+        if isinstance(payload, list):
+            asset = self._select_installer_asset_metadata(
+                payload,
+                latest_version=latest_version,
+                latest_tag=latest_tag,
+            )
+            if not asset:
+                return None, "Release 中没有找到匹配当前版本的 Windows 安装包资源。"
+            size = asset.get("size")
+            return {
+                "name": str(asset.get("name") or "").strip(),
+                "download_url": str(asset.get("browser_download_url") or "").strip(),
+                "size": size if isinstance(size, int) and size >= 0 else None,
+                "digest": str(asset.get("digest") or "").strip() or None,
+            }, None
+
+        assets = payload.get("assets")
+        if assets is None:
+            return None, "GitHub Release 未提供安装包元数据，无法直接下载安装。"
+        if not isinstance(assets, list):
+            return None, "GitHub Release 安装包元数据格式不正确，无法直接下载安装。"
+
+        asset = self._select_installer_asset_metadata(
+            assets,
+            latest_version=latest_version,
+            latest_tag=latest_tag,
+        )
+        if not asset:
+            return None, "Release 中没有找到匹配当前版本的 Windows 安装包资源。"
+
+        size = asset.get("size")
+        return {
+            "name": str(asset.get("name") or "").strip(),
+            "download_url": str(asset.get("browser_download_url") or "").strip(),
+            "size": size if isinstance(size, int) and size >= 0 else None,
+            "digest": str(asset.get("digest") or "").strip() or None,
+        }, None
+
+    def _classify_installer_asset_version(self, asset_name, latest_version=None, latest_tag=None):
+        raw_expected_version = latest_version or latest_tag
+        if not raw_expected_version:
+            return "unknown"
+
+        expected_version = self._normalize_version_tag(raw_expected_version)
+        if not expected_version:
+            return "unknown"
+
+        version_match = re.search(r"v?\d+(?:[._-]\d+)+", Path(asset_name).stem.lower())
+        if not version_match:
+            return "unknown"
+
+        asset_version = self._normalize_version_tag(version_match.group(0))
+        if not asset_version:
+            return "unknown"
+
+        if self._compare_versions(asset_version, expected_version) != 0:
+            return "mismatch"
+        return "exact"
+
+    def _score_installer_asset(
+        self,
+        asset_name,
+        suffix,
+        latest_version=None,
+        latest_tag=None,
+        version_match=None,
+    ):
+        name = asset_name.lower()
+        normalized_name = re.sub(r"[^a-z0-9]+", "", name)
+        score = 20 if suffix == ".exe" else 10
+        if normalized_name.startswith("gamecontentextractionsetupv"):
+            score += 140
+        elif normalized_name.startswith("gamecontentextractionsetup"):
+            score += 120
+        if "gamecontentextraction" in normalized_name or "内容抽取" in asset_name:
+            score += 100
+        if version_match == "exact":
+            score += 60
+        if "installer" in name or "setup" in name:
+            score += 20
+        if "portable" in name:
+            score -= 50
+        return score
+
+    def _sanitize_update_asset_name(self, asset_name, latest_version):
+        candidate_name = Path(str(asset_name or "").strip()).name
+        if candidate_name:
+            return candidate_name
+
+        version = str(latest_version or "latest").strip() or "latest"
+        return f"zbt-prompt-{version}.exe"
 
     def _summarize_release_notes(self, notes):
         cleaned_notes = notes.strip()

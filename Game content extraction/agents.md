@@ -47,7 +47,9 @@
 
 ## 更新与发布
 
-- 更新检查只提示并打开 Releases 页面；不得自动下载、覆盖 exe、重启程序、写入 `draw_history.json` 或阻塞 UI。
+- 更新检查优先走“安装包内更新”：发现新版本且 Release 提供安装包元数据时，可下载、校验并启动安装包；若拿不到安装包元数据，再退化为提示用户打开 Releases 页面手动查看。
+- 启动安装包前，必须先清理 PyInstaller 单文件进程带给子进程的 DLL 搜索路径、`_PYI_*`、`_MEIPASS2`、`TCL_LIBRARY`、`TK_LIBRARY` 等运行时环境，避免安装器回拉新版本时出现 `Failed to load Python DLL`。
+- 更新流程不得直接覆盖正在运行的 exe，不得写入 `draw_history.json`，也不要长期阻塞 UI；下载和校验应放到后台线程。
 - 只有发布桌面工具新版本时，才更新 `APP_VERSION`、`installer.iss` 输出名和正式 tag。
 
 ## 验证

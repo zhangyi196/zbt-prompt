@@ -56,4 +56,5 @@
 - 涉及 App 逻辑时同步查看 `Game content extraction/agents.md`。
 - `Game content extraction/build/`、`Game content extraction/dist/` 和 `Game content extraction/release/*.exe` 属于本地构建产物，默认保持忽略；若 `.gitignore` 命中已跟踪文件，需同步取消跟踪。
 - 桌面工具安装包固定输出到 `Game content extraction/release/`；发布前先确认本地安装包名、版本号和 Release 资产一致。
+- 检查更新默认走“安装包内更新”，不要直接覆盖正在运行的 exe；若由 PyInstaller 单文件程序启动安装器，先清理 DLL 搜索路径、`_PYI_*`、`_MEIPASS2`、`TCL_LIBRARY`、`TK_LIBRARY` 等运行时环境，再拉起安装包。
 - 源码包推荐发布标识 `source-YYYYMMDD`、资产名 `zbt-prompt-source-YYYYMMDD.zip`；只有发布桌面工具新版本时，才提升 `APP_VERSION`、安装包名和正式 `v0.1.x` tag。
