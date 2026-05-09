@@ -1,0 +1,31 @@
+{
+  "iteration": 2,
+  "timestamp": "2026-05-09T00:00:00+08:00",
+  "hypotheses": [
+    {
+      "id": "H1",
+      "description": "GitHub API 403 来自无认证限流，当前代码缺少非 API 兜底",
+      "status": "confirmed",
+      "evidence": "现有实现仅对 404 做回退；历史调试会话已记录公开仓库下仍可能遇到 403 rate limit。"
+    },
+    {
+      "id": "H2",
+      "description": "403 是请求通道问题，版本比较逻辑仍然可复用",
+      "status": "confirmed",
+      "evidence": "新增回退后仍交由 _build_update_result 处理版本比较，测试可正确识别 v0.1.6 为可更新。"
+    },
+    {
+      "id": "H3",
+      "description": "更新按钮默认可见后，旧测试的隐藏断言已经过时",
+      "status": "confirmed",
+      "evidence": "当前 _hide_update_button() 会恢复按钮文案和可点击状态，不再 pack_forget。"
+    }
+  ],
+  "fix": {
+    "action": "对 GitHub API 的 403/429 增加 releases/latest 重定向回退，并同步更新单测",
+    "verification": [
+      "test_update_check.py 覆盖 403 回退和按钮可见行为",
+      "内容抽取.py py_compile 通过"
+    ]
+  }
+}

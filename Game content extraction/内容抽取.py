@@ -20,6 +20,7 @@ APP_VERSION = "0.1.4"
 UPDATE_API_URL = "https://api.github.com/repos/zhangyi196/zbt-prompt/releases/latest"
 UPDATE_RELEASES_LIST_API_URL = "https://api.github.com/repos/zhangyi196/zbt-prompt/releases?per_page=20"
 UPDATE_RELEASES_URL = "https://github.com/zhangyi196/zbt-prompt/releases"
+UPDATE_RELEASES_LATEST_URL = "https://github.com/zhangyi196/zbt-prompt/releases/latest"
 UPDATE_REQUEST_TIMEOUT_SECONDS = 8
 
 
@@ -591,10 +592,12 @@ class BlindBoxExtractor:
 
         self.update_button = ttk.Button(
             header_frame,
-            text="发现新版本",
+            text="检查更新",
             command=self._on_update_button_click,
             style="Secondary.TButton",
         )
+        self.update_button.pack(side=tk.RIGHT)
+        self.update_button_visible = True
 
     def _show_workspace(self, name):
         if name not in self.workspace_frames:
@@ -632,9 +635,10 @@ class BlindBoxExtractor:
         if not self.update_button:
             return
 
-        if self.update_button_visible:
-            self.update_button.pack_forget()
-            self.update_button_visible = False
+        self.update_button.configure(text="检查更新", state=tk.NORMAL)
+        if not self.update_button_visible:
+            self.update_button.pack(side=tk.RIGHT)
+            self.update_button_visible = True
 
     def _on_update_button_click(self):
         if self.latest_update_result and self.latest_update_result.get("status") == "update_available":
@@ -687,10 +691,42 @@ class BlindBoxExtractor:
         except json.JSONDecodeError as exc:
             raise ValueError("GitHub 返回内容不是有效 JSON") from exc
 
+    def _resolve_latest_release_via_redirect(self):
+        request = urllib.request.Request(
+            UPDATE_RELEASES_LATEST_URL,
+            headers={
+                "Accept": "text/html,application/xhtml+xml",
+                "User-Agent": f"GameContentExtractor/{APP_VERSION}",
+            },
+        )
+
+        try:
+            with urllib.request.urlopen(request, timeout=UPDATE_REQUEST_TIMEOUT_SECONDS) as response:
+                final_url = response.geturl()
+        except urllib.error.HTTPError as exc:
+            raise ValueError(f"GitHub 返回 HTTP {exc.code}") from exc
+        except urllib.error.URLError as exc:
+            raise ValueError(f"无法连接 GitHub：{exc.reason}") from exc
+
+        tag_match = re.search(r"/releases/tag/([^/?#]+)", final_url)
+        latest_tag = tag_match.group(1) if tag_match else ""
+        latest_version = self._normalize_version_tag(latest_tag)
+        if not latest_version:
+            raise ValueError("无法从 GitHub Releases 页面解析最新版本")
+
+        return {
+            "tag_name": latest_tag or latest_version,
+            "html_url": final_url,
+            "body": "",
+        }
+
     def _fetch_latest_release(self):
         try:
             payload = self._fetch_github_json(UPDATE_API_URL)
         except urllib.error.HTTPError as exc:
+            if exc.code in {403, 429}:
+                payload = self._resolve_latest_release_via_redirect()
+                return self._build_update_result(payload)
             if exc.code != 404:
                 raise ValueError(f"GitHub 返回 HTTP {exc.code}") from exc
 
@@ -769,7 +805,12 @@ class BlindBoxExtractor:
 
         self.latest_update_result = None
         self._hide_update_button()
-        if silent or status in {"up_to_date", "no_release"}:
+        if status == "up_to_date":
+            if not silent:
+                messagebox.showinfo("检查更新", "当前已是最新版本。")
+            return
+
+        if silent or status == "no_release":
             return
 
         messagebox.showwarning("检查更新", result.get("message", "检查更新失败"))

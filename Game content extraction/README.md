@@ -12,7 +12,7 @@
 
 当前 `盲盒物品/动物抽取` 工作区采用左侧配置、右侧提示词输出的双栏布局，方便一边调参数一边查看结果。
 
-核心功能不依赖 Web、数据库或服务端。更新检查启动后静默执行，只有发现新版时才显示右上角 `发现新版本` 按钮。
+核心功能不依赖 Web、数据库或服务端。更新检查启动后会静默执行，右上角默认显示 `检查更新` 按钮；发现新版时按钮文案会切换为 `发现新版本`。
 
 维护规则见本目录 [agents.md](agents.md)；盲盒物品写库规则见 [data/agents.md](data/agents.md)，一轮修改完成后的人工复查见 [data/复查清单.md](data/复查清单.md)，跨类别重复词定位见 [data/全局重复词定位清单.md](data/全局重复词定位清单.md)，跨类别不合理命名定位见 [data/全局不合理命名清单.md](data/全局不合理命名清单.md)；全仓提示词规则见上级目录 [agents.md](../agents.md)。
 
@@ -144,9 +144,9 @@ https://api.github.com/repos/zhangyi196/zbt-prompt/releases/latest
 https://api.github.com/repos/zhangyi196/zbt-prompt/releases?per_page=20
 ```
 
-当前版本写在 `内容抽取.py` 的 `APP_VERSION`。检查更新只比较 GitHub Release 版本并打开发布页，不自动下载、覆盖或重启。没有高于当前版本的 Release 时，更新按钮保持隐藏。
+当前版本写在 `内容抽取.py` 的 `APP_VERSION`。检查更新只比较 GitHub Release 版本并打开发布页，不自动下载、覆盖或重启。没有高于当前版本的 Release 时，按钮保持为 `检查更新`，用户仍可手动重试。
 
-更新检查使用无认证 GitHub API，release 所在仓库需要保持 public。若仓库切回 private，旧版安装包会收到 404 并在静默检查时不显示按钮；若遇到 GitHub 无认证限流 403，需要等待 rate limit reset 后重试。
+更新检查优先使用无认证 GitHub API，release 所在仓库需要保持 public。若仓库切回 private，旧版安装包会收到 404，静默检查不会弹窗，但用户仍可手动点击按钮重试；若遇到 GitHub 无认证限流 `403/429`，程序会回退到 `https://github.com/zhangyi196/zbt-prompt/releases/latest` 的重定向结果继续判断最新版本，只有回退也失败时才提示手动去 Releases 页面查看。
 
 发布新版时：更新 `APP_VERSION` 和 `installer.iss` 输出名 -> 构建 exe -> 检查 exe 归档包含 `tkinter` / `_tkinter` / Tcl / Tk -> 生成安装包 -> 做启动/静默安装烟测 -> 创建更高 tag（如 `v0.1.4`）并上传安装包。
 
