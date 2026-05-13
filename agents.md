@@ -7,6 +7,7 @@
 
 ## 入口
 
+- `skills/green-circle-photo-prompts/SKILL.md`：文件夹路径驱动的洗图 skill；主 agent 调度 4 个 subagent，直接调用 `prompts/0.image-prompt/绿圈洗图 2 v1.2.1.1 3组.md` 作为系统提示词，并按参考图同名写入 `txt`。
 - `prompts/main-image/agents.md`：主图 AI 提示词总入口。
 - `prompts/main-image/主图 第一步.md`：判断 Target 是否需要新增内容；需要时只输出盲盒类别编号、动物字段、禁用字段和补偿字段。
 - `prompts/main-image/主图 第二步 .md`：审核和摆放候选物；用户给了候选就不得脑补新候选，默认按稳定承载面上的可见物体处理。

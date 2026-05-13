@@ -1,0 +1,4 @@
+interface:
+  display_name: "绿圈洗图批处理"
+  short_description: "按文件夹批量洗图，并调用源md作为系统提示词写入txt"
+  default_prompt: "请读取绿圈洗图源 md 作为系统提示词，并为这个文件夹中的参考图批量生成同名 txt"
