@@ -1,0 +1,97 @@
+{
+  "id": "TASK-003",
+  "title": "agents.md 同步更新",
+  "description": "根据组图23.md和组图4.md的最终修改状态，同步更新 prompts/2.group-image/agents.md 中的硬规则、入口描述和使用边界",
+
+  "issue_id": null,
+  "issue_refs": [],
+  "type": "feature",
+  "priority": "medium",
+  "effort": "small",
+  "action": "修改 prompts/2.group-image/agents.md：(1) 硬规则段增加新增的三条约束——九宫格空间覆盖最低标准、所有对象指代字段禁止颜色/材质前缀（含 VLM 风险说明）、紧邻物体互斥扫描；(2) 入口段更新组图23和组图4的描述，反映新的规则重点；(3) 使用边界段补充紧邻互斥和幅度量化相关边界说明",
+  "status": "pending",
+  "completed_at": null,
+  "actual_duration": null,
+
+  "scope": "prompts/2.group-image/",
+  "focus_paths": ["prompts/2.group-image/agents.md"],
+
+  "read_first": [
+    "prompts/2.group-image/agents.md",
+    "prompts/2.group-image/组图 23.md",
+    "prompts/2.group-image/组图 4.md"
+  ],
+
+  "depends_on": ["TASK-001", "TASK-002"],
+  "wave": 2,
+  "parallel_group": null,
+  "execution_group": null,
+  "executor": "agent",
+
+  "convergence": {
+    "criteria": [
+      "prompts/2.group-image/agents.md 包含 '九宫格' 或 '空间覆盖' 相关描述",
+      "prompts/2.group-image/agents.md 包含 '颜色' 或 '材质' 或 'VLM' 相关禁令描述",
+      "prompts/2.group-image/agents.md 包含 '紧邻' 或 '互斥' 相关描述",
+      "prompts/2.group-image/agents.md 包含 '幅度' 或 '30%' 或 '存在感' 相关描述"
+    ],
+    "verification": "grep -c '九宫格\\|空间覆盖\\|空间分布' 'prompts/2.group-image/agents.md' && grep -c '颜色\\|材质\\|VLM' 'prompts/2.group-image/agents.md' && grep -c '紧邻\\|互斥' 'prompts/2.group-image/agents.md' && grep -c '幅度\\|存在感' 'prompts/2.group-image/agents.md'",
+    "definition_of_done": "agents.md 的硬规则段包含组图23的三条新约束和组图4的幅度标准，入口描述反映修改重点，使用边界段已补充"
+  },
+
+  "files": [
+    {
+      "path": "prompts/2.group-image/agents.md",
+      "action": "modify",
+      "target": "硬规则段、入口段、使用边界段",
+      "change": "同步新增三条组图23硬约束 + 组图4幅度标准 + 更新入口描述"
+    }
+  ],
+
+  "implementation": [
+    "1. 读取 prompts/2.group-image/组图 23.md 全文（确认 TASK-001 最终状态）",
+    "2. 读取 prompts/2.group-image/组图 4.md 全文（确认 TASK-002 最终状态）",
+    "3. 读取 prompts/2.group-image/agents.md 全文",
+    "4. 在硬规则段增加：'- 组图23差异点 List 1+2 合并覆盖九宫格至少 8/9 区域（左上/中上/右上/左中/中心/右中/左下/中下/右下），每区域至少 1 点'、'- 所有对象指代字段（位置/修改/摆放内容）禁止颜色词、材质词、纹理词作为对象前缀；VLM 颜色识别不稳定，带颜色描述易导致大面积错误差异点'、'- 紧邻物体（间距小于一个物体宽度）不得同时设为差异点，审核阶段前置扫描'、'- 组图4差异点变化幅度不低于原物体 30% 或产生明显存在感变化，禁止仅颜色微调或轻微缩放'",
+    "5. 在入口段更新组图23和组图4的描述文字，体现新规则重点",
+    "6. 在使用边界段补充紧邻互斥和幅度量化的适用边界",
+    "7. 保持文档结构不变，只追加不删除"
+  ],
+
+  "test": {
+    "commands": [],
+    "unit": [],
+    "integration": [],
+    "success_metrics": ["九宫格相关存在", "颜色/材质/VLM禁令存在", "紧邻互斥存在", "幅度标准存在"]
+  },
+
+  "reference": {
+    "pattern": "agents.md 现有硬规则列表：'- ' 开头的简要规则描述",
+    "files": ["prompts/2.group-image/agents.md"],
+    "examples": null
+  },
+
+  "rationale": {
+    "chosen_approach": "追加式更新——在现有硬规则列表末尾增加新条目，不删除不重写，保持历史可追溯",
+    "decision_factors": ["agents.md 是入口文件，应简洁反映所有关键约束", "不删除旧规则避免意外丢失信息"],
+    "tradeoffs": "规则条目增加可能让 agents.md 变长——但每条都是独立硬约束，值得保留"
+  },
+
+  "risks": ["如果 TASK-001/002 的修改有调整，TASK-003 需要同步适配——通过 depends_on 确保执行顺序"],
+
+  "code_skeleton": null,
+
+  "doc_context": {
+    "affected_features": ["FT-001 AI提示词规则引擎", "FT-006 项目导航与全局规则"],
+    "affected_components": ["TC-005 组图23差异迁移", "TC-006 组图4差异设计"],
+    "affected_requirements": ["REQ-001", "REQ-002", "REQ-003", "REQ-004"],
+    "adr_ids": []
+  },
+
+  "meta": {
+    "estimated_time": "10min",
+    "risk": "low",
+    "autonomous": true,
+    "checkpoint": true
+  }
+}

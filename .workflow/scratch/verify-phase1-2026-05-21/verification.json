@@ -1,0 +1,63 @@
+{
+  "phase": 1,
+  "status": "passed",
+  "verified_at": "2026-05-21T16:00:00+08:00",
+  "verifier": "workflow-verifier",
+  "must_haves": {
+    "truths": [
+      {
+        "claim": "REQ-001: 组图23 九宫格空间分布均匀化",
+        "status": "verified",
+        "evidence": "组图 23.md 包含九宫格空间分布硬约束子段，4处关键词命中（九宫格/9个区域）",
+        "criteria": [
+          {"criterion": "包含九宫格或9个区域", "status": "verified", "evidence": "4 occurrences in 组图 23.md"},
+          {"criterion": "自检项 ≥8 且含空间覆盖检查", "status": "verified", "evidence": "自检项=10，#6为九宫格覆盖率检查"}
+        ]
+      },
+      {
+        "claim": "REQ-002: 位置描述禁止颜色/材质前缀",
+        "status": "verified",
+        "evidence": "组图 23.md 位置闸门段已扩展为所有对象指代字段禁令，含VLM风险说明，2处命中",
+        "criteria": [
+          {"criterion": "包含VLM和颜色禁令", "status": "verified", "evidence": "2 occurrences: 主规则+自检项#7"},
+          {"criterion": "禁令扩展到修改/摆放内容", "status": "verified", "evidence": "明确列出位置、修改、摆放内容三个字段"}
+        ]
+      },
+      {
+        "claim": "REQ-003: 紧邻物体互斥约束",
+        "status": "verified",
+        "evidence": "组图 23.md 冲突闸门段新增紧邻物体互斥检查条目，量化一个物体宽度，4处命中",
+        "criteria": [
+          {"criterion": "包含紧邻和物体宽度", "status": "verified", "evidence": "4 occurrences: 主规则+自检项#8"},
+          {"criterion": "前置检查非后置过滤", "status": "verified", "evidence": "明确写'在候选审核阶段前置执行'"}
+        ]
+      },
+      {
+        "claim": "REQ-004: 组图4 分布均匀度与修改幅度",
+        "status": "verified",
+        "evidence": "组图 4.md 优先级第3位为空间均匀分布，总目标含30%幅度标准+禁令",
+        "criteria": [
+          {"criterion": "空间均匀分布第3优先级", "status": "verified", "evidence": "组图 4.md:30 确认为 '3. 空间均匀分布'"},
+          {"criterion": "包含30%或存在感变化", "status": "verified", "evidence": "1 occurrence: 变化面积≥30%或存在感变化"},
+          {"criterion": "包含颜色微调禁令", "status": "verified", "evidence": "1 occurrence: 禁止仅做颜色微调、轻微缩放"}
+        ]
+      }
+    ],
+    "artifacts": [
+      {"path": "prompts/2.group-image/组图 23.md", "status": "VERIFIED", "substantive": true},
+      {"path": "prompts/2.group-image/组图 4.md", "status": "VERIFIED", "substantive": true},
+      {"path": "prompts/2.group-image/agents.md", "status": "VERIFIED", "substantive": true}
+    ],
+    "key_links": [
+      {"from": "agents.md → 组图 23.md", "status": "WIRED", "evidence": "入口描述含九宫格覆盖率/颜色禁令/紧邻互斥"},
+      {"from": "agents.md → 组图 4.md", "status": "WIRED", "evidence": "入口描述含优先级/幅度标准"},
+      {"from": "组图 23.md 规则 → 自检项", "status": "WIRED", "evidence": "3条新规则均有对应自检项"}
+    ]
+  },
+  "gaps": [],
+  "constraint_violations": [],
+  "antipatterns": [],
+  "fix_plans": [],
+  "human_verification": ["人工验证建议：使用修改后的组图23.md和组图4.md执行一轮实际生成，确认差异点分布均匀度和位置描述质量"],
+  "coverage_score": 100
+}

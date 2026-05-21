@@ -1,0 +1,104 @@
+{
+  "id": "TASK-002",
+  "title": "提升组图 4 的第一眼可见性准入标准",
+  "description": "修改 prompts/2.group-image/组图 4.md，把现有 30% 幅度规则升级为‘30% 只是下限，第一眼可见才是最终准入条件’，并收紧图案变化落点。",
+  "issue_id": null,
+  "issue_refs": [],
+  "type": "feature",
+  "priority": "high",
+  "effort": "medium",
+  "action": "在 prompts/2.group-image/组图 4.md 的总目标、冷区补点策略、类型定义或约束段中，加入‘30% 只是下限，第一眼可见才是最终准入条件’、‘若某个候选点需要逐格对照才发现，直接淘汰’、‘图案内容变化只允许落在中小型独立承载物，不得落在地板、毛毯、整墙、整窗帘等大块表面’这三组具体规则。",
+  "status": "completed",
+  "completed_at": "2026-05-21T18:40:00+08:00",
+  "actual_duration": "20m",
+  "scope": "prompts/2.group-image",
+  "focus_paths": [
+    "prompts/2.group-image/组图 4.md"
+  ],
+  "read_first": [
+    "prompts/2.group-image/组图 4.md",
+    "prompts/2.group-image/agents.md",
+    ".workflow/scratch/brainstorm-group23-group4-salience-2026-05-21/guidance-specification.md",
+    ".workflow/scratch/brainstorm-group23-group4-salience-2026-05-21/feature-specs/F-002-group4-visibility-salience.md"
+  ],
+  "depends_on": [],
+  "wave": 1,
+  "parallel_group": "prompt-salience",
+  "execution_group": null,
+  "executor": "agent",
+  "convergence": {
+    "criteria": [
+      "prompts/2.group-image/组图 4.md contains '**硬性要求：9 个区域每区固定 2 个差异点，总计刚好 18 个。**'",
+      "prompts/2.group-image/组图 4.md contains '30% 只是下限，第一眼可见才是最终准入条件'",
+      "prompts/2.group-image/组图 4.md contains '若某个候选点需要逐格对照才发现，直接淘汰'",
+      "prompts/2.group-image/组图 4.md contains '图案内容变化只允许落在中小型独立承载物'",
+      "prompts/2.group-image/组图 4.md contains '地板、毛毯、整墙、整窗帘'"
+    ],
+    "verification": "Read prompts/2.group-image/组图 4.md and verify one exact string remains in the 2×9 spatial quota block, one appears in the goal/entry criteria, and the图案落点限制 appears in the rule/type-definition area.",
+    "definition_of_done": "组图 4 的差异点不仅面积达标，而且在手机屏幕上能被第一眼发现，同时不把显著性压到大面积背景表面。"
+  },
+  "files": [
+    {
+      "path": "prompts/2.group-image/组图 4.md",
+      "action": "modify",
+      "target": "总目标 / 空间分配规则 / 类型定义或约束段",
+      "change": "保留 18 点和九宫格 2×9 配额，新增第一眼可见终审标准，补充逐格对照淘汰规则，并限制图案内容变化只能落在中小型独立承载物而非地板、毛毯、整墙、整窗帘等大块表面。"
+    }
+  ],
+  "implementation": [
+    "在总目标第 2 条附近补写 ‘30% 只是下限，第一眼可见才是最终准入条件’，明确面积达标但需细看者一律淘汰。",
+    "在冷区补点策略中加入兜底约束：若某冷区只有轻微变化可做，必须改用更清晰的小实体变化或局部状态变化。",
+    "在图案内容变化相关段落中补写 ‘图案内容变化只允许落在中小型独立承载物’，并列出地板、毛毯、整墙、整窗帘等禁止落点。",
+    "保留 18 个差异点、九宫格 2×9、单一不同点、大面积背景稳定等既有硬约束，不做结构性改写。"
+  ],
+  "test": {
+    "commands": [],
+    "unit": [],
+    "integration": [],
+    "success_metrics": [
+      "第一眼可见规则可通过精确字符串检索验证",
+      "18 点与九宫格 2×9 配额文本未被破坏"
+    ]
+  },
+  "reference": {
+    "pattern": "组图 4 已通过优先级和幅度量化进行约束，本轮在原结构内增强准入规则",
+    "files": [
+      "prompts/2.group-image/组图 4.md",
+      "prompts/2.group-image/agents.md"
+    ],
+    "examples": null
+  },
+  "rationale": {
+    "chosen_approach": "沿用组图 4 现有 18 点与九宫格框架，只增强显著性准入和图案落点限制，变更面最小。",
+    "decision_factors": [
+      "brainstorm 已确认 30% 只能作为下限",
+      "用户补充要求组图 4 的变化也要更明显",
+      "不应改动现有链路和点位总数"
+    ],
+    "tradeoffs": "更强的可见性约束可能减少可选候选点，但能显著降低‘面积达标但仍不明显’的问题。"
+  },
+  "risks": [
+    "若没有同步限制图案变化落点，模型仍可能把显著性放到大块背景。",
+    "若只加口号不加淘汰条件，执行时仍可能回落到轻微变化。"
+  ],
+  "code_skeleton": null,
+  "doc_context": {
+    "affected_features": [
+      "FT-001"
+    ],
+    "affected_components": [
+      "TC-006"
+    ],
+    "affected_requirements": [
+      "REQ-001",
+      "REQ-004"
+    ],
+    "adr_ids": []
+  },
+  "meta": {
+    "estimated_time": "20m",
+    "risk": "medium",
+    "autonomous": true,
+    "checkpoint": false
+  }
+}

@@ -1,0 +1,708 @@
+{
+  "version": 2,
+  "generatedAt": 1779358825781,
+  "entries": [
+    {
+      "id": "project-project",
+      "type": "project",
+      "title": "Project: zbt-prompt",
+      "summary": "## What This Is",
+      "tags": [],
+      "status": "active",
+      "created": "2026-05-21T08:33:09.329Z",
+      "updated": "2026-05-21T08:33:09.329Z",
+      "scope": null,
+      "category": null,
+      "createdBy": null,
+      "sourceRef": null,
+      "parent": null,
+      "related": [],
+      "source": {
+        "kind": "file",
+        "path": "project.md"
+      }
+    },
+    {
+      "id": "roadmap-roadmap",
+      "type": "roadmap",
+      "title": "Roadmap: zbt-prompt",
+      "summary": "## Overview",
+      "tags": [],
+      "status": "active",
+      "created": "2026-05-21T09:53:12.994Z",
+      "updated": "2026-05-21T09:53:12.994Z",
+      "scope": null,
+      "category": null,
+      "createdBy": null,
+      "sourceRef": null,
+      "parent": null,
+      "related": [],
+      "source": {
+        "kind": "file",
+        "path": "roadmap.md"
+      }
+    },
+    {
+      "id": "spec:project:architecture-constraints",
+      "type": "spec",
+      "title": "Architecture Constraints",
+      "summary": "# Architecture Constraints",
+      "tags": [
+        "architecture",
+        "module",
+        "layer",
+        "boundary",
+        "dependency",
+        "structure"
+      ],
+      "status": "active",
+      "created": "2026-05-21T08:35:44.008Z",
+      "updated": "2026-05-21T08:35:44.008Z",
+      "scope": "project",
+      "category": "arch",
+      "createdBy": null,
+      "sourceRef": null,
+      "parent": null,
+      "related": [],
+      "source": {
+        "kind": "file",
+        "path": "specs/architecture-constraints.md"
+      }
+    },
+    {
+      "id": "spec:project:architecture-constraints-001",
+      "type": "spec",
+      "title": "Module Structure",
+      "summary": "- Type: single-package（单仓库） - Key modules: - `prompts/` — AI 提示词规则（0.image-prompt / 1.main-image / 2.group-image） - `skills/` — Claude Code Skills（green-circle-photo-prompts） - `Game content extraction/` — Python tkinter 桌面工具 + 盲盒数据层 ",
+      "tags": [
+        "architecture",
+        "module",
+        "layer",
+        "boundary",
+        "dependency",
+        "structure"
+      ],
+      "status": "active",
+      "created": "2026-05-21T08:35:44.008Z",
+      "updated": "2026-05-21T08:35:44.008Z",
+      "scope": "project",
+      "category": "arch",
+      "createdBy": null,
+      "sourceRef": null,
+      "parent": "spec:project:architecture-constraints",
+      "related": [],
+      "source": {
+        "kind": "file",
+        "path": "specs/architecture-constraints.md"
+      }
+    },
+    {
+      "id": "spec:project:architecture-constraints-002",
+      "type": "spec",
+      "title": "Layer Boundaries",
+      "summary": "``` agents.md (总导航 + 全局硬规则) ├── prompts/ │ ├── 0.image-prompt/ → 绿圈洗图（独立链路） │ ├── 1.main-image/ → 主图生成链路 │ └── 2.group-image/ → 组图差异链路 ├── skills/ → 调用 prompts/ 规则 └── Game content extra",
+      "tags": [
+        "architecture",
+        "module",
+        "layer",
+        "boundary",
+        "dependency",
+        "structure"
+      ],
+      "status": "active",
+      "created": "2026-05-21T08:35:44.008Z",
+      "updated": "2026-05-21T08:35:44.008Z",
+      "scope": "project",
+      "category": "arch",
+      "createdBy": null,
+      "sourceRef": null,
+      "parent": "spec:project:architecture-constraints",
+      "related": [],
+      "source": {
+        "kind": "file",
+        "path": "specs/architecture-constraints.md"
+      }
+    },
+    {
+      "id": "spec:project:architecture-constraints-003",
+      "type": "spec",
+      "title": "Dependency Rules",
+      "summary": "- `skills/` 引用 `prompts/` 中的系统提示词作为规则源 - `Game content extraction/data/` 是盲盒数据的唯一事实源 - 根目录 `agents.md` 只保留稳定入口和全局规则，执行细则收敛在子目录 - 提示词不直接依赖 `blind_boxes.py`，通过第一步的类别库保持同步",
+      "tags": [
+        "architecture",
+        "module",
+        "layer",
+        "boundary",
+        "dependency",
+        "structure"
+      ],
+      "status": "active",
+      "created": "2026-05-21T08:35:44.008Z",
+      "updated": "2026-05-21T08:35:44.008Z",
+      "scope": "project",
+      "category": "arch",
+      "createdBy": null,
+      "sourceRef": null,
+      "parent": "spec:project:architecture-constraints",
+      "related": [],
+      "source": {
+        "kind": "file",
+        "path": "specs/architecture-constraints.md"
+      }
+    },
+    {
+      "id": "spec:project:architecture-constraints-004",
+      "type": "spec",
+      "title": "Technology Constraints",
+      "summary": "- 桌面工具: Python 3.13 + tkinter/ttk 原生（不引入 Web/数据库） - 提示词规则: Markdown, UTF-8, 中文 - Skills: Claude Code Skills 框架 - 无外部 API 依赖",
+      "tags": [
+        "architecture",
+        "module",
+        "layer",
+        "boundary",
+        "dependency",
+        "structure"
+      ],
+      "status": "active",
+      "created": "2026-05-21T08:35:44.008Z",
+      "updated": "2026-05-21T08:35:44.008Z",
+      "scope": "project",
+      "category": "arch",
+      "createdBy": null,
+      "sourceRef": null,
+      "parent": "spec:project:architecture-constraints",
+      "related": [],
+      "source": {
+        "kind": "file",
+        "path": "specs/architecture-constraints.md"
+      }
+    },
+    {
+      "id": "spec:project:coding-conventions",
+      "type": "spec",
+      "title": "Coding Conventions",
+      "summary": "# Coding Conventions",
+      "tags": [
+        "style",
+        "naming",
+        "import",
+        "pattern",
+        "convention",
+        "formatting"
+      ],
+      "status": "active",
+      "created": "2026-05-21T08:35:42.588Z",
+      "updated": "2026-05-21T08:35:42.588Z",
+      "scope": "project",
+      "category": "coding",
+      "createdBy": null,
+      "sourceRef": null,
+      "parent": null,
+      "related": [],
+      "source": {
+        "kind": "file",
+        "path": "specs/coding-conventions.md"
+      }
+    },
+    {
+      "id": "spec:project:coding-conventions-001",
+      "type": "spec",
+      "title": "Formatting",
+      "summary": "- Indentation: Markdown 无严格要求；Python 4 空格 - Line length: 未配置 - Trailing commas: Python 无强制 - Semicolons: 不使用 - Encoding: UTF-8（所有中文文件）",
+      "tags": [
+        "style",
+        "naming",
+        "import",
+        "pattern",
+        "convention",
+        "formatting"
+      ],
+      "status": "active",
+      "created": "2026-05-21T08:35:42.588Z",
+      "updated": "2026-05-21T08:35:42.588Z",
+      "scope": "project",
+      "category": "coding",
+      "createdBy": null,
+      "sourceRef": null,
+      "parent": "spec:project:coding-conventions",
+      "related": [],
+      "source": {
+        "kind": "file",
+        "path": "specs/coding-conventions.md"
+      }
+    },
+    {
+      "id": "spec:project:coding-conventions-002",
+      "type": "spec",
+      "title": "Naming",
+      "summary": "- Prompt 文件: 中文描述性名称（如 `主图 第一步.md`、`组图 23.md`） - Python 文件: snake_case（如 `blind_boxes.py`、`item_states.py`） - Skills 目录: kebab-case（如 `green-circle-photo-prompts/`）",
+      "tags": [
+        "style",
+        "naming",
+        "import",
+        "pattern",
+        "convention",
+        "formatting"
+      ],
+      "status": "active",
+      "created": "2026-05-21T08:35:42.588Z",
+      "updated": "2026-05-21T08:35:42.588Z",
+      "scope": "project",
+      "category": "coding",
+      "createdBy": null,
+      "sourceRef": null,
+      "parent": "spec:project:coding-conventions",
+      "related": [],
+      "source": {
+        "kind": "file",
+        "path": "specs/coding-conventions.md"
+      }
+    },
+    {
+      "id": "spec:project:coding-conventions-003",
+      "type": "spec",
+      "title": "Imports",
+      "summary": "- Python: 标准库 → 项目内模块 - 无路径别名配置",
+      "tags": [
+        "style",
+        "naming",
+        "import",
+        "pattern",
+        "convention",
+        "formatting"
+      ],
+      "status": "active",
+      "created": "2026-05-21T08:35:42.588Z",
+      "updated": "2026-05-21T08:35:42.588Z",
+      "scope": "project",
+      "category": "coding",
+      "createdBy": null,
+      "sourceRef": null,
+      "parent": "spec:project:coding-conventions",
+      "related": [],
+      "source": {
+        "kind": "file",
+        "path": "specs/coding-conventions.md"
+      }
+    },
+    {
+      "id": "spec:project:coding-conventions-004",
+      "type": "spec",
+      "title": "Patterns",
+      "summary": "- 提示词文件采用固定结构：角色设定 → 核心任务 → 规则 → 输出格式 → 自检 - 每个子模块有专属 `agents.md` 做入口导航 - 规则层级：全局硬规则（根 agents.md）→ 模块执行细则（子目录 agents.md） - 数据修改遵循审查→修改→复查闭环",
+      "tags": [
+        "style",
+        "naming",
+        "import",
+        "pattern",
+        "convention",
+        "formatting"
+      ],
+      "status": "active",
+      "created": "2026-05-21T08:35:42.588Z",
+      "updated": "2026-05-21T08:35:42.588Z",
+      "scope": "project",
+      "category": "coding",
+      "createdBy": null,
+      "sourceRef": null,
+      "parent": "spec:project:coding-conventions",
+      "related": [],
+      "source": {
+        "kind": "file",
+        "path": "specs/coding-conventions.md"
+      }
+    },
+    {
+      "id": "spec:project:debug-notes",
+      "type": "spec",
+      "title": "Debug Notes",
+      "summary": "# Debug Notes",
+      "tags": [
+        "debug",
+        "issue",
+        "workaround",
+        "root-cause",
+        "gotcha"
+      ],
+      "status": "active",
+      "created": "2026-05-21T08:33:23.355Z",
+      "updated": "2026-05-21T08:33:23.355Z",
+      "scope": "project",
+      "category": "debug",
+      "createdBy": null,
+      "sourceRef": null,
+      "parent": null,
+      "related": [],
+      "source": {
+        "kind": "file",
+        "path": "specs/debug-notes.md"
+      }
+    },
+    {
+      "id": "spec:project:learnings",
+      "type": "spec",
+      "title": "Learnings",
+      "summary": "# Learnings",
+      "tags": [
+        "bug",
+        "lesson",
+        "gotcha",
+        "learning"
+      ],
+      "status": "active",
+      "created": "2026-05-21T10:13:11.283Z",
+      "updated": "2026-05-21T10:13:11.283Z",
+      "scope": "project",
+      "category": "learning",
+      "createdBy": null,
+      "sourceRef": null,
+      "parent": null,
+      "related": [],
+      "source": {
+        "kind": "file",
+        "path": "specs/learnings.md"
+      }
+    },
+    {
+      "id": "spec:project:learnings-001",
+      "type": "spec",
+      "title": "Entries",
+      "summary": "- 2026-05-21: When prompt salience needs to be stronger, make the acceptance gate first-glance visible and tie it to the exact rule section; area thresholds alone are not enough.",
+      "tags": [
+        "bug",
+        "lesson",
+        "gotcha",
+        "learning"
+      ],
+      "status": "active",
+      "created": "2026-05-21T10:13:11.283Z",
+      "updated": "2026-05-21T10:13:11.283Z",
+      "scope": "project",
+      "category": "learning",
+      "createdBy": null,
+      "sourceRef": null,
+      "parent": "spec:project:learnings",
+      "related": [],
+      "source": {
+        "kind": "file",
+        "path": "specs/learnings.md"
+      }
+    },
+    {
+      "id": "spec:project:quality-rules",
+      "type": "spec",
+      "title": "Quality Rules",
+      "summary": "# Quality Rules",
+      "tags": [
+        "quality",
+        "lint",
+        "rule",
+        "enforcement"
+      ],
+      "status": "active",
+      "created": "2026-05-21T08:35:46.871Z",
+      "updated": "2026-05-21T08:35:46.872Z",
+      "scope": "project",
+      "category": "review",
+      "createdBy": null,
+      "sourceRef": null,
+      "parent": null,
+      "related": [],
+      "source": {
+        "kind": "file",
+        "path": "specs/quality-rules.md"
+      }
+    },
+    {
+      "id": "spec:project:quality-rules-001",
+      "type": "spec",
+      "title": "全局硬规则",
+      "summary": "- 禁止脑补不可见对象、画外空间、遮挡后区域或身份不稳定对象 - 差异点遵守\"一圈一物一变化\"；不得依赖细线、小点、刻痕、碎屑、污渍、标签或价格签 - 不改人物骨架、姿态、头身朝向、四肢动作、支撑关系和贴邻热区 - 不做灯光、发光、明暗、阴影、高光、反光、滤光、投影或镜面成像变化 - 灯具、灯罩、灯泡、蜡烛火焰等照明对象不得整体消失、整体移动或替换成不发光物 - 新增、异物植入或替换为更大物体前，必须确认 Target 有完整可见且未被占用的可放置空间 - 位置字段只定位，不",
+      "tags": [
+        "quality",
+        "lint",
+        "rule",
+        "enforcement"
+      ],
+      "status": "active",
+      "created": "2026-05-21T08:35:46.871Z",
+      "updated": "2026-05-21T08:35:46.872Z",
+      "scope": "project",
+      "category": "review",
+      "createdBy": null,
+      "sourceRef": null,
+      "parent": "spec:project:quality-rules",
+      "related": [],
+      "source": {
+        "kind": "file",
+        "path": "specs/quality-rules.md"
+      }
+    },
+    {
+      "id": "spec:project:quality-rules-002",
+      "type": "spec",
+      "title": "盲盒数据质量门",
+      "summary": "- 四池各 50 条，池内唯一 - 条目真实、自然、第一眼可识别 - 修改后必须运行 `test_blind_box_content_model.py` - 伪多样性检查：主词未变仅换前缀视为未修复",
+      "tags": [
+        "quality",
+        "lint",
+        "rule",
+        "enforcement"
+      ],
+      "status": "active",
+      "created": "2026-05-21T08:35:46.871Z",
+      "updated": "2026-05-21T08:35:46.872Z",
+      "scope": "project",
+      "category": "review",
+      "createdBy": null,
+      "sourceRef": null,
+      "parent": "spec:project:quality-rules",
+      "related": [],
+      "source": {
+        "kind": "file",
+        "path": "specs/quality-rules.md"
+      }
+    },
+    {
+      "id": "spec:project:quality-rules-003",
+      "type": "spec",
+      "title": "提示词输出质量门",
+      "summary": "- 固定输出格式，不做额外解释 - 数量配额必须精确满足 - 每条差异点第一眼可见，手机屏幕无需放大 - 自检项逐条通过",
+      "tags": [
+        "quality",
+        "lint",
+        "rule",
+        "enforcement"
+      ],
+      "status": "active",
+      "created": "2026-05-21T08:35:46.871Z",
+      "updated": "2026-05-21T08:35:46.872Z",
+      "scope": "project",
+      "category": "review",
+      "createdBy": null,
+      "sourceRef": null,
+      "parent": "spec:project:quality-rules",
+      "related": [],
+      "source": {
+        "kind": "file",
+        "path": "specs/quality-rules.md"
+      }
+    },
+    {
+      "id": "spec:project:review-standards",
+      "type": "spec",
+      "title": "Review Standards",
+      "summary": "# Review Standards",
+      "tags": [
+        "review",
+        "checklist",
+        "gate",
+        "approval",
+        "standard"
+      ],
+      "status": "active",
+      "created": "2026-05-21T08:33:23.355Z",
+      "updated": "2026-05-21T08:33:23.358Z",
+      "scope": "project",
+      "category": "review",
+      "createdBy": null,
+      "sourceRef": null,
+      "parent": null,
+      "related": [],
+      "source": {
+        "kind": "file",
+        "path": "specs/review-standards.md"
+      }
+    },
+    {
+      "id": "spec:project:test-conventions",
+      "type": "spec",
+      "title": "Test Conventions",
+      "summary": "# Test Conventions",
+      "tags": [
+        "test",
+        "coverage",
+        "mock",
+        "fixture",
+        "assertion",
+        "framework"
+      ],
+      "status": "active",
+      "created": "2026-05-21T08:35:45.423Z",
+      "updated": "2026-05-21T08:35:45.424Z",
+      "scope": "project",
+      "category": "test",
+      "createdBy": null,
+      "sourceRef": null,
+      "parent": null,
+      "related": [],
+      "source": {
+        "kind": "file",
+        "path": "specs/test-conventions.md"
+      }
+    },
+    {
+      "id": "spec:project:test-conventions-001",
+      "type": "spec",
+      "title": "Framework",
+      "summary": "- Framework: pytest（通过 `Game content extraction/.venv/` 运行） - Run command: `Game content extraction/.venv/Scripts/python.exe -m pytest` 或直接运行测试文件",
+      "tags": [
+        "test",
+        "coverage",
+        "mock",
+        "fixture",
+        "assertion",
+        "framework"
+      ],
+      "status": "active",
+      "created": "2026-05-21T08:35:45.423Z",
+      "updated": "2026-05-21T08:35:45.424Z",
+      "scope": "project",
+      "category": "test",
+      "createdBy": null,
+      "sourceRef": null,
+      "parent": "spec:project:test-conventions",
+      "related": [],
+      "source": {
+        "kind": "file",
+        "path": "specs/test-conventions.md"
+      }
+    },
+    {
+      "id": "spec:project:test-conventions-002",
+      "type": "spec",
+      "title": "Directory Structure",
+      "summary": "- Pattern: 测试文件放在被测模块同级目录（`Game content extraction/`） - 测试文件命名: `test_*.py`",
+      "tags": [
+        "test",
+        "coverage",
+        "mock",
+        "fixture",
+        "assertion",
+        "framework"
+      ],
+      "status": "active",
+      "created": "2026-05-21T08:35:45.423Z",
+      "updated": "2026-05-21T08:35:45.424Z",
+      "scope": "project",
+      "category": "test",
+      "createdBy": null,
+      "sourceRef": null,
+      "parent": "spec:project:test-conventions",
+      "related": [],
+      "source": {
+        "kind": "file",
+        "path": "specs/test-conventions.md"
+      }
+    },
+    {
+      "id": "spec:project:test-conventions-003",
+      "type": "spec",
+      "title": "Naming Conventions",
+      "summary": "- Test files: `test_blind_box_content_model.py`, `test_clear_input_behavior.py`, `test_expression_enhancement.py`",
+      "tags": [
+        "test",
+        "coverage",
+        "mock",
+        "fixture",
+        "assertion",
+        "framework"
+      ],
+      "status": "active",
+      "created": "2026-05-21T08:35:45.423Z",
+      "updated": "2026-05-21T08:35:45.424Z",
+      "scope": "project",
+      "category": "test",
+      "createdBy": null,
+      "sourceRef": null,
+      "parent": "spec:project:test-conventions",
+      "related": [],
+      "source": {
+        "kind": "file",
+        "path": "specs/test-conventions.md"
+      }
+    },
+    {
+      "id": "spec:project:test-conventions-004",
+      "type": "spec",
+      "title": "Known Test Files",
+      "summary": "- `Game content extraction/test_blind_box_content_model.py` — 盲盒内容模型验证 - `Game content extraction/test_clear_input_behavior.py` — 输入行为测试 - `Game content extraction/test_expression_enhancement.py` — 表情增强测试",
+      "tags": [
+        "test",
+        "coverage",
+        "mock",
+        "fixture",
+        "assertion",
+        "framework"
+      ],
+      "status": "active",
+      "created": "2026-05-21T08:35:45.423Z",
+      "updated": "2026-05-21T08:35:45.424Z",
+      "scope": "project",
+      "category": "test",
+      "createdBy": null,
+      "sourceRef": null,
+      "parent": "spec:project:test-conventions",
+      "related": [],
+      "source": {
+        "kind": "file",
+        "path": "specs/test-conventions.md"
+      }
+    },
+    {
+      "id": "spec:project:test-conventions-005",
+      "type": "spec",
+      "title": "Patterns",
+      "summary": "- 修改盲盒数据后必须运行 `test_blind_box_content_model.py` - 额外检查四池数量、重复、跨池重叠、禁词、尾词配额和模板密度",
+      "tags": [
+        "test",
+        "coverage",
+        "mock",
+        "fixture",
+        "assertion",
+        "framework"
+      ],
+      "status": "active",
+      "created": "2026-05-21T08:35:45.423Z",
+      "updated": "2026-05-21T08:35:45.424Z",
+      "scope": "project",
+      "category": "test",
+      "createdBy": null,
+      "sourceRef": null,
+      "parent": "spec:project:test-conventions",
+      "related": [],
+      "source": {
+        "kind": "file",
+        "path": "specs/test-conventions.md"
+      }
+    },
+    {
+      "id": "spec:project:ui-conventions",
+      "type": "spec",
+      "title": "UI Conventions",
+      "summary": "# UI Conventions",
+      "tags": [
+        "ui",
+        "design",
+        "color",
+        "typography",
+        "layout",
+        "animation",
+        "component"
+      ],
+      "status": "active",
+      "created": "2026-05-21T08:33:23.355Z",
+      "updated": "2026-05-21T08:33:23.355Z",
+      "scope": "project",
+      "category": "ui",
+      "createdBy": null,
+      "sourceRef": null,
+      "parent": null,
+      "related": [],
+      "source": {
+        "kind": "file",
+        "path": "specs/ui-conventions.md"
+      }
+    }
+  ]
+}

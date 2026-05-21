@@ -1,0 +1,282 @@
+{
+  "version": "1.0",
+  "schema_version": "1.0",
+  "project": "zbt-prompt",
+  "last_updated": "2026-05-21T16:00:00+08:00",
+  "features": [
+    {
+      "id": "FT-001",
+      "name": "AI提示词规则引擎",
+      "status": "active",
+      "requirement_ids": [],
+      "component_ids": ["TC-001", "TC-002", "TC-003", "TC-004", "TC-005", "TC-006"],
+      "phase": null,
+      "description": "卡通休闲找不同游戏的三条AI提示词链路：绿圈洗图、主图生成、组图差异设计"
+    },
+    {
+      "id": "FT-002",
+      "name": "绿圈洗图批处理技能",
+      "status": "active",
+      "requirement_ids": [],
+      "component_ids": ["TC-007"],
+      "phase": null,
+      "description": "Claude Code skill，按文件夹批量调度subagent生成英文洗图提示词"
+    },
+    {
+      "id": "FT-003",
+      "name": "盲盒物品数据层",
+      "status": "active",
+      "requirement_ids": [],
+      "component_ids": ["TC-008", "TC-009", "TC-010", "TC-013", "TC-014", "TC-015", "TC-016", "TC-017", "TC-018"],
+      "phase": null,
+      "description": "20类盲盒四池物品库、审查修改规则、全局重复词/不合理命名清单"
+    },
+    {
+      "id": "FT-004",
+      "name": "桌面工具集",
+      "status": "active",
+      "requirement_ids": [],
+      "component_ids": ["TC-011", "TC-012"],
+      "phase": null,
+      "description": "Python tkinter原生桌面工具：图像抓取、文件批量重命名"
+    },
+    {
+      "id": "FT-005",
+      "name": "人物表情系统",
+      "status": "active",
+      "requirement_ids": [],
+      "component_ids": ["TC-004", "TC-019"],
+      "phase": null,
+      "description": "组图23表情前置规则 + 表情库模板（25正向/25负向类别）"
+    },
+    {
+      "id": "FT-006",
+      "name": "项目导航与全局规则",
+      "status": "active",
+      "requirement_ids": [],
+      "component_ids": ["TC-020", "TC-021"],
+      "phase": null,
+      "description": "agents.md总导航、README.md目录说明、全局硬规则和盲盒修改总则"
+    }
+  ],
+  "components": [
+    {
+      "id": "TC-001",
+      "name": "绿圈洗图提示词",
+      "type": "prompt-rule",
+      "code_locations": ["prompts/0.image-prompt/绿圈洗图 2 v1.2.1.1 3组.md"],
+      "feature_ids": ["FT-001"],
+      "symbols": [],
+      "last_updated": "2026-05-21",
+      "description": "SD风格化反推英文提示词生成，智能评估画面密度，忽略绿圈UI干扰"
+    },
+    {
+      "id": "TC-002",
+      "name": "主图第一步",
+      "type": "prompt-rule",
+      "code_locations": ["prompts/1.main-image/主图 第一步.md"],
+      "feature_ids": ["FT-001"],
+      "symbols": [],
+      "last_updated": "2026-05-21",
+      "description": "判断场景是否需要新增物品，匹配20类盲盒类别，输出5字段（类别编号×2/动物/禁用/补偿）"
+    },
+    {
+      "id": "TC-003",
+      "name": "主图第二步",
+      "type": "prompt-rule",
+      "code_locations": ["prompts/1.main-image/主图 第二步 .md"],
+      "feature_ids": ["FT-001"],
+      "symbols": [],
+      "last_updated": "2026-05-21",
+      "description": "候选物审核与摆放设计，含场景扫描/候选审核/有限修改/最终摆放/合规自检五阶段"
+    },
+    {
+      "id": "TC-004",
+      "name": "组图23表情前置",
+      "type": "prompt-rule",
+      "code_locations": ["prompts/2.group-image/组图 23 表情前置.md"],
+      "feature_ids": ["FT-001", "FT-005"],
+      "symbols": [],
+      "last_updated": "2026-05-21",
+      "description": "根据Ref-A→Ref-B真实变化输出负向组/正向组/正负向组三组表情预案"
+    },
+    {
+      "id": "TC-005",
+      "name": "组图23差异迁移",
+      "type": "prompt-rule",
+      "code_locations": ["prompts/2.group-image/组图 23.md"],
+      "feature_ids": ["FT-001"],
+      "symbols": [],
+      "last_updated": "2026-05-21",
+      "description": "Ref-A→Ref-B真实变化迁移到Target，List1(16条核心)+List2(16条辅助)，含剧情绑定/人物互斥/冷区兜底"
+    },
+    {
+      "id": "TC-006",
+      "name": "组图4差异设计",
+      "type": "prompt-rule",
+      "code_locations": ["prompts/2.group-image/组图 4.md"],
+      "feature_ids": ["FT-001"],
+      "symbols": [],
+      "last_updated": "2026-05-21",
+      "description": "基于中期关卡图设计18个全新差异点，九宫格2×9固定配额+类型配额3/6/3/3/3"
+    },
+    {
+      "id": "TC-007",
+      "name": "绿圈洗图批处理Skill",
+      "type": "skill",
+      "code_locations": [
+        "skills/green-circle-photo-prompts/SKILL.md",
+        "skills/green-circle-photo-prompts/references/prompt-spec.md",
+        "skills/green-circle-photo-prompts/scripts/build_manifest.py",
+        "skills/green-circle-photo-prompts/scripts/write_prompt_files.py"
+      ],
+      "feature_ids": ["FT-002"],
+      "symbols": [],
+      "last_updated": "2026-05-21",
+      "description": "文件夹路径驱动的批量洗图skill，主agent调度4个GPT-5.4 subagent并行处理"
+    },
+    {
+      "id": "TC-008",
+      "name": "盲盒物品库",
+      "type": "data-model",
+      "code_locations": ["Game content extraction/data/blind_boxes.py"],
+      "feature_ids": ["FT-003"],
+      "symbols": ["BLIND_BOX_ITEM_POOL_BUNDLES"],
+      "last_updated": "2026-05-21",
+      "description": "20类盲盒四池物品数据（core/support/visible_small/scene_expansion），每池50条"
+    },
+    {
+      "id": "TC-009",
+      "name": "动物数据",
+      "type": "data-model",
+      "code_locations": ["Game content extraction/data/animals.py"],
+      "feature_ids": ["FT-003"],
+      "symbols": [],
+      "last_updated": "2026-05-21",
+      "description": "动物类型、动物用品和动物痕迹数据定义"
+    },
+    {
+      "id": "TC-010",
+      "name": "物品状态数据",
+      "type": "data-model",
+      "code_locations": ["Game content extraction/data/item_states.py"],
+      "feature_ids": ["FT-003"],
+      "symbols": [],
+      "last_updated": "2026-05-21",
+      "description": "物品状态词定义，透明/反光/高光语义视为风险"
+    },
+    {
+      "id": "TC-011",
+      "name": "图像抓取工具",
+      "type": "desktop-tool",
+      "code_locations": ["Game content extraction/image_fetcher_ui.py"],
+      "feature_ids": ["FT-004"],
+      "symbols": [],
+      "last_updated": "2026-05-21",
+      "description": "Python tkinter图像文件复制工具UI"
+    },
+    {
+      "id": "TC-012",
+      "name": "文件批量重命名工具",
+      "type": "desktop-tool",
+      "code_locations": ["Game content extraction/file_batch_renamer.py"],
+      "feature_ids": ["FT-004"],
+      "symbols": [],
+      "last_updated": "2026-05-21",
+      "description": "Python tkinter文件批量重命名UI，含文件存在保护逻辑"
+    },
+    {
+      "id": "TC-013",
+      "name": "审查规则",
+      "type": "data-rule",
+      "code_locations": ["Game content extraction/data/审查规则.md"],
+      "feature_ids": ["FT-003"],
+      "symbols": [],
+      "last_updated": "2026-05-21",
+      "description": "盲盒物品审查宪法：问题模式定义、否决条件和审查输出要求"
+    },
+    {
+      "id": "TC-014",
+      "name": "修改规则",
+      "type": "data-rule",
+      "code_locations": ["Game content extraction/data/修改规则.md"],
+      "feature_ids": ["FT-003"],
+      "symbols": [],
+      "last_updated": "2026-05-21",
+      "description": "盲盒物品修改宪法：替换目标、边界和验收标准"
+    },
+    {
+      "id": "TC-015",
+      "name": "复查清单",
+      "type": "data-rule",
+      "code_locations": ["Game content extraction/data/复查清单.md"],
+      "feature_ids": ["FT-003"],
+      "symbols": [],
+      "last_updated": "2026-05-21",
+      "description": "修改完成后的精简收尾检查表"
+    },
+    {
+      "id": "TC-016",
+      "name": "全局重复词定位清单",
+      "type": "data-rule",
+      "code_locations": ["Game content extraction/data/全局重复词定位清单.md"],
+      "feature_ids": ["FT-003"],
+      "symbols": [],
+      "last_updated": "2026-05-21",
+      "description": "跨类别高频重复词、词族和定位索引"
+    },
+    {
+      "id": "TC-017",
+      "name": "全局不合理命名清单",
+      "type": "data-rule",
+      "code_locations": ["Game content extraction/data/全局不合理命名清单.md"],
+      "feature_ids": ["FT-003"],
+      "symbols": [],
+      "last_updated": "2026-05-21",
+      "description": "跨类别不直观、功能先于主体、壳体先于本体的命名索引"
+    },
+    {
+      "id": "TC-018",
+      "name": "类别审查文档集",
+      "type": "data-rule",
+      "code_locations": ["Game content extraction/data/审查文件/"],
+      "feature_ids": ["FT-003"],
+      "symbols": [],
+      "last_updated": "2026-05-21",
+      "description": "20类盲盒各自的问题记录、替换方向、修改复审和剩余风险文档"
+    },
+    {
+      "id": "TC-019",
+      "name": "组图23表情库",
+      "type": "data-model",
+      "code_locations": ["组图 23 表情库.md"],
+      "feature_ids": ["FT-005"],
+      "symbols": [],
+      "last_updated": "2026-05-21",
+      "description": "人物表情模板库，25正向+25负向类别，眉/眼/嘴三段式模板，供提示词和工具共用"
+    },
+    {
+      "id": "TC-020",
+      "name": "项目总导航",
+      "type": "documentation",
+      "code_locations": ["agents.md"],
+      "feature_ids": ["FT-006"],
+      "symbols": [],
+      "last_updated": "2026-05-21",
+      "description": "根目录agents.md：全局硬规则、盲盒修改总则、工具总则、修改与发布规范"
+    },
+    {
+      "id": "TC-021",
+      "name": "项目README",
+      "type": "documentation",
+      "code_locations": ["README.md"],
+      "feature_ids": ["FT-006"],
+      "symbols": [],
+      "last_updated": "2026-05-21",
+      "description": "项目目录结构说明、盲盒内容库概述、维护要点和发布规范"
+    }
+  ],
+  "requirements": [],
+  "architecture_decisions": [],
+  "actions": []
+}

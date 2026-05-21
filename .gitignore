@@ -48,6 +48,5 @@ Game content extraction/_tmp_history_verify_*/
 # Skill scratch output
 .workflow/.scratchpad/green-circle-photo-prompts/
 
-# Keep repo data trackable
-!data/
-!data/**
+# Local test data (images + generated prompts)
+data/

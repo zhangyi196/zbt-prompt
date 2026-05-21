@@ -1,0 +1,81 @@
+{
+  "summary": "增强组图 23 辅助差异与组图 4 差异点的第一眼可见性，并同步组图入口说明与自检约束，保持九宫格覆盖、紧邻互斥、禁颜色/材质前缀和大主体禁改不回退。",
+  "approach": "采用两阶段执行：Wave 1 并行修改 prompts/2.group-image/组图 23.md 与 prompts/2.group-image/组图 4.md 的显著性规则和自检文本；Wave 2 在前两项文案稳定后同步更新 prompts/2.group-image/agents.md，避免入口描述与执行细则分叉。",
+  "task_ids": [
+    "TASK-001",
+    "TASK-002",
+    "TASK-003"
+  ],
+  "task_count": 3,
+  "complexity": "medium",
+  "estimated_time": "45-75m",
+  "recommended_execution": "Agent",
+  "waves": [
+    {
+      "wave": 1,
+      "tasks": [
+        "TASK-001",
+        "TASK-002"
+      ]
+    },
+    {
+      "wave": 2,
+      "tasks": [
+        "TASK-003"
+      ]
+    }
+  ],
+  "data_flow": {
+    "diagram": null,
+    "stages": [
+      "brainstorm guidance and prior analyze context -> TASK-001/TASK-002 prompt rule edits",
+      "TASK-001/TASK-002 final rule wording -> TASK-003 agents entry sync"
+    ]
+  },
+  "design_decisions": [
+    "组图 23 的 List 2 临时从 16 条提升到 18 条，以换取更充足的冷区补点与显著性调度空间。",
+    "组图 23 与组图 4 统一采用‘第一眼可见’作为准入标准，而不只依赖面积或类型配额。",
+    "大承载面图案变化继续受限，不允许用地板、毛毯、整墙、整窗帘等大块表面制造显著性。"
+  ],
+  "shared_context": {
+    "patterns": [
+      "提示词文件采用固定结构：规则段 -> 固定输出格式 -> 合规自检。",
+      "组图执行细则收敛在 prompts/2.group-image/，入口说明由本目录 agents.md 维护。"
+    ],
+    "conventions": [
+      "Markdown UTF-8 中文规则文案。",
+      "不改既有输出板块结构和字段名。",
+      "一圈一物一变化、禁脑补、禁光影改动、大主体稳定继续保留。"
+    ],
+    "dependencies": [
+      "TASK-003 依赖 TASK-001 与 TASK-002 的最终表述。"
+    ]
+  },
+  "confidence": {
+    "overall": 91,
+    "dimensions": {
+      "requirements_coverage": 93,
+      "task_quality": 90,
+      "dependency_correctness": 95,
+      "estimation_accuracy": 86,
+      "collision_safety": 92
+    },
+    "weakest_dimension": "estimation_accuracy",
+    "pressure_pass": {
+      "task_id": "TASK-001",
+      "status": "passed",
+      "notes": "read_first 覆盖目标文件、入口文件和 brainstorm 规范；convergence.criteria 全部可通过 grep/Read 校验；action 与 implementation 含具体数量、类别和校验点。"
+    },
+    "residual_risks": [
+      "组图 23 List 2 从 16 条调整为 18 条会触碰旧 analyze 的 locked 数量约束，需要在执行时仅按本轮 roadmap/brainstorm 的新要求落地。"
+    ]
+  },
+  "_metadata": {
+    "timestamp": "2026-05-21T18:18:00+08:00",
+    "source": "workflow-planner",
+    "planning_mode": "full",
+    "plan_type": "phase",
+    "schema_version": "2.0",
+    "git_commit": null
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "summary": "优化组图 23 和组图 4 提示词规则：组图23 增加九宫格空间分布约束、强化颜色/材质禁令、增加紧邻互斥检查；组图4 提升空间均匀分布优先级、量化修改幅度标准；同步更新 agents.md",
+  "approach": "按文件分组，组图23和组图4独立并行修改，agents.md 待两者完成后同步",
+  "task_ids": ["TASK-001", "TASK-002", "TASK-003"],
+  "task_count": 3,
+  "complexity": "low",
+  "estimated_time": "30-45min",
+  "recommended_execution": "Agent",
+
+  "waves": [
+    {
+      "wave": 1,
+      "label": "核心规则修改",
+      "tasks": ["TASK-001", "TASK-002"],
+      "parallel": true
+    },
+    {
+      "wave": 2,
+      "label": "入口同步",
+      "tasks": ["TASK-003"],
+      "parallel": false
+    }
+  ],
+
+  "data_flow": {
+    "diagram": "TASK-001 + TASK-002 → TASK-003",
+    "stages": [
+      { "stage": 1, "description": "并行修改组图23和组图4的提示词规则", "tasks": ["TASK-001", "TASK-002"] },
+      { "stage": 2, "description": "根据两个文件的最终状态同步更新 agents.md", "tasks": ["TASK-003"] }
+    ]
+  },
+
+  "design_decisions": [
+    "九宫格覆盖率合并计算 List 1 + List 2，最低 8/9 格，不强求 9/9",
+    "颜色/材质禁令扩展到所有对象指代字段（位置/修改/摆放内容）",
+    "紧邻互斥在候选审核阶段前置检查，不在 List 生成后过滤",
+    "组图4 空间均匀分布提升至第3优先级（灯光禁令和单一不同点之后）"
+  ],
+
+  "shared_context": {
+    "patterns": ["固定输出格式", "自检项", "优先级排序", "硬性禁令"],
+    "conventions": ["中文提示词", "UTF-8", "Markdown", "规则层级：全局→模块"],
+    "dependencies": ["组图23和组图4独立，互不依赖"]
+  },
+
+  "_metadata": {
+    "timestamp": "2026-05-21T16:00:00+08:00",
+    "source": "workflow-planner",
+    "planning_mode": "full",
+    "plan_type": "feature",
+    "schema_version": "2.0",
+    "git_commit": null
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "id": "TASK-001",
+  "title": "增强组图 23 的 List 2 显著性规则",
+  "description": "修改 prompts/2.group-image/组图 23.md，使 List 2 从合规补点升级为第一眼可见的小区域强信号，并把数量临时从 16 条提升到 18 条。",
+  "issue_id": null,
+  "issue_refs": [],
+  "type": "feature",
+  "priority": "high",
+  "effort": "medium",
+  "action": "在 prompts/2.group-image/组图 23.md 中把 List 2 数量由‘固定 16 条’改为‘固定 18 条’，并在 List 2 规则、固定输出格式、合规自检三处加入明确的第一眼可见准入、抽象差异类别（局部结构缺损、局部表面破坏、局部状态反转、局部异常附着或脱落、局部方向或连接异常）与大承载面限制。",
+  "status": "completed",
+  "completed_at": "2026-05-21T18:40:00+08:00",
+  "actual_duration": "25m",
+  "scope": "prompts/2.group-image",
+  "focus_paths": [
+    "prompts/2.group-image/组图 23.md"
+  ],
+  "read_first": [
+    "prompts/2.group-image/组图 23.md",
+    "prompts/2.group-image/agents.md",
+    ".workflow/scratch/brainstorm-group23-group4-salience-2026-05-21/guidance-specification.md",
+    ".workflow/scratch/brainstorm-group23-group4-salience-2026-05-21/feature-specs/F-001-group23-list2-salience.md"
+  ],
+  "depends_on": [],
+  "wave": 1,
+  "parallel_group": "prompt-salience",
+  "execution_group": null,
+  "executor": "agent",
+  "convergence": {
+    "criteria": [
+      "prompts/2.group-image/组图 23.md contains '### List 2：辅助差异'",
+      "prompts/2.group-image/组图 23.md contains '- **固定 18 条**，只从冷区取点'",
+      "prompts/2.group-image/组图 23.md contains '必须先过“第一眼可见”闸门'",
+      "prompts/2.group-image/组图 23.md contains '局部结构缺损 / 局部表面破坏 / 局部状态反转 / 局部异常附着或脱落 / 局部方向或连接异常'",
+      "prompts/2.group-image/组图 23.md contains 'List 1 / List 2 是否各 18 条'"
+    ],
+    "verification": "Read prompts/2.group-image/组图 23.md and verify the exact strings appear under the List 2 rule block and the compliance checklist, not only elsewhere in the file.",
+    "definition_of_done": "组图 23 的辅助差异规则变得更明显、更适合中老年用户，同时不破坏九宫格覆盖、紧邻互斥与对象指代禁令。"
+  },
+  "files": [
+    {
+      "path": "prompts/2.group-image/组图 23.md",
+      "action": "modify",
+      "target": "List 2：辅助差异 / 固定输出格式 / 合规自检",
+      "change": "把 List 2 数量从 16 条改为 18 条；新增第一眼可见准入；把差异类别改写为 5 类抽象类别；补充地板、毛毯、整墙、整窗帘、大家具主体表面不得作为显著性主载体的限制；把自检数量说明同步改为各 18 条。"
+    }
+  ],
+  "implementation": [
+    "在 ‘## 三、List 规则’ 的 List 2 段落中，把数量说明改成 ‘固定 18 条’，并明确写入 ‘必须先过第一眼可见闸门，再检查类型、句式和配额’。",
+    "在 List 2 变化类型描述中加入单行抽象类别串：‘局部结构缺损 / 局部表面破坏 / 局部状态反转 / 局部异常附着或脱落 / 局部方向或连接异常’，同时保留单点、小区域、可单独圈选要求。",
+    "在大承载面限制中明确列出地板、毛毯、整墙、整窗帘、大家具主体表面不得作为显著性放大的主要载体，仅允许边界清楚的局部块状变化。",
+    "在 ‘### 四、辅助差异设计列表（List 2）’ 和 ‘## 五、合规自检’ 中把 List 2 数量与显著性检查同步到 18 条和第一眼可见标准。"
+  ],
+  "test": {
+    "commands": [],
+    "unit": [],
+    "integration": [],
+    "success_metrics": [
+      "文案规则可通过精确字符串检索验证",
+      "数量、自检、入口规则之间无冲突"
+    ]
+  },
+  "reference": {
+    "pattern": "既有组图 23 规则采用规则段 + 固定输出格式 + 合规自检联动更新",
+    "files": [
+      "prompts/2.group-image/组图 23.md",
+      "prompts/2.group-image/agents.md"
+    ],
+    "examples": null
+  },
+  "rationale": {
+    "chosen_approach": "直接在组图 23 的主规则、自检和输出格式三处同时落地，避免数量、显著性和入口说明分裂。",
+    "decision_factors": [
+      "brainstorm 已给出明确类别和边界",
+      "List 2 是本轮显著性问题的主战场",
+      "需要把规则变化做成 grep 可验证的文本信号"
+    ],
+    "tradeoffs": "数量从 16 提到 18 会提升密度管理难度，但能换取更好的冷区覆盖与显著性调度空间。"
+  },
+  "risks": [
+    "若只改数量不改准入语言，会导致更多但仍偏弱的差异。",
+    "若大承载面限制写得不够具体，模型仍可能把显著性压在地板或毛毯图案上。"
+  ],
+  "code_skeleton": null,
+  "doc_context": {
+    "affected_features": [
+      "FT-001"
+    ],
+    "affected_components": [
+      "TC-005"
+    ],
+    "affected_requirements": [
+      "REQ-001",
+      "REQ-003",
+      "REQ-004"
+    ],
+    "adr_ids": []
+  },
+  "meta": {
+    "estimated_time": "25m",
+    "risk": "medium",
+    "autonomous": true,
+    "checkpoint": false
+  }
+}

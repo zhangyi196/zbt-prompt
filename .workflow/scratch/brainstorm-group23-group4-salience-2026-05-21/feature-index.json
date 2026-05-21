@@ -1,0 +1,20 @@
+{
+  "session_id": "brainstorm-group23-group4-salience-2026-05-21",
+  "topic": "增强组图 23 辅助差异与组图 4 差异显著性",
+  "features": [
+    {
+      "id": "F-001",
+      "slug": "group23-list2-salience",
+      "title": "组图 23 List 2 显著性增强",
+      "priority": "P1",
+      "target": "prompts/2.group-image/组图 23.md"
+    },
+    {
+      "id": "F-002",
+      "slug": "group4-visibility-salience",
+      "title": "组图 4 第一眼可见性增强",
+      "priority": "P1",
+      "target": "prompts/2.group-image/组图 4.md"
+    }
+  ]
+}

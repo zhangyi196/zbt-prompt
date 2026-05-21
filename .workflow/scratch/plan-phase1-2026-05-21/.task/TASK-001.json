@@ -1,0 +1,95 @@
+{
+  "id": "TASK-001",
+  "title": "组图23.md 三处规则增强",
+  "description": "在组图23.md中增加九宫格空间分布硬约束、强化位置描述颜色/材质禁令、增加紧邻物体互斥前置检查",
+
+  "issue_id": null,
+  "issue_refs": [],
+  "type": "feature",
+  "priority": "high",
+  "effort": "medium",
+  "action": "修改 prompts/2.group-image/组图 23.md：(1) List 规则段增加九宫格覆盖率硬约束——List 1 + List 2 合起来至少覆盖九宫格 8/9 区域（左上/中上/右上/左中/中心/右中/左下/中下/右下），每个区域至少 1 个差异点，冷区极少的区域允许用块状局部承载面补点；(2) 位置字段禁令扩展——在 Target 对象与位置闸门段增加\"所有对象指代字段（位置、修改、摆放内容）禁止使用颜色词、材质词、纹理词作为对象前缀，如'褐色的墙壁''木质的桌子'；VLM 模型对颜色识别不稳定，带颜色的对象描述容易导致大面积错误差异点\"；(3) 紧邻互斥——在冲突与可圈选闸门段增加\"审核阶段必须扫描紧邻物体：以目标物体为中心、周围一个物体宽度的范围内的物体视为紧邻，不得同时设为差异点。List 1 和 List 2 合计也不得包含紧邻对\"。同步更新自检项",
+  "status": "pending",
+  "completed_at": null,
+  "actual_duration": null,
+
+  "scope": "prompts/2.group-image/",
+  "focus_paths": ["prompts/2.group-image/组图 23.md"],
+
+  "read_first": [
+    "prompts/2.group-image/组图 23.md",
+    "prompts/2.group-image/agents.md",
+    ".workflow/scratch/analyze-phase1-2026-05-21/context.md"
+  ],
+
+  "depends_on": [],
+  "wave": 1,
+  "parallel_group": "core-rules",
+  "execution_group": null,
+  "executor": "agent",
+
+  "convergence": {
+    "criteria": [
+      "prompts/2.group-image/组图 23.md 包含 '九宫格' 或 '左上' 或 '9 个区域'",
+      "prompts/2.group-image/组图 23.md 包含 '颜色' 和 'VLM' 或 '识别' 相关禁令描述",
+      "prompts/2.group-image/组图 23.md 包含 '紧邻' 或 '相邻物体' 或 '周围' 和 '物体宽度'",
+      "prompts/2.group-image/组图 23.md 自检项数量 >= 8 且包含空间覆盖和紧邻互斥相关条目"
+    ],
+    "verification": "grep -c '九宫格\\|9 个区域' 'prompts/2.group-image/组图 23.md' && grep -c '颜色.*材质\\|VLM' 'prompts/2.group-image/组图 23.md' && grep -c '紧邻\\|相邻.*物体.*宽度' 'prompts/2.group-image/组图 23.md'",
+    "definition_of_done": "组图23.md 的 List 1+2 有九宫格覆盖率最低标准，位置/修改字段禁止颜色材质前缀且解释了 VLM 原因，紧邻物体有互斥扫描步骤，自检项已同步更新"
+  },
+
+  "files": [
+    {
+      "path": "prompts/2.group-image/组图 23.md",
+      "action": "modify",
+      "target": "List 规则段、Target 对象与位置闸门段、冲突与可圈选闸门段、合规自检段",
+      "change": "增加九宫格覆盖硬约束 + 强化颜色/材质禁令到所有对象指代字段 + 增加紧邻物体互斥前置检查 + 更新自检项"
+    }
+  ],
+
+  "implementation": [
+    "1. 读取 prompts/2.group-image/组图 23.md 全文",
+    "2. 在 List 规则段（约第58-78行 '## 三、List 规则' 区域）增加九宫格空间分布约束：定义 9 个区域（左上/中上/右上/左中/中心/右中/左下/中下/右下），要求 List 1 + List 2 合并覆盖至少 8 个区域，每区域至少 1 个差异点；冷区极少时允许用块状局部承载面补点",
+    "3. 在 Target 对象与位置闸门段（约第26-32行 '### 2. Target 对象与位置闸门' 区域）强化禁令：将'位置字段只定位，不写颜色、材质...'扩展为'所有对象指代字段（位置、修改、摆放内容）禁止使用颜色词、材质词、纹理词作为对象前缀修饰。例如禁止写褐色的墙壁、木质的桌子、红色的杯子。原因：VLM 模型对颜色识别不稳定，带颜色描述的对象容易导致大面积错误差异点。只能写基础物体名+方位/结构'",
+    "4. 在冲突与可圈选闸门段（约第34-39行 '### 3. 冲突与可圈选闸门' 区域）增加紧邻互斥：在现有冲突规则后增加'紧邻互斥检查：审核每个候选时，以该物体为中心、周围约一个物体宽度的范围内，不得有其他已确认的差异点。List 1 和 List 2 合并后也不得包含紧邻物体对。紧挨着的两个物体（间距小于一个物体宽度）只保留更清晰、更易圈选的一个。'",
+    "5. 更新自检项（约第125-134行 '## 五、合规自检' 区域）：在现有 8 项自检中增加空间覆盖检查和紧邻互斥检查条目，保持总数 8-10 项"
+  ],
+
+  "test": {
+    "commands": [],
+    "unit": [],
+    "integration": [],
+    "success_metrics": ["九宫格相关关键词存在", "VLM/颜色禁令存在", "紧邻互斥关键词存在", "自检项 >= 8"]
+  },
+
+  "reference": {
+    "pattern": "组图 23.md 现有规则结构：优先级排序 → 闸门分段 → List 规则 → 输出格式 → 自检",
+    "files": ["prompts/2.group-image/组图 23.md"],
+    "examples": null
+  },
+
+  "rationale": {
+    "chosen_approach": "在现有规则段内增强而非新增独立段落，保持文档结构一致性",
+    "decision_factors": ["最小改动原则", "规则就近原则（空间分布→List段，位置描述→位置闸门段，紧邻→冲突段）"],
+    "tradeoffs": "九宫格覆盖率设 8/9 而非 9/9，给极端场景留弹性"
+  },
+
+  "risks": ["九宫格约束可能与剧情需求冲突——通过设置 8/9 而非 9/9 缓解", "紧邻定义可能过于模糊——用'一个物体宽度'作为量化参考"],
+
+  "code_skeleton": null,
+
+  "doc_context": {
+    "affected_features": ["FT-001 AI提示词规则引擎"],
+    "affected_components": ["TC-005 组图23差异迁移"],
+    "affected_requirements": ["REQ-001 组图23九宫格空间分布", "REQ-002 位置描述禁令", "REQ-003 紧邻互斥"],
+    "adr_ids": []
+  },
+
+  "meta": {
+    "estimated_time": "20min",
+    "risk": "low",
+    "autonomous": true,
+    "checkpoint": false
+  }
+}

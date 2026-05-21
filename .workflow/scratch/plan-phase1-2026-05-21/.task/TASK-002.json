@@ -1,0 +1,93 @@
+{
+  "id": "TASK-002",
+  "title": "组图4.md 优先级调整与修改幅度量化",
+  "description": "在组图4.md中将空间均匀分布优先级从第6位提升到第3位，并增加修改幅度量化标准",
+
+  "issue_id": null,
+  "issue_refs": [],
+  "type": "feature",
+  "priority": "high",
+  "effort": "medium",
+  "action": "修改 prompts/2.group-image/组图 4.md：(1) 最高优先级规则段——将'空间均匀分布'从第 6 位提升到第 3 位，更新后的优先级顺序为：1.灯光/发光相关禁令 → 2.单一不同点原则 → 3.空间均匀分布 → 4.对象锁定与重叠回避 → 5.大面积背景稳定 → 6.人物骨架锚定 → 7.类型配额 → 8.逻辑通俗与卡通舒适；(2) 总目标段——在'差异必须一眼可见'后增加修改幅度量化标准：'每个差异点的变化面积应不低于原物体的 30%，或产生明显可辨的存在感变化（如物体消失/新增、方向翻转、开合状态改变、图案内容替换）。禁止仅做颜色微调、轻微缩放、微小偏移或纹理细微变化。'",
+  "status": "pending",
+  "completed_at": null,
+  "actual_duration": null,
+
+  "scope": "prompts/2.group-image/",
+  "focus_paths": ["prompts/2.group-image/组图 4.md"],
+
+  "read_first": [
+    "prompts/2.group-image/组图 4.md",
+    "prompts/2.group-image/agents.md",
+    ".workflow/scratch/analyze-phase1-2026-05-21/context.md"
+  ],
+
+  "depends_on": [],
+  "wave": 1,
+  "parallel_group": "core-rules",
+  "execution_group": null,
+  "executor": "agent",
+
+  "convergence": {
+    "criteria": [
+      "prompts/2.group-image/组图 4.md 第 3 条优先级为 '空间均匀分布' 或包含 '空间' 相关关键词",
+      "prompts/2.group-image/组图 4.md 包含 '30%' 或 '变化面积' 或 '存在感变化' 相关幅度量化描述",
+      "prompts/2.group-image/组图 4.md 包含 '禁止仅做颜色微调' 或 '禁止.*轻微' 相关幅度禁令"
+    ],
+    "verification": "grep -n '空间均匀分布' 'prompts/2.group-image/组图 4.md' | head -1 && grep -c '30%\\|变化面积\\|存在感' 'prompts/2.group-image/组图 4.md' && grep -c '颜色微调\\|轻微' 'prompts/2.group-image/组图 4.md'",
+    "definition_of_done": "组图4.md 优先级列表中空间均匀分布在第3位，总目标段有修改幅度量化标准（30%或存在感变化）和幅度禁令"
+  },
+
+  "files": [
+    {
+      "path": "prompts/2.group-image/组图 4.md",
+      "action": "modify",
+      "target": "最高优先级规则段（约第26-35行）、总目标段（约第13-22行）",
+      "change": "优先级第6位'空间均匀分布'提升到第3位 + 总目标段增加修改幅度量化标准"
+    }
+  ],
+
+  "implementation": [
+    "1. 读取 prompts/2.group-image/组图 4.md 全文",
+    "2. 在最高优先级规则段（约第26-35行），将优先级列表从'1.灯光/发光相关禁令 → 2.单一不同点原则 → 3.对象锁定与重叠回避 → 4.大面积背景稳定 → 5.人物骨架锚定 → 6.空间均匀分布 → 7.类型配额 → 8.逻辑通俗与卡通舒适'改为'1.灯光/发光相关禁令 → 2.单一不同点原则 → 3.空间均匀分布 → 4.对象锁定与重叠回避 → 5.大面积背景稳定 → 6.人物骨架锚定 → 7.类型配额 → 8.逻辑通俗与卡通舒适'",
+    "3. 在总目标段（约第13-22行）的'差异必须一眼可见，不能依赖细小细节'之后，增加修改幅度量化标准：'每个差异点的变化面积应不低于原物体的 30%，或产生明显可辨的存在感变化（如物体消失/新增、方向翻转、开合状态改变、图案内容替换）。禁止仅做颜色微调、轻微缩放（<10%）、微小偏移或纹理细微变化。'",
+    "4. 检查文档其余部分是否有与新的优先级顺序或幅度标准冲突的表述，如有则调整"
+  ],
+
+  "test": {
+    "commands": [],
+    "unit": [],
+    "integration": [],
+    "success_metrics": ["空间均匀分布在第3优先级位", "30%或存在感变化描述存在", "幅度禁令存在"]
+  },
+
+  "reference": {
+    "pattern": "组图 4.md 现有优先级列表：数字编号 + 简短名称",
+    "files": ["prompts/2.group-image/组图 4.md"],
+    "examples": null
+  },
+
+  "rationale": {
+    "chosen_approach": "只调整优先级顺序和增加幅度标准，不改变其他规则内容，最小化改动",
+    "decision_factors": ["灯光禁令和单一不同点是更硬的约束不宜超越", "空间分布需要高于操作性规则才能被 AI 执行"],
+    "tradeoffs": "提升空间分布优先级意味着对象锁定和背景稳定可能在拥挤场景中让步——通过保留'大面积背景稳定'在第5位缓解"
+  },
+
+  "risks": ["30%幅度标准可能在某些小物体上过于严格——用'或存在感变化'作为弹性替代"],
+
+  "code_skeleton": null,
+
+  "doc_context": {
+    "affected_features": ["FT-001 AI提示词规则引擎"],
+    "affected_components": ["TC-006 组图4差异设计"],
+    "affected_requirements": ["REQ-004 组图4分布均匀度与修改幅度"],
+    "adr_ids": []
+  },
+
+  "meta": {
+    "estimated_time": "15min",
+    "risk": "low",
+    "autonomous": true,
+    "checkpoint": false
+  }
+}
