@@ -146,10 +146,26 @@
       "harvested": false,
       "created_at": "2026-05-27T12:30:00+08:00",
       "completed_at": "2026-05-27T12:31:00+08:00"
+    },
+    {
+      "id": "QCK-002",
+      "type": "quick",
+      "scope": "adhoc",
+      "status": "completed",
+      "milestone": "M2",
+      "phase": null,
+      "title": "请帮助我根据以上内容为list2进行重构",
+      "description": "重构组图 23 的 List 2 为 6 类强变化菜单",
+      "directory": ".workflow/scratch/quick-group23-list2-restructure-2026-05-27/",
+      "path": ".workflow/scratch/quick-group23-list2-restructure-2026-05-27/",
+      "verified": "skipped",
+      "harvested": false,
+      "created_at": "2026-05-27T11:58:45+08:00",
+      "completed_at": "2026-05-27T12:32:00+08:00"
     }
   ],
   "status": "idle",
-  "last_updated": "2026-05-27T12:31:00+08:00",
+  "last_updated": "2026-05-27T12:32:00+08:00",
   "last_codebase_rebuild": "2026-05-21T16:00:00+08:00",
   "accumulated_context": {
     "key_decisions": [],

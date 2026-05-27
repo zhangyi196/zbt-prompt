@@ -1,0 +1,51 @@
+{
+  "summary": "以 quick 单任务方式重构 `prompts/2.group-image/组图 23.md` 的 List 2，把现有变化池整合为 6 类完整变化菜单，并明确默认优先整对象级、整块内容级强变化，直接降级或禁用弱轮廓与微痕迹变化。",
+  "approach": "只在目标文件内重写 List 2 的类别句、强优先级句、弱信号禁令句、类型配额句与服装约束句；保留固定 18 条、冷区取点、真实可见锚点、第一眼可见闸门、边缘/细线/微痕迹禁令与 List 1 核心逻辑不变。",
+  "task_ids": [
+    "TASK-001"
+  ],
+  "task_count": 1,
+  "complexity": "low",
+  "estimated_time": "20m",
+  "recommended_execution": "Agent",
+  "waves": [
+    {
+      "wave": 1,
+      "tasks": [
+        "TASK-001"
+      ]
+    }
+  ],
+  "data_flow": {
+    "diagram": null,
+    "stages": [
+      "读取 `组图 23.md` 的 List 2 现有规则",
+      "按已锁定约束把 9 类变化池收敛为 6 类菜单",
+      "回写同一文件中的 List 2 重构文案"
+    ]
+  },
+  "design_decisions": [
+    "只改 `prompts/2.group-image/组图 23.md`，不扩散到其他提示词文件。",
+    "List 2 保持固定 18 条与冷区取点机制不变，只重构变化菜单与强弱信号门槛。",
+    "服装变化继续保留，但只能复用 6 类菜单表达，不单列新类型。"
+  ],
+  "shared_context": {
+    "patterns": [
+      "硬规则短句串联",
+      "先定候选闸门再定类型与配额",
+      "用显式禁令淘汰弱轮廓变化"
+    ],
+    "conventions": [
+      "中文提示词风格",
+      "quick 模式单任务计划",
+      "只允许修改 1 个目标文件"
+    ],
+    "dependencies": []
+  },
+  "_metadata": {
+    "timestamp": "2026-05-27T00:00:00Z",
+    "source": "workflow-planner",
+    "planning_mode": "quick",
+    "plan_type": "prompt-rule"
+  }
+}
