@@ -1,0 +1,85 @@
+{
+  "id": "TASK-001",
+  "title": "收紧组图 23 的 List 2 强信号规则并统一输出项数量",
+  "description": "仅修改 `prompts/2.group-image/组图 23.md`：保持 List 1 核心逻辑不变，重写 List 2 的入选与轮换规则，让小范围强信号更硬、轻微破损与小痕迹直接出局，并把固定输出格式中‘8 项输出’改成与后文 12 项自检一致的描述。",
+  "status": "completed",
+  "type": "feature",
+  "priority": "high",
+  "effort": "small",
+  "action": "Implement",
+  "scope": "prompts/2.group-image/组图 23.md",
+  "focus_paths": [
+    "prompts/2.group-image/组图 23.md"
+  ],
+  "depends_on": [],
+  "parallel_group": null,
+  "convergence": {
+    "criteria": [
+      "文件包含精确字符串 `不存在的实体不得作为锚点或位置依据。`",
+      "文件包含精确字符串 `轻微破损、小痕迹、小划痕、细裂纹一律不得进入 List 2。`",
+      "文件包含精确字符串 `服装变化不是独立第 10 类，只能复用现有 9 类变化类型表达。`",
+      "文件包含精确字符串 `按第五节固定 12 项输出。`"
+    ],
+    "verification": "使用 `Read` 或 `Grep` 检查 `prompts/2.group-image/组图 23.md` 中上述 4 个精确字符串存在，且未扩散到其他文件。",
+    "definition_of_done": "List 2 规则被收紧为更偏向小范围强信号、拒绝轻微信号凑数，同时输出格式与自检数量表述一致，且 List 1 核心逻辑未被改动。"
+  },
+  "files": [
+    {
+      "path": "prompts/2.group-image/组图 23.md",
+      "action": "modify",
+      "target": "List 2 规则段落与固定输出格式说明",
+      "change": "重写 List 2 的闸门、弱信号淘汰、服装变化约束与轮换上限文案，并把第五块的输出项数量改为 12 项一致表述"
+    }
+  ],
+  "implementation": [
+    "在 `### List 2：辅助差异` 段首补一句，明确位置、修改、摆放内容只能引用当前画面真实可见、边界清楚的对象或局部承载面，并写入 `不存在的实体不得作为锚点或位置依据。`，把 quick analyze 中的禁止脑补锚点直接落成硬规则。",
+    "改写第一眼可见闸门与强信号描述：保留现有 9 类变化池，但新增更硬的淘汰句，直接写明 `轻微破损、小痕迹、小划痕、细裂纹一律不得进入 List 2。`，并把优先信号收敛到缺口、开合、断裂、附着、局部内容替换、显著存在感增减这类小范围强对比变化。",
+    "保留服装变化可稳定出现的方向，但在服装规则处补两层约束：一是加入 `服装变化不是独立第 10 类，只能复用现有 9 类变化类型表达。`；二是强调至少 3 条、至多 6 条，并要求服装变化与非服装变化、不同机制之间轮换，避免退化成单一服装模板或单一破损模板。",
+    "在 `### 五、最终合规性自检` 下把旧句 `按第五节固定 8 项输出。` 改成 `按第五节固定 12 项输出。`，确保与后文 `最终输出的第五块按“是/否 + 简短说明”写这 12 项：` 完全一致。"
+  ],
+  "test": {
+    "commands": [
+      "Grep 精确检查 `不存在的实体不得作为锚点或位置依据。`",
+      "Grep 精确检查 `轻微破损、小痕迹、小划痕、细裂纹一律不得进入 List 2。`",
+      "Grep 精确检查 `服装变化不是独立第 10 类，只能复用现有 9 类变化类型表达。`",
+      "Grep 精确检查 `按第五节固定 12 项输出。`"
+    ],
+    "unit": [],
+    "integration": [],
+    "success_metrics": [
+      "4 条精确字符串均能在目标文件中检出",
+      "计划只涉及 1 个文件且无额外扩展目标"
+    ]
+  },
+  "reference": {
+    "pattern": "沿用现有 `组图 23.md` 中按段落收紧约束、用硬禁令句封边的提示词写法",
+    "files": [
+      "prompts/2.group-image/组图 23.md",
+      ".workflow/scratch/analyze-group23-vlm-hallucination-clothing-2026-05-27/context.md"
+    ],
+    "examples": null
+  },
+  "rationale": {
+    "chosen_approach": "本次需求只涉及同一提示词文件中的规则收紧与文案一致性修复，单任务集中修改可以避免过度拆分，并且最符合 quick 模式。",
+    "decision_factors": [
+      "用户明确要求 List 1 不动",
+      "quick analyze 已锁定禁止脑补锚点、服装不扩成第 10 类、继续使用 9 类变化池",
+      "输出项数量不一致就在同一文件中，顺手修正可避免执行歧义"
+    ],
+    "tradeoffs": "不扩展到 agents.md、组图 4.md 或其他文件，因此只在 `组图 23.md` 内通过硬门槛与轮换约束解决当前问题。"
+  },
+  "risks": [
+    "若强信号措辞过猛但缺少轮换约束，可能把 List 2 压成单一破损模板。",
+    "若服装条款只提下限不提上限，可能让结果退化成服装差异霸屏。"
+  ],
+  "meta": {
+    "status": "completed",
+    "estimated_time": "25m",
+    "risk": "low",
+    "autonomous": true,
+    "checkpoint": false,
+    "wave": 1,
+    "execution_group": null,
+    "executor": "agent"
+  }
+}
