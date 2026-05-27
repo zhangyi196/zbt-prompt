@@ -118,10 +118,22 @@
       "harvested": false,
       "created_at": "2026-05-21T19:00:00+08:00",
       "completed_at": "2026-05-21T19:00:00+08:00"
+    },
+    {
+      "id": "ANL-002",
+      "type": "analyze",
+      "scope": "adhoc",
+      "status": "completed",
+      "milestone": "M2",
+      "phase": null,
+      "path": ".workflow/scratch/analyze-group23-vlm-hallucination-clothing-2026-05-27/",
+      "harvested": false,
+      "created_at": "2026-05-27T12:00:00+08:00",
+      "completed_at": "2026-05-27T12:00:00+08:00"
     }
   ],
   "status": "idle",
-  "last_updated": "2026-05-21T19:00:00+08:00",
+  "last_updated": "2026-05-27T12:00:00+08:00",
   "last_codebase_rebuild": "2026-05-21T16:00:00+08:00",
   "accumulated_context": {
     "key_decisions": [],
