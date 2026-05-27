@@ -1,0 +1,51 @@
+{
+  "summary": "以单任务方式重写 `prompts/2.group-image/组图 23.md` 中的 List 2 规则，强化小范围强信号门槛，明确禁止脑补锚点与轻微信号凑数，同时修正文内输出项数量不一致，保持 List 1 核心逻辑不变。",
+  "approach": "仅在 `组图 23.md` 内集中调整 List 2 的筛选与配额文案：先把真实可见锚点和第一眼可见闸门写硬，再在现有 9 类变化池内提高强信号下限、限制轻微破损与服装模板化，最后统一固定输出格式与 12 项自检的数量描述。",
+  "task_ids": [
+    "TASK-001"
+  ],
+  "task_count": 1,
+  "complexity": "low",
+  "estimated_time": "25m",
+  "recommended_execution": "Agent",
+  "waves": [
+    {
+      "wave": 1,
+      "tasks": [
+        "TASK-001"
+      ]
+    }
+  ],
+  "data_flow": {
+    "diagram": null,
+    "stages": [
+      "读取当前 List 2 与固定输出格式",
+      "收敛 quick analyze 已锁定约束",
+      "改写同一文件中的 List 2 与自检文案"
+    ]
+  },
+  "design_decisions": [
+    "保留 List 2 现有 9 类变化池，不新增服装第 10 类。",
+    "把真实可见锚点与第一眼可见闸门前置，禁止不存在实体或极小边缘差异入选。",
+    "提高强信号门槛时同时保留服装变化与非服装变化轮换，避免退化成单一服装或单一破损模板。"
+  ],
+  "shared_context": {
+    "patterns": [
+      "同文件局部规则收紧",
+      "配额下限与上限并行约束",
+      "固定输出格式与自检条目同步修正"
+    ],
+    "conventions": [
+      "只改 `prompts/2.group-image/组图 23.md`",
+      "中文提示词文案",
+      "quick 模式单任务计划"
+    ],
+    "dependencies": []
+  },
+  "_metadata": {
+    "timestamp": "2026-05-27T00:00:00Z",
+    "source": "workflow-planner",
+    "planning_mode": "quick",
+    "plan_type": "prompt-rule"
+  }
+}
