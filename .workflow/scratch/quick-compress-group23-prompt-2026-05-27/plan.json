@@ -1,0 +1,51 @@
+{
+  "summary": "以 quick 单任务方式规划 `prompts/2.group-image/组图 23.md` 的保守压缩：仅收敛重复规则、黑名单表达、固定输出说明与自检复述，目标是在减少 token 的同时保持原有行为、硬约束与输出协议不变。",
+  "approach": "只围绕目标提示词文件做文案级压缩，不改任务骨架与协议。执行时优先合并重复总则、统一对象指代表述、抽象长黑名单、去掉格式区与自检区的重复说明，并在改写后逐项回查 Ref 绑定、禁止脑补、人物互斥、九宫格覆盖、List 1/2 数量、固定六板块输出与自检结构是否仍为显式硬规则。",
+  "task_ids": [
+    "TASK-001"
+  ],
+  "task_count": 1,
+  "complexity": "low",
+  "estimated_time": "20m",
+  "recommended_execution": "Agent",
+  "waves": [
+    {
+      "wave": 1,
+      "tasks": [
+        "TASK-001"
+      ]
+    }
+  ],
+  "data_flow": {
+    "diagram": null,
+    "stages": [
+      "读取当前 `组图 23.md` 的重复规则与固定输出区",
+      "按保守压缩原则合并重复约束并收敛冗余表述",
+      "回查六板块协议与关键硬约束未发生语义漂移"
+    ]
+  },
+  "design_decisions": [
+    "采用单任务 quick 计划，避免把同一提示词文件拆成多个执行单元。",
+    "压缩手段限定为去重合并、黑名单抽象化、格式区去重、自检项压缩，不做激进重写。",
+    "输出协议与关键配额视为不可变约束，压缩后必须仍能逐项定位到原有硬规则。"
+  ],
+  "shared_context": {
+    "patterns": [
+      "角色设定 → 核心任务 → 规则 → 输出格式 → 自检",
+      "同文件内文案压缩",
+      "固定结构不变前提下的重复段落合并"
+    ],
+    "conventions": [
+      "仅修改 `prompts/2.group-image/组图 23.md`",
+      "quick 模式单计划单任务",
+      "保守压缩，不改变输出协议"
+    ],
+    "dependencies": []
+  },
+  "_metadata": {
+    "timestamp": "2026-05-27T00:00:00Z",
+    "source": "workflow-planner",
+    "planning_mode": "quick",
+    "plan_type": "prompt-compression"
+  }
+}

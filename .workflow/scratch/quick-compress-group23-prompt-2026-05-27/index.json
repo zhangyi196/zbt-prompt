@@ -1,0 +1,23 @@
+{
+  "id": "quick-compress-group23-prompt-2026-05-27",
+  "type": "quick",
+  "title": "根据以上方案帮助我进行压缩，不激进压缩",
+  "status": "completed",
+  "created_at": "2026-05-27T16:38:54.242532+08:00",
+  "updated_at": "2026-05-27T16:52:52.647964+08:00",
+  "flags": {
+    "discuss": false,
+    "full": false
+  },
+  "plan": {
+    "task_ids": [
+      "TASK-001"
+    ],
+    "task_count": 1
+  },
+  "execution": {
+    "method": "agent",
+    "tasks_completed": 1,
+    "tasks_total": 1
+  }
+}

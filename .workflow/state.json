@@ -8,13 +8,17 @@
     {
       "id": "M1",
       "name": "组图提示词质量优化",
-      "phases": ["1. 组图提示词质量优化"],
+      "phases": [
+        "1. 组图提示词质量优化"
+      ],
       "status": "completed"
     },
     {
       "id": "M2",
       "name": "组图显著性定向增强",
-      "phases": ["1. 组图显著性定向增强"],
+      "phases": [
+        "1. 组图显著性定向增强"
+      ],
       "status": "completed"
     }
   ],
@@ -39,7 +43,9 @@
       "milestone": "M1",
       "phase": 1,
       "path": ".workflow/scratch/plan-phase1-2026-05-21/",
-      "depends_on": ["ANL-001"],
+      "depends_on": [
+        "ANL-001"
+      ],
       "harvested": false,
       "created_at": "2026-05-21T16:00:00+08:00",
       "completed_at": "2026-05-21T16:00:00+08:00"
@@ -162,10 +168,25 @@
       "harvested": false,
       "created_at": "2026-05-27T11:58:45+08:00",
       "completed_at": "2026-05-27T12:32:00+08:00"
+    },
+    {
+      "id": "QCK-003",
+      "type": "quick",
+      "scope": "adhoc",
+      "status": "completed",
+      "milestone": "M2",
+      "phase": null,
+      "title": "根据以上方案帮助我进行压缩，不激进压缩",
+      "description": "保守压缩组图 23 提示词，收敛重复规则并保持固定输出协议",
+      "directory": ".workflow/scratch/quick-compress-group23-prompt-2026-05-27/",
+      "path": ".workflow/scratch/quick-compress-group23-prompt-2026-05-27/",
+      "verified": "skipped",
+      "harvested": false,
+      "created_at": "2026-05-27T16:38:54.242532+08:00",
+      "completed_at": "2026-05-27T16:52:52.647964+08:00"
     }
   ],
-  "status": "idle",
-  "last_updated": "2026-05-27T12:32:00+08:00",
+  "last_updated": "2026-05-27T16:52:52.647964+08:00",
   "last_codebase_rebuild": "2026-05-21T16:00:00+08:00",
   "accumulated_context": {
     "key_decisions": [],
