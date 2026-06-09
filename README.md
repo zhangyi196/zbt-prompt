@@ -5,6 +5,7 @@
 ## 目录
 
 - `skills/green-circle-photo-prompts/`：文件夹路径驱动的洗图 skill，直接调用 `prompts/0.image-prompt/绿圈洗图 2 v1.2.1.1 3组.md` 作为系统提示词，并按参考图同名生成 `txt`。
+- `prompts/0.image-prompt/`：绿圈洗图 AI 提示词目录，含专属 `agents.md` 和版本管理文档。
 - `prompts/main-image/`：主图 AI 提示词目录，含专属 `agents.md`、`主图 第一步.md`、`主图 第二步 .md`。
 - `prompts/group-image/`：组图 AI 提示词目录，含专属 `agents.md`、`组图 4.md`、`组图 23.md`、`组图 23 表情前置.md`。
 - `组图 23 表情库.md`：人物表情模板库，保留根目录固定位置供提示词和工具共用。
