@@ -15,7 +15,7 @@
 - `prompts/group-image/agents.md`：组图 AI 提示词总入口。
 - `prompts/group-image/组图 4.md`：18 个找不同差异点，九宫格每区 2 个。
 - `prompts/group-image/组图 23.md`：Ref-A / Ref-B 到 Target 的差异迁移。
-- `prompts/group-image/组图 23 表情前置.md`、`组图 23 表情库.md`：人物表情前置规则与事实源；其中表情库固定留在根目录。
+- `prompts/group-image/组图 23 表情前置.md`、`组图 23 表情库.md`、`组图 23 表情库 版本管理.md`：人物表情前置规则、事实源与版本记录；其中表情库固定留在根目录。
 - `Game content extraction/data/agents.md`、`审查规则.md`、`审查文件.md`、`审查文件/{类别} 审查文档.md`、`修改规则.md`、`全局重复词定位清单.md`：盲盒数据和审查 / 修改规则；改 `blind_boxes.py` 前先读。
 
 ## 全局硬规则
