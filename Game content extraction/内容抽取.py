@@ -2233,11 +2233,17 @@ class BlindBoxExtractor:
                 current_audience = "多人"
                 continue
 
-            template_match = re.match(r"^([1-8])\.\s*(眉：.+)$", line)
+            template_match = re.match(r"^([1-8])\.\s*(.+)$", line)
             if template_match and current_polarity and current_expression and current_audience:
+                template_text = template_match.group(2).strip()
+                if not (
+                    template_text.startswith("眉：")
+                    or re.search(r"[；;]\s*眉：", template_text)
+                ):
+                    continue
                 template_index = int(template_match.group(1))
                 library[current_polarity][current_expression][current_audience][template_index] = (
-                    template_match.group(2).strip()
+                    template_text
                 )
 
         if not library["正向"] or not library["负向"]:
@@ -2271,9 +2277,9 @@ class BlindBoxExtractor:
 
     def _strip_existing_expression_template(self, value):
         stripped_value = value.strip()
-        match = re.match(r"(?s)^(.*?)\s*[，,]\s*眉：.*?；眼：.*?；嘴：.*$", stripped_value)
+        match = re.search(r"\s*[，,]\s*(?:[^，,；;]+[；;]\s*)?眉：", stripped_value)
         if match:
-            return match.group(1).strip()
+            return stripped_value[:match.start()].strip()
         return stripped_value
 
     def _split_expression_candidates(self, value):

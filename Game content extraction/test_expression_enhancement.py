@@ -48,6 +48,68 @@ MULTI_AUDIENCE_SAMPLE = (
     "禁用区域: 姿态不变\n"
 )
 
+NEW_FORMAT_NEGATIVE_SAMPLE = (
+    "极性: 负向\n"
+    "剧情: [目标物]突然让人生气\n"
+    "单人/多人: 单人\n"
+    "具体表情: 生气\n"
+    "人物定位: 画面中间人物\n"
+    "表情功能: 生气\n"
+    "适配提示: 眼神回指[目标物]\n"
+    "禁用区域: 姿态不变\n"
+)
+
+NEW_FORMAT_LIBRARY = """# 测试表情库
+
+## 一、正向表情
+
+### 1. 喜欢
+
+**单人模板 1-8**
+1. 爱心眼心动；眉：双眉舒展；眼：双眼变成爱心形看向[目标物]；脸颊：双颊泛红；嘴：小弧口开心张开。
+2. 偷看脸红；眉：一侧眉尾轻抬；眼：一眼偷看[目标物]，另一眼半垂；脸颊：靠近偷看方向更红；嘴：嘴角藏着小笑。
+3. 亮眼惊喜；眉：眉尾微微上抬；眼：双眼圆亮看向[目标物]；嘴：半开成惊喜小口。
+4. 甜到眯眼；眉：双眉柔和放低；眼：双眼舒服眯起；脸颊：脸颊鼓出甜弧；嘴：嘴角软软上弯。
+5. 露齿捧场；眉：一侧眉峰高高抬起；眼：双眼弯成笑眼；牙齿：露出整齐大白牙；嘴：咧开成捧场大笑。
+6. 舌尖期待；眉：一侧眉尾期待抬起；眼：一眼盯住[目标物]；舌头：舌尖轻轻露出；嘴：张成小期待口。
+7. 口水心动；眉：双眉明显上拱；眼：双眼黏住[目标物]；口边：嘴角挂一滴小口水；嘴：半张并上扬。
+8. 脸颊开花笑；眉：双眉高低展开；眼：一眼看住[目标物]，另一眼开心弯起；脸颊：红晕像圆形贴片；嘴：张开成饱满笑弧。
+
+**多人模板 1-8**
+1. 爱心眼心动；眉：双眉舒展；眼：双眼变成爱心形看向[对方人物]；脸颊：双颊泛红；嘴：小弧口开心张开。
+2. 偷看脸红；眉：一侧眉尾轻抬；眼：一眼偷看[对方人物]，另一眼半垂；脸颊：靠近偷看方向更红；嘴：嘴角藏着小笑。
+3. 亮眼惊喜；眉：眉尾微微上抬；眼：双眼圆亮看向[对方人物]；嘴：半开成惊喜小口。
+4. 甜到眯眼；眉：双眉柔和放低；眼：双眼舒服眯起回应[对方人物]；脸颊：脸颊鼓出甜弧；嘴：嘴角软软上弯。
+5. 露齿捧场；眉：一侧眉峰高高抬起；眼：双眼弯成笑眼看向[对方人物]；牙齿：露出整齐大白牙；嘴：咧开成捧场大笑。
+6. 舌尖期待；眉：一侧眉尾期待抬起；眼：一眼盯住[对方人物]；舌头：舌尖轻轻露出；嘴：张成小期待口。
+7. 口水心动；眉：双眉明显上拱；眼：双眼在[对方人物]和[目标物]之间发亮；口边：嘴角挂一滴小口水；嘴：半张并上扬。
+8. 脸颊开花笑；眉：双眉高低展开；眼：一眼看住[对方人物]，另一眼开心弯起；脸颊：红晕像圆形贴片；嘴：张开成饱满笑弧。
+
+## 二、负向表情
+
+### 1. 生气
+
+**单人模板 1-8**
+1. 气到脸红；眉：一侧眉头压低，另一侧眉尾挑起；眼：一侧眼瞪住[目标物]，另一侧眼收窄；脸颊：两侧脸颊明显涨红；嘴：嘴巴抿紧成下压斜线。
+2. 咬牙爆筋；眉：双眉向眉心挤紧；眼：双眼怒视[目标物]；额头：额角鼓起一小段卡通青筋；牙齿：上下牙咬成锯齿线。
+3. 鼓脸憋气；眉：一侧眉尾下压；眼：一眼盯住[目标物]，另一眼半眯；脸颊：双颊鼓成气包；嘴：闭紧成圆鼓形。
+4. 气到冒烟；眉：双眉低压成尖角；眼：双眼瞪向[目标物]；额头：额头上方冒两段短烟线；嘴：嘴角向下绷住。
+5. 单边咬牙；眉：一侧眉心深压；眼：一侧眼锁住[目标物]；牙齿：一侧露出咬紧的牙齿；嘴：嘴角向一边拉紧。
+6. 憋到发抖；眉：眉头向下挤住；眼：双眼憋红般瞪住[目标物]；脸颊：脸颊鼓起并泛红；嘴：嘴巴闭紧。
+7. 气到吐血短线；眉：双眉大幅下压；眼：双眼怒瞪[目标物]；嘴：嘴巴猛地张开，吐出一小股卡通红色短线；口边：红色短线只停在嘴边。
+8. 笑不出来的怒脸；眉：一侧眉峰高挑，另一侧眉头压低；眼：一眼冷冷盯着[目标物]；牙齿：露出一小段怒笑齿线；嘴：嘴角想笑却僵住。
+
+**多人模板 1-8**
+1. 气到脸红；眉：一侧眉头压低，另一侧眉尾挑起；眼：一侧眼瞪住[对方人物]，另一侧眼扫向[目标物]；脸颊：两侧脸颊明显涨红；嘴：嘴巴抿紧成下压斜线。
+2. 咬牙爆筋；眉：双眉向眉心挤紧；眼：双眼怒视[对方人物]；额头：额角鼓起一小段卡通青筋；牙齿：上下牙咬成锯齿线。
+3. 鼓脸憋气；眉：一侧眉尾下压；眼：一眼盯住[对方人物]，另一眼半眯；脸颊：双颊鼓成气包；嘴：闭紧成圆鼓形。
+4. 气到冒烟；眉：双眉低压成尖角；眼：双眼瞪向[对方人物]；额头：额头上方冒两段短烟线；嘴：嘴角向下绷住。
+5. 单边咬牙；眉：一侧眉心深压；眼：一侧眼锁住[对方人物]；牙齿：一侧露出咬紧的牙齿；嘴：嘴角向一边拉紧。
+6. 憋到发抖；眉：眉头向下挤住；眼：双眼憋红般瞪住[对方人物]；脸颊：脸颊鼓起并泛红；嘴：嘴巴闭紧。
+7. 气到吐血短线；眉：双眉大幅下压；眼：双眼怒瞪[对方人物]；嘴：嘴巴猛地张开，吐出一小股卡通红色短线；口边：红色短线只停在嘴边。
+8. 笑不出来的怒脸；眉：一侧眉峰高挑，另一侧眉头压低；眼：一眼冷冷盯着[对方人物]；牙齿：露出一小段怒笑齿线；嘴：嘴角想笑却僵住。
+"""
+
 
 class ExpressionEnhancementTests(unittest.TestCase):
     @classmethod
@@ -70,6 +132,13 @@ class ExpressionEnhancementTests(unittest.TestCase):
             )
 
         extractor.draw_history = extractor._load_draw_history()
+        return extractor
+
+    def make_extractor_with_library(self, library_text, history_data=None):
+        extractor = self.make_extractor(history_data)
+        library_path = pathlib.Path(extractor.history_file).with_name("expression_library.md")
+        library_path.write_text(library_text, encoding="utf-8")
+        extractor._get_expression_library_path = lambda: str(library_path)
         return extractor
 
     def test_single_expression_category_keeps_existing_behavior(self):
@@ -250,6 +319,32 @@ class ExpressionEnhancementTests(unittest.TestCase):
         self.assertEqual(second.count("眉："), 1)
         self.assertEqual(second.count("眼："), 1)
         self.assertEqual(second.count("嘴："), 1)
+
+    def test_new_format_template_keeps_variant_and_extra_face_fields(self):
+        extractor = self.make_extractor_with_library(NEW_FORMAT_LIBRARY)
+
+        result = extractor.enhance_expression_text(NEW_FORMAT_NEGATIVE_SAMPLE, template_index=1)
+
+        self.assertIn("具体表情: 生气，气到脸红；眉：", result)
+        self.assertIn("脸颊：两侧脸颊明显涨红", result)
+        self.assertIn("嘴：嘴巴抿紧成下压斜线", result)
+        self.assertEqual(
+            extractor.draw_history["expression_pools"]["expression_template:负向:单人:生气"],
+            {"1": 1},
+        )
+
+    def test_repeat_enhancement_replaces_new_format_without_stacking(self):
+        extractor = self.make_extractor_with_library(NEW_FORMAT_LIBRARY)
+        first = extractor.enhance_expression_text(NEW_FORMAT_NEGATIVE_SAMPLE, template_index=7)
+
+        second = extractor.enhance_expression_text(first, template_index=7)
+
+        self.assertEqual(first, second)
+        self.assertEqual(second.count("气到吐血短线"), 1)
+        self.assertEqual(second.count("眉："), 1)
+        self.assertEqual(second.count("眼："), 1)
+        self.assertEqual(second.count("嘴："), 1)
+        self.assertEqual(second.count("口边："), 1)
 
     def test_old_draw_history_is_upgraded_with_expression_pools(self):
         legacy_history = {
