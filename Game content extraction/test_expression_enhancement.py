@@ -1,6 +1,7 @@
 import importlib.util
 import json
 import pathlib
+import re
 import shutil
 import sys
 import unittest
@@ -9,6 +10,8 @@ from unittest import mock
 
 
 MODULE_PATH = pathlib.Path(__file__).with_name("内容抽取.py")
+REPO_ROOT = MODULE_PATH.parent.parent
+FRONT_PROMPT_PATH = REPO_ROOT / "prompts" / "2.group-image" / "组图 23 表情前置.md"
 sys.path.insert(0, str(MODULE_PATH.parent))
 SPEC = importlib.util.spec_from_file_location("content_extractor", MODULE_PATH)
 content_extractor = importlib.util.module_from_spec(SPEC)
@@ -140,6 +143,44 @@ class ExpressionEnhancementTests(unittest.TestCase):
         library_path.write_text(library_text, encoding="utf-8")
         extractor._get_expression_library_path = lambda: str(library_path)
         return extractor
+
+    def read_front_prompt_categories(self, polarity):
+        prompt_text = FRONT_PROMPT_PATH.read_text(encoding="utf-8")
+        match = re.search(rf"^{polarity}类别：(.+)$", prompt_text, flags=re.MULTILINE)
+        self.assertIsNotNone(match, f"缺少{polarity}类别行")
+        category_text = match.group(1).rstrip("。")
+        return [item.strip() for item in re.split(r"[、，,]", category_text) if item.strip()]
+
+    def test_official_expression_library_uses_v2_category_counts(self):
+        self.assertEqual(len(self.library["正向"]), 30)
+        self.assertEqual(len(self.library["负向"]), 30)
+
+        for polarity, categories in self.library.items():
+            for category, templates in categories.items():
+                for audience in ("单人", "多人"):
+                    with self.subTest(polarity=polarity, category=category, audience=audience):
+                        self.assertEqual(len(templates[audience]), 8)
+
+    def test_front_prompt_categories_match_expression_library(self):
+        self.assertEqual(self.read_front_prompt_categories("正向"), list(self.library["正向"].keys()))
+        self.assertEqual(self.read_front_prompt_categories("负向"), list(self.library["负向"].keys()))
+
+    def test_official_v2_library_enhances_sample_categories(self):
+        samples = (
+            ("正向", "喜欢"),
+            ("正向", "奸笑"),
+            ("负向", "反胃"),
+            ("负向", "犯困睡着"),
+        )
+
+        for polarity, category in samples:
+            with self.subTest(polarity=polarity, category=category):
+                sample = NEW_FORMAT_NEGATIVE_SAMPLE.replace("极性: 负向", f"极性: {polarity}").replace(
+                    "具体表情: 生气", f"具体表情: {category}"
+                ).replace("表情功能: 生气", f"表情功能: {category}")
+                result = self.make_extractor().enhance_expression_text(sample, template_index=1)
+                self.assertIn(f"具体表情: {category}，", result)
+                self.assertIn("；眉：", result)
 
     def test_single_expression_category_keeps_existing_behavior(self):
         result = self.make_extractor().enhance_expression_text(NEGATIVE_SAMPLE, template_index=4)
