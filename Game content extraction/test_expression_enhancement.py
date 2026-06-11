@@ -113,6 +113,34 @@ NEW_FORMAT_LIBRARY = """# 测试表情库
 8. 笑不出来的怒脸；眉：一侧眉峰高挑，另一侧眉头压低；眼：一眼冷冷盯着[对方人物]；牙齿：露出一小段怒笑齿线；嘴：嘴角想笑却僵住。
 """
 
+FLEXIBLE_ANCHOR_LIBRARY = (
+    NEW_FORMAT_LIBRARY
+    .replace(
+        "1. 气到脸红；眉：一侧眉头压低，另一侧眉尾挑起；眼：一侧眼瞪住[目标物]，另一侧眼收窄；脸颊：两侧脸颊明显涨红；嘴：嘴巴抿紧成下压斜线。",
+        "1. 鸭嘴瘪住；嘴：嘴巴向前瘪成小鸭嘴形；眼：双眼湿漉漉看向[目标物]；脸颊：双颊被瘪嘴挤得微微鼓起。",
+    )
+    .replace(
+        "2. 咬牙爆筋；眉：双眉向眉心挤紧；眼：双眼怒视[目标物]；额头：额角鼓起一小段卡通青筋；牙齿：上下牙咬成锯齿线。",
+        "2. 空白眼黑线；眼：双眼空白看向[目标物]；额头：额头垂下几条短短卡通黑线；嘴：嘴巴僵成细缝。",
+    )
+    .replace(
+        "3. 鼓脸憋气；眉：一侧眉尾下压；眼：一眼盯住[目标物]，另一眼半眯；脸颊：双颊鼓成气包；嘴：闭紧成圆鼓形。",
+        "3. 冷青额头反胃；额头：额头上半部出现一小片冷青色难受阴影；眼：眼皮发软避开[目标物]；口边：嘴边冒出一小段卡通呕吐短线。",
+    )
+    .replace(
+        "1. 气到脸红；眉：一侧眉头压低，另一侧眉尾挑起；眼：一侧眼瞪住[对方人物]，另一侧眼扫向[目标物]；脸颊：两侧脸颊明显涨红；嘴：嘴巴抿紧成下压斜线。",
+        "1. 鸭嘴瘪住；嘴：嘴巴向前瘪成小鸭嘴形；眼：双眼湿漉漉看向[对方人物]；脸颊：双颊被瘪嘴挤得微微鼓起。",
+    )
+    .replace(
+        "2. 咬牙爆筋；眉：双眉向眉心挤紧；眼：双眼怒视[对方人物]；额头：额角鼓起一小段卡通青筋；牙齿：上下牙咬成锯齿线。",
+        "2. 空白眼黑线；眼：双眼空白看向[对方人物]；额头：额头垂下几条短短卡通黑线；嘴：嘴巴僵成细缝。",
+    )
+    .replace(
+        "3. 鼓脸憋气；眉：一侧眉尾下压；眼：一眼盯住[对方人物]，另一眼半眯；脸颊：双颊鼓成气包；嘴：闭紧成圆鼓形。",
+        "3. 冷青额头反胃；额头：额头上半部出现一小片冷青色难受阴影；眼：眼皮发软避开[对方人物]；口边：嘴边冒出一小段卡通呕吐短线。",
+    )
+)
+
 
 class ExpressionEnhancementTests(unittest.TestCase):
     @classmethod
@@ -161,6 +189,26 @@ class ExpressionEnhancementTests(unittest.TestCase):
                     with self.subTest(polarity=polarity, category=category, audience=audience):
                         self.assertEqual(len(templates[audience]), 8)
 
+    def test_official_expression_library_templates_use_flexible_face_fields(self):
+        face_fields = content_extractor.BlindBoxExtractor.EXPRESSION_FACE_FIELDS
+        field_pattern = "|".join(re.escape(field) for field in face_fields)
+
+        for polarity, categories in self.library.items():
+            for category, audience_map in categories.items():
+                for audience, templates in audience_map.items():
+                    for template_index, template in templates.items():
+                        with self.subTest(
+                            polarity=polarity,
+                            category=category,
+                            audience=audience,
+                            template_index=template_index,
+                        ):
+                            fields = re.findall(rf"(?:^|[；;])\s*({field_pattern})：", template)
+                            self.assertGreaterEqual(len(fields), 3)
+                            self.assertLessEqual(len(fields), 5)
+                            self.assertTrue({"眼", "嘴"} & set(fields))
+                            self.assertEqual(len(fields), len(set(fields)))
+
     def test_front_prompt_categories_match_expression_library(self):
         self.assertEqual(self.read_front_prompt_categories("正向"), list(self.library["正向"].keys()))
         self.assertEqual(self.read_front_prompt_categories("负向"), list(self.library["负向"].keys()))
@@ -180,7 +228,7 @@ class ExpressionEnhancementTests(unittest.TestCase):
                 ).replace("表情功能: 生气", f"表情功能: {category}")
                 result = self.make_extractor().enhance_expression_text(sample, template_index=1)
                 self.assertIn(f"具体表情: {category}，", result)
-                self.assertIn("；眉：", result)
+                self.assertRegex(result, r"；(眉|眼|脸颊|额头|嘴|牙齿|舌头|口边|脸侧)：")
 
     def test_single_expression_category_keeps_existing_behavior(self):
         result = self.make_extractor().enhance_expression_text(NEGATIVE_SAMPLE, template_index=4)
@@ -373,6 +421,29 @@ class ExpressionEnhancementTests(unittest.TestCase):
             extractor.draw_history["expression_pools"]["expression_template:负向:单人:生气"],
             {"1": 1},
         )
+
+    def test_flexible_anchor_templates_can_start_with_any_face_field(self):
+        extractor = self.make_extractor_with_library(FLEXIBLE_ANCHOR_LIBRARY)
+
+        mouth_result = extractor.enhance_expression_text(NEW_FORMAT_NEGATIVE_SAMPLE, template_index=1)
+        eye_result = extractor.enhance_expression_text(NEW_FORMAT_NEGATIVE_SAMPLE, template_index=2)
+        forehead_result = extractor.enhance_expression_text(NEW_FORMAT_NEGATIVE_SAMPLE, template_index=3)
+
+        self.assertIn("具体表情: 生气，鸭嘴瘪住；嘴：嘴巴向前瘪成小鸭嘴形", mouth_result)
+        self.assertIn("具体表情: 生气，空白眼黑线；眼：双眼空白看向[目标物]", eye_result)
+        self.assertIn("具体表情: 生气，冷青额头反胃；额头：额头上半部出现一小片冷青色难受阴影", forehead_result)
+
+    def test_repeat_enhancement_replaces_flexible_anchor_without_stacking(self):
+        extractor = self.make_extractor_with_library(FLEXIBLE_ANCHOR_LIBRARY)
+        first = extractor.enhance_expression_text(NEW_FORMAT_NEGATIVE_SAMPLE, template_index=1)
+
+        second = extractor.enhance_expression_text(first, template_index=1)
+
+        self.assertEqual(first, second)
+        self.assertEqual(second.count("鸭嘴瘪住"), 1)
+        self.assertEqual(second.count("嘴："), 1)
+        self.assertEqual(second.count("眼："), 1)
+        self.assertEqual(second.count("脸颊："), 1)
 
     def test_repeat_enhancement_replaces_new_format_without_stacking(self):
         extractor = self.make_extractor_with_library(NEW_FORMAT_LIBRARY)

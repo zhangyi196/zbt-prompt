@@ -45,6 +45,17 @@ class BlindBoxExtractor:
     UI_FONT = ("Microsoft YaHei UI", 10)
     UI_FONT_BOLD = ("Microsoft YaHei UI", 10, "bold")
     IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".webp", ".bmp", ".gif"}
+    EXPRESSION_FACE_FIELDS = (
+        "眉",
+        "眼",
+        "脸颊",
+        "额头",
+        "嘴",
+        "牙齿",
+        "舌头",
+        "口边",
+        "脸侧",
+    )
 
     def __init__(self, root):
         self.root = root
@@ -2236,10 +2247,7 @@ class BlindBoxExtractor:
             template_match = re.match(r"^([1-8])\.\s*(.+)$", line)
             if template_match and current_polarity and current_expression and current_audience:
                 template_text = template_match.group(2).strip()
-                if not (
-                    template_text.startswith("眉：")
-                    or re.search(r"[；;]\s*眉：", template_text)
-                ):
+                if not self._has_expression_face_field(template_text):
                     continue
                 template_index = int(template_match.group(1))
                 library[current_polarity][current_expression][current_audience][template_index] = (
@@ -2277,10 +2285,24 @@ class BlindBoxExtractor:
 
     def _strip_existing_expression_template(self, value):
         stripped_value = value.strip()
-        match = re.search(r"\s*[，,]\s*(?:[^，,；;]+[；;]\s*)?眉：", stripped_value)
+        match = self._find_existing_expression_template_start(stripped_value)
         if match:
             return stripped_value[:match.start()].strip()
         return stripped_value
+
+    def _get_expression_face_field_pattern(self):
+        return "|".join(re.escape(field) for field in self.EXPRESSION_FACE_FIELDS)
+
+    def _has_expression_face_field(self, text):
+        field_pattern = self._get_expression_face_field_pattern()
+        return bool(re.search(rf"(?:^|[；;])\s*(?:{field_pattern})：", text))
+
+    def _find_existing_expression_template_start(self, text):
+        field_pattern = self._get_expression_face_field_pattern()
+        return re.search(
+            rf"\s*[，,]\s*(?:[^，,；;]+[；;]\s*)?(?:{field_pattern})：",
+            text,
+        )
 
     def _split_expression_candidates(self, value):
         candidates = [
