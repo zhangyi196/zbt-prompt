@@ -209,6 +209,44 @@ class ExpressionEnhancementTests(unittest.TestCase):
                             self.assertTrue({"眼", "嘴"} & set(fields))
                             self.assertEqual(len(fields), len(set(fields)))
 
+    def test_official_expression_library_templates_avoid_body_and_attachment_content(self):
+        forbidden_patterns = (
+            "身体",
+            "姿态",
+            "头部朝向",
+            "四肢",
+            "后退",
+            "全身",
+            "项链",
+            "领角",
+            "脖子",
+            "衣领",
+            "耳饰",
+            "头饰",
+            "面具",
+            "口罩",
+            "眼罩",
+            "头套",
+            "喷溅",
+            "衣物",
+            "背景",
+            "画外",
+        )
+
+        for polarity, categories in self.library.items():
+            for category, audience_map in categories.items():
+                for audience, templates in audience_map.items():
+                    for template_index, template in templates.items():
+                        detail_text = template.split("；", 1)[1] if "；" in template else template
+                        with self.subTest(
+                            polarity=polarity,
+                            category=category,
+                            audience=audience,
+                            template_index=template_index,
+                        ):
+                            for forbidden in forbidden_patterns:
+                                self.assertNotIn(forbidden, detail_text)
+
     def test_front_prompt_categories_match_expression_library(self):
         self.assertEqual(self.read_front_prompt_categories("正向"), list(self.library["正向"].keys()))
         self.assertEqual(self.read_front_prompt_categories("负向"), list(self.library["负向"].keys()))
