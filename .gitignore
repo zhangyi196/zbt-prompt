@@ -49,4 +49,4 @@ Game content extraction/_tmp_history_verify_*/
 .workflow/.scratchpad/green-circle-photo-prompts/
 
 # Local test data (images + generated prompts)
-data/
+/data/
