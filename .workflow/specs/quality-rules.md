@@ -37,3 +37,43 @@ keywords:
 - 自检项逐条通过
 
 ## Entries
+
+<spec-entry category="quality" keywords="group23,expression,ordinary-label,face-only" date="2026-06-11" source="commit:ce18e76">
+
+### 组图 23 普通标签不等于普通表情点
+
+组图 23 中，标签 `普通` 不等于普通表情点；只有纯脸部字段变化才可按普通表情点规则处理，身体、姿态、头部朝向和四肢动作不变只作内部约束，不输出额外说明。
+
+</spec-entry>
+
+<spec-entry category="quality" keywords="group23,expression,face-fields,pose-lock" date="2026-06-11" source="commit:ce18e76">
+
+### 组图 23 普通表情点只写脸部字段
+
+组图 23 的普通表情点只能写脸部字段，包括眉、眼、脸颊、额头、嘴、牙齿、舌头、口边、脸侧；不得写身体状态、姿态、头部朝向、四肢动作、服装主体、发型、背景或地面变化。
+
+</spec-entry>
+
+<spec-entry category="quality" keywords="group23,expression,attachments,overlays" date="2026-06-11" source="commit:ce18e76">
+
+### 组图 23 普通表情点不得承载外来物
+
+组图 23 的普通表情点不得承载外来覆盖物或附属区内容，例如面具、口罩、眼罩、头套、纸片、布条、项链、领角、脖子饰品、耳饰或头饰。
+
+</spec-entry>
+
+<spec-entry category="quality" keywords="group23,list2,attachments,visual-hot-zone" date="2026-06-11" source="commit:ce18e76">
+
+### 组图 23 表情点与附属区分流
+
+组图 23 中，同一人物已使用普通表情点后，项链、脖子、领角等附属区只能出现在 List 2；不得与该表情差异同圈、贴边、重叠、近邻或落入同一头颈视觉热区。
+
+</spec-entry>
+
+<spec-entry category="quality" keywords="group23,prompt-maintenance,minimal-diff,three-changes" date="2026-06-11" source="commit:ce18e76">
+
+### 组图 23 提示词优化采用最小必要修改
+
+组图 23 的提示词优化应采用最小必要修改：不整体重写，不改动无问题内容，每次最多修改 3 处；优先删除、合并、替换，并说明每处修改原因。
+
+</spec-entry>
