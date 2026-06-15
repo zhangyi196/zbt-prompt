@@ -180,8 +180,8 @@ class ExpressionEnhancementTests(unittest.TestCase):
         return [item.strip() for item in re.split(r"[、，,]", category_text) if item.strip()]
 
     def test_official_expression_library_uses_v2_category_counts(self):
-        self.assertEqual(len(self.library["正向"]), 30)
-        self.assertEqual(len(self.library["负向"]), 30)
+        self.assertEqual(len(self.library["正向"]), 24)
+        self.assertEqual(len(self.library["负向"]), 24)
 
         for polarity, categories in self.library.items():
             for category, templates in categories.items():
@@ -254,7 +254,7 @@ class ExpressionEnhancementTests(unittest.TestCase):
     def test_official_v2_library_enhances_sample_categories(self):
         samples = (
             ("正向", "喜欢"),
-            ("正向", "奸笑"),
+            ("正向", "眯眼坏笑"),
             ("负向", "反胃"),
             ("负向", "犯困睡着"),
         )
@@ -318,9 +318,9 @@ class ExpressionEnhancementTests(unittest.TestCase):
             self.make_extractor().enhance_expression_text(sample, template_index=4)
 
     def test_multi_candidate_expression_validates_candidate_polarity(self):
-        sample = MULTI_CANDIDATE_SAMPLE.replace("困惑、委屈|失落 / 尴尬", "困惑,偷笑")
+        sample = MULTI_CANDIDATE_SAMPLE.replace("困惑、委屈|失落 / 尴尬", "困惑,忍笑")
 
-        with self.assertRaisesRegex(ValueError, "极性与表情类别错配：偷笑 属于正向"):
+        with self.assertRaisesRegex(ValueError, "极性与表情类别错配：忍笑 属于正向"):
             self.make_extractor().enhance_expression_text(sample, template_index=4)
 
     def test_single_expression_category_records_history_after_success(self):
