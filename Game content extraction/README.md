@@ -18,10 +18,10 @@
 
 ## 下载
 
-当前用于检查更新测试的版本对：`v0.1.5 -> v0.1.6`。两者功能保持一致，主要用于验证安装包内更新流程。
+当前用于检查更新测试的版本对：`v0.1.6 -> v0.1.7`。两者功能保持一致，主要用于验证安装包内更新流程。
 
 - Release 页面：<https://github.com/zhangyi196/zbt-prompt/releases>
-- 测试安装包：`GameContentExtraction-Setup-v0.1.5.exe`、`GameContentExtraction-Setup-v0.1.6.exe`
+- 测试安装包：`GameContentExtraction-Setup-v0.1.6.exe`、`GameContentExtraction-Setup-v0.1.7.exe`
 - 具体文件大小、SHA256 和最新测试资产以 Releases 页面为准。
 - 安装器会显示安装路径选择页，可修改默认安装目录。
 
