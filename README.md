@@ -10,7 +10,7 @@
 - `prompts/group-image/`：组图 AI 提示词目录，含专属 `agents.md`、`组图 4.md`、`组图 23.md`、`组图 23 表情前置.md`。
 - `组图 23 表情库.md`、`组图 23 表情库 版本管理.md`：人物表情模板库与版本记录，保留根目录固定位置供提示词和工具共用。
 - `美式卡通具体表情写法.md`：人物表情库趣味化重构草案，说明“简洁情绪类别 + 8 个具体卡通脸部变体 + 主视觉锚点优先”的灵活写法。
-- `表情库 2.0.0版本.md`：人物表情库 2.0.0 目录来源草案；正式事实源已同步到根目录 `组图 23 表情库.md`。
+- `表情库 2.0.0版本.md`：人物表情库 2.0.1 目录草案，记录正向 24 类、负向 24 类的分类、核心面部表现和禁止表现。
 - `Game content extraction/data/agents.md`：盲盒四池物品写库规则。
 - `Game content extraction/data/全局重复词定位清单.md`：跨类别高频重复词与位置索引。
 - `Game content extraction/`：本地工具，说明见 [Game content extraction/README.md](Game%20content%20extraction/README.md)。
