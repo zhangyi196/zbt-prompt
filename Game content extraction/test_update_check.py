@@ -71,7 +71,7 @@ class UpdateCheckTests(unittest.TestCase):
     def fake_showinfo(self, title, message):
         self.showinfo_calls.append((title, message))
 
-    def make_release_payload(self, version="0.1.8", assets=None, **overrides):
+    def make_release_payload(self, version="0.1.9", assets=None, **overrides):
         payload = {
             "tag_name": f"v{version}",
             "html_url": f"https://example.test/releases/v{version}",
@@ -146,7 +146,7 @@ class UpdateCheckTests(unittest.TestCase):
         self.assertEqual(installer["url"], url)
         self.assertEqual(installer["size"], size)
 
-    def assert_manual_download_required(self, result, *, version="0.1.8", url):
+    def assert_manual_download_required(self, result, *, version="0.1.9", url):
         self.assertEqual(result["status"], "update_available")
         self.assertEqual(result["latest_version"], version)
         self.assertEqual(result["url"], url)
@@ -165,13 +165,13 @@ class UpdateCheckTests(unittest.TestCase):
                     [
                         self.make_release_payload("0.1.1", body="current"),
                         self.make_release_payload(
-                            "0.1.8",
+                            "0.1.9",
                             body="next",
                             assets=[
                                 self.make_asset("zbt-prompt-source-20260509.zip"),
                                 self.make_asset(
-                                    "GameContentExtraction-Setup-v0.1.8.exe",
-                                    url="https://example.test/downloads/installer-v0.1.8.exe",
+                                    "GameContentExtraction-Setup-v0.1.9.exe",
+                                    url="https://example.test/downloads/installer-v0.1.9.exe",
                                     size=456789,
                                 ),
                             ],
@@ -185,12 +185,12 @@ class UpdateCheckTests(unittest.TestCase):
         result = self.make_extractor()._fetch_latest_release()
 
         self.assertEqual(result["status"], "update_available")
-        self.assertEqual(result["latest_version"], "0.1.8")
-        self.assertEqual(result["url"], "https://example.test/releases/v0.1.8")
+        self.assertEqual(result["latest_version"], "0.1.9")
+        self.assertEqual(result["url"], "https://example.test/releases/v0.1.9")
         self.assert_installer_metadata(
             result,
-            name="GameContentExtraction-Setup-v0.1.8.exe",
-            url="https://example.test/downloads/installer-v0.1.8.exe",
+            name="GameContentExtraction-Setup-v0.1.9.exe",
+            url="https://example.test/downloads/installer-v0.1.9.exe",
             size=456789,
         )
 
@@ -209,7 +209,7 @@ class UpdateCheckTests(unittest.TestCase):
         self.assertEqual(result["status"], "no_release")
 
     def test_latest_403_and_429_fall_back_to_latest_release_redirect(self):
-        redirect_url = "https://github.com/zhangyi196/zbt-prompt/releases/tag/v0.1.8"
+        redirect_url = "https://github.com/zhangyi196/zbt-prompt/releases/tag/v0.1.9"
 
         for status_code in (403, 429):
             with self.subTest(status_code=status_code):
@@ -237,13 +237,13 @@ class UpdateCheckTests(unittest.TestCase):
 
         result = extractor._build_update_result(
             self.make_release_payload(
-                "0.1.8",
+                "0.1.9",
                 assets=[
                     self.make_asset("checksums.txt"),
                     self.make_asset("zbt-prompt-source-20260509.zip"),
                     self.make_asset(
-                        "GameContentExtraction-Setup-v0.1.8.exe",
-                        url="https://example.test/downloads/setup-v0.1.8.exe",
+                        "GameContentExtraction-Setup-v0.1.9.exe",
+                        url="https://example.test/downloads/setup-v0.1.9.exe",
                         size=987654,
                     ),
                 ],
@@ -251,11 +251,11 @@ class UpdateCheckTests(unittest.TestCase):
         )
 
         self.assertEqual(result["status"], "update_available")
-        self.assertEqual(result["latest_version"], "0.1.8")
+        self.assertEqual(result["latest_version"], "0.1.9")
         self.assert_installer_metadata(
             result,
-            name="GameContentExtraction-Setup-v0.1.8.exe",
-            url="https://example.test/downloads/setup-v0.1.8.exe",
+            name="GameContentExtraction-Setup-v0.1.9.exe",
+            url="https://example.test/downloads/setup-v0.1.9.exe",
             size=987654,
         )
 
@@ -264,7 +264,7 @@ class UpdateCheckTests(unittest.TestCase):
 
         result = extractor._build_update_result(
             self.make_release_payload(
-                "0.1.8",
+                "0.1.9",
                 assets=[
                     self.make_asset("zbt-prompt-source-20260509.zip"),
                     self.make_asset("checksums.txt"),
@@ -273,7 +273,7 @@ class UpdateCheckTests(unittest.TestCase):
         )
 
         self.assertEqual(result["status"], "update_available")
-        self.assertEqual(result["latest_version"], "0.1.8")
+        self.assertEqual(result["latest_version"], "0.1.9")
         self.assertIsNone(self.get_installer_metadata(result))
         self.assertTrue(result["installer_error"])
 
@@ -281,13 +281,13 @@ class UpdateCheckTests(unittest.TestCase):
         extractor = self.make_extractor()
         selected, error = extractor._extract_installer_asset(
             self.make_release_payload(
-                "0.1.8",
+                "0.1.9",
                 assets=[
                     self.make_asset("zbt-prompt-source-20260509.zip"),
                     self.make_asset("notes.txt"),
                     self.make_asset(
-                        "GameContentExtraction-Setup-v0.1.8.exe",
-                        url="https://example.test/downloads/setup-v0.1.8.exe",
+                        "GameContentExtraction-Setup-v0.1.9.exe",
+                        url="https://example.test/downloads/setup-v0.1.9.exe",
                         size=654321,
                     ),
                 ],
@@ -296,10 +296,10 @@ class UpdateCheckTests(unittest.TestCase):
 
         self.assertIsNotNone(selected)
         self.assertIsNone(error)
-        self.assertEqual(selected["name"], "GameContentExtraction-Setup-v0.1.8.exe")
+        self.assertEqual(selected["name"], "GameContentExtraction-Setup-v0.1.9.exe")
         self.assertEqual(
             selected.get("download_url") or selected.get("browser_download_url") or selected.get("url"),
-            "https://example.test/downloads/setup-v0.1.8.exe",
+            "https://example.test/downloads/setup-v0.1.9.exe",
         )
         self.assertEqual(selected["size"], 654321)
 
@@ -307,7 +307,7 @@ class UpdateCheckTests(unittest.TestCase):
         extractor = self.make_extractor()
 
         selected, error = extractor._extract_installer_asset(
-            self.make_release_payload("0.1.8")
+            self.make_release_payload("0.1.9")
         )
 
         self.assertIsNone(selected)
@@ -323,48 +323,48 @@ class UpdateCheckTests(unittest.TestCase):
             [
                 self.make_asset("notes.txt"),
                 self.make_asset(
-                    "GameContentExtraction-v0.1.8.exe",
-                    url="https://example.test/downloads/generic-v0.1.8.exe",
+                    "GameContentExtraction-v0.1.9.exe",
+                    url="https://example.test/downloads/generic-v0.1.9.exe",
                 ),
                 self.make_asset(
-                    "GameContentExtraction-Setup-v0.1.8.exe",
-                    url="https://example.test/downloads/setup-v0.1.8.exe",
+                    "GameContentExtraction-Setup-v0.1.9.exe",
+                    url="https://example.test/downloads/setup-v0.1.9.exe",
                 ),
                 self.make_asset(
-                    "GameContentExtraction-portable-v0.1.8.exe",
-                    url="https://example.test/downloads/portable-v0.1.8.exe",
+                    "GameContentExtraction-portable-v0.1.9.exe",
+                    url="https://example.test/downloads/portable-v0.1.9.exe",
                 ),
                 self.make_asset(
-                    "GameContentExtraction-v0.1.8.msi",
-                    url="https://example.test/downloads/setup-v0.1.8.msi",
+                    "GameContentExtraction-v0.1.9.msi",
+                    url="https://example.test/downloads/setup-v0.1.9.msi",
                 ),
                 self.make_asset(
-                    "GameContentExtraction-Setup-v0.1.8.exe",
+                    "GameContentExtraction-Setup-v0.1.9.exe",
                     browser_download_url="",
                 ),
             ]
         )
 
         self.assertIsNotNone(selected)
-        self.assertEqual(selected["name"], "GameContentExtraction-Setup-v0.1.8.exe")
+        self.assertEqual(selected["name"], "GameContentExtraction-Setup-v0.1.9.exe")
         self.assertEqual(
             selected["browser_download_url"],
-            "https://example.test/downloads/setup-v0.1.8.exe",
+            "https://example.test/downloads/setup-v0.1.9.exe",
         )
 
     def test_score_installer_asset_prefers_setup_exe_over_portable_msi(self):
         extractor = self.make_extractor()
 
         setup_exe = extractor._score_installer_asset(
-            "GameContentExtraction-Setup-v0.1.8.exe",
+            "GameContentExtraction-Setup-v0.1.9.exe",
             ".exe",
         )
         plain_msi = extractor._score_installer_asset(
-            "GameContentExtraction-v0.1.8.msi",
+            "GameContentExtraction-v0.1.9.msi",
             ".msi",
         )
         portable_exe = extractor._score_installer_asset(
-            "GameContentExtraction-portable-v0.1.8.exe",
+            "GameContentExtraction-portable-v0.1.9.exe",
             ".exe",
         )
 
