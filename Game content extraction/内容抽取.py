@@ -94,10 +94,13 @@ class BlindBoxExtractor:
         self.runtime_dir = runtime_dir
         self.history_file = os.path.join(runtime_dir, "draw_history.json")
         self.draw_history = self._load_draw_history()
+        self.expression_stats_file = os.path.join(runtime_dir, "expression_stats.json")
+        self.expression_stats = self._load_expression_stats()
         self.renamer_config_file = os.path.join(runtime_dir, "config.json")
         self.renamer_config = self._load_renamer_config()
         self.expression_window = None
         self.expression_input_text = None
+        self.expression_detail_text = None
         self.expression_output_text = None
         self.expression_template_mode_var = None
         self.expression_template_index_var = None
@@ -125,6 +128,10 @@ class BlindBoxExtractor:
         self.setup_ui()
         self._setup_renamer_config_listeners()
         self._schedule_initial_update_check()
+        try:
+            self.root.protocol("WM_DELETE_WINDOW", self._handle_close)
+        except tk.TclError:
+            pass
 
     
     def _create_empty_draw_history(self):
@@ -224,6 +231,240 @@ class BlindBoxExtractor:
         used_counts = self._get_expression_pool_counts(pool_key)
         count_key = str(selected_value)
         used_counts[count_key] = used_counts.get(count_key, 0) + 1
+
+    def _create_empty_expression_stats(self):
+        return {
+            "version": 1,
+            "committed_counts": {
+                "正向": {},
+                "负向": {},
+            },
+            "current_input_hash": None,
+            "current_last_entries": [],
+            "current_committed_entries": [],
+        }
+
+    def _load_expression_stats(self):
+        stats = self._create_empty_expression_stats()
+        stats_file = getattr(self, "expression_stats_file", None)
+        if not stats_file or not os.path.exists(stats_file):
+            self.expression_stats = stats
+            if stats_file:
+                self._save_expression_stats()
+            return stats
+
+        try:
+            with open(stats_file, "r", encoding="utf-8") as file:
+                data = json.load(file)
+        except (OSError, json.JSONDecodeError, TypeError, ValueError):
+            self.expression_stats = stats
+            self._save_expression_stats()
+            return stats
+
+        if isinstance(data, dict):
+            counts = data.get("committed_counts", {})
+            if isinstance(counts, dict):
+                for polarity in ("正向", "负向"):
+                    raw_counts = counts.get(polarity, {})
+                    if not isinstance(raw_counts, dict):
+                        continue
+                    normalized_counts = {}
+                    for raw_name, raw_value in raw_counts.items():
+                        try:
+                            value = int(raw_value)
+                        except (TypeError, ValueError):
+                            value = 0
+                        normalized_counts[str(raw_name)] = max(0, value)
+                    stats["committed_counts"][polarity] = normalized_counts
+
+            stats["current_input_hash"] = (
+                str(data.get("current_input_hash"))
+                if data.get("current_input_hash")
+                else None
+            )
+            for key in ("current_last_entries", "current_committed_entries"):
+                entries = data.get(key, [])
+                stats[key] = self._normalize_expression_stat_entries(entries)
+
+        self.expression_stats = stats
+        self._save_expression_stats()
+        return stats
+
+    def _save_expression_stats(self):
+        stats_file = getattr(self, "expression_stats_file", None)
+        if not stats_file:
+            return
+        with open(stats_file, "w", encoding="utf-8") as file:
+            json.dump(self.expression_stats, file, ensure_ascii=False, indent=2)
+
+    def _normalize_expression_stat_entries(self, entries):
+        normalized_entries = []
+        if not isinstance(entries, list):
+            return normalized_entries
+        for entry in entries:
+            if not isinstance(entry, dict):
+                continue
+            polarity = entry.get("polarity")
+            expression = entry.get("expression")
+            if polarity not in ("正向", "负向") or not expression:
+                continue
+            normalized_entries.append({
+                "polarity": polarity,
+                "expression": str(expression),
+            })
+        return normalized_entries
+
+    def _make_expression_input_hash(self, text):
+        return hashlib.sha256(text.strip().encode("utf-8")).hexdigest()
+
+    def _get_expression_category_order(self):
+        library = self._load_expression_library()
+        return {
+            "正向": list(library.get("正向", {}).keys()),
+            "负向": list(library.get("负向", {}).keys()),
+        }
+
+    def _extract_selected_expression_name(self, value):
+        stripped_value = self._strip_existing_expression_template(value).strip()
+        if not stripped_value:
+            return ""
+        return re.split(r"\s*[，,、/|；;]\s*", stripped_value, maxsplit=1)[0].strip()
+
+    def _summarize_expression_value(self, value):
+        stripped_value = value.strip()
+        if not stripped_value:
+            return ""
+        return re.split(r"[；;]", stripped_value, maxsplit=1)[0].strip()
+
+    def _extract_expression_usage_entries(self, text, include_display=False):
+        library = self._load_expression_library()
+        blocks = self._parse_expression_blocks(text)
+        entries = []
+        for block in blocks:
+            fields = block["fields"]
+            polarity = self._normalize_expression_polarity(fields["极性"]["value"])
+            expression_name = self._extract_selected_expression_name(
+                fields["具体表情"]["value"]
+            )
+            self._validate_expression_name(library, polarity, expression_name)
+            entry = {
+                "polarity": polarity,
+                "expression": expression_name,
+            }
+            if include_display:
+                character = fields.get("人物定位", {}).get("value", "").strip()
+                entry["character"] = character or "未填写人物定位"
+                entry["detail"] = self._summarize_expression_value(
+                    fields["具体表情"]["value"]
+                )
+            entries.append(entry)
+        return entries
+
+    def _adjust_expression_stats_counts(self, entries, delta):
+        stats = getattr(self, "expression_stats", None)
+        if not isinstance(stats, dict):
+            stats = self._load_expression_stats()
+        counts = stats.setdefault("committed_counts", {})
+        for polarity in ("正向", "负向"):
+            if not isinstance(counts.get(polarity), dict):
+                counts[polarity] = {}
+
+        for entry in self._normalize_expression_stat_entries(entries):
+            polarity_counts = counts[entry["polarity"]]
+            expression_name = entry["expression"]
+            next_count = polarity_counts.get(expression_name, 0) + delta
+            if next_count > 0:
+                polarity_counts[expression_name] = next_count
+            else:
+                polarity_counts.pop(expression_name, None)
+
+    def _commit_pending_expression_stats(self):
+        stats = getattr(self, "expression_stats", None)
+        if not isinstance(stats, dict):
+            stats = self._load_expression_stats()
+
+        last_entries = self._normalize_expression_stat_entries(
+            stats.get("current_last_entries", [])
+        )
+        committed_entries = self._normalize_expression_stat_entries(
+            stats.get("current_committed_entries", [])
+        )
+        if not last_entries:
+            return False
+
+        if committed_entries == last_entries:
+            return False
+
+        if committed_entries:
+            self._adjust_expression_stats_counts(committed_entries, -1)
+        self._adjust_expression_stats_counts(last_entries, 1)
+        stats["current_last_entries"] = last_entries
+        stats["current_committed_entries"] = list(last_entries)
+        self._save_expression_stats()
+        return True
+
+    def _stage_expression_stats_result(self, input_text, enhanced_text):
+        stats = getattr(self, "expression_stats", None)
+        if not isinstance(stats, dict):
+            stats = self._load_expression_stats()
+
+        input_hash = self._make_expression_input_hash(input_text)
+        if stats.get("current_input_hash") and stats.get("current_input_hash") != input_hash:
+            self._commit_pending_expression_stats()
+            stats = self.expression_stats
+            stats["current_last_entries"] = []
+            stats["current_committed_entries"] = []
+
+        entries = self._extract_expression_usage_entries(enhanced_text)
+        stats["current_input_hash"] = input_hash
+        stats["current_last_entries"] = entries
+        self._save_expression_stats()
+        return entries
+
+    def _format_expression_stats_summary(self):
+        stats = getattr(self, "expression_stats", None)
+        if not isinstance(stats, dict):
+            stats = self._load_expression_stats()
+        category_order = self._get_expression_category_order()
+        counts = stats.get("committed_counts", {})
+
+        lines = [
+            "表情统计参考，仅用于同等贴合时提升多样性，不得覆盖剧情判断。",
+            "统计口径：每组输入只统计最后一次实际使用结果；当前摘要来自已提交的实际使用结果。",
+            "",
+        ]
+        for polarity in ("正向", "负向"):
+            polarity_counts = counts.get(polarity, {})
+            summary_items = [
+                f"{expression_name} {int(polarity_counts.get(expression_name, 0) or 0)}"
+                for expression_name in category_order.get(polarity, [])
+            ]
+            lines.append(f"{polarity}：")
+            lines.append("，".join(summary_items) + "。")
+            lines.append("")
+
+        lines.append(
+            "选择规则：先按剧情和人物反馈筛选贴合类别；同等贴合时优先低统计表情，减少高统计表情；不得为了补低频强行选择不贴剧情的表情。"
+        )
+        return "\n".join(lines).strip()
+
+    def _format_expression_detail_summary(self, text):
+        entries = self._extract_expression_usage_entries(text, include_display=True)
+        lines = []
+        for index, entry in enumerate(entries, start=1):
+            lines.append(f"{index}. 人物定位：{entry['character']}")
+            lines.append(f"   具体表情：{entry['detail']}")
+        return "\n".join(lines)
+
+    def _set_expression_detail_text(self, content):
+        detail_text = getattr(self, "expression_detail_text", None)
+        if not detail_text:
+            return
+        detail_text.configure(state=tk.NORMAL)
+        detail_text.delete(1.0, tk.END)
+        if content:
+            detail_text.insert(tk.END, content)
+        detail_text.configure(state=tk.DISABLED)
 
     def _load_renamer_config(self):
         if not os.path.exists(self.renamer_config_file):
@@ -430,6 +671,13 @@ class BlindBoxExtractor:
         self.draw_history["expression_pools"] = {}
         self._save_draw_history()
         self._show_output_message("全部抽取历史已重置")
+
+    def _handle_close(self):
+        try:
+            self._commit_pending_expression_stats()
+        except Exception:
+            pass
+        self.root.destroy()
 
     def setup_ui(self):
         self._configure_styles()
@@ -1371,9 +1619,9 @@ class BlindBoxExtractor:
 
     def _build_expression_workspace(self, parent):
         ttk.Label(parent, text="表情组文本:", font=self.UI_FONT_BOLD).pack(pady=(4, 6), anchor=tk.W)
-        self.expression_input_text = scrolledtext.ScrolledText(parent, height=12, width=92)
+        self.expression_input_text = scrolledtext.ScrolledText(parent, height=8, width=92)
         self._style_text_widget(self.expression_input_text)
-        self.expression_input_text.pack(pady=(0, 12), fill=tk.BOTH, expand=True)
+        self.expression_input_text.pack(pady=(0, 10), fill=tk.BOTH, expand=True)
 
         control_frame = ttk.Frame(parent)
         control_frame.pack(pady=(0, 12), fill=tk.X)
@@ -1406,13 +1654,20 @@ class BlindBoxExtractor:
         ttk.Label(control_frame, text="单人/多人均 1-8", style="Muted.TLabel").pack(side=tk.LEFT, padx=10)
 
         button_frame = ttk.Frame(parent)
-        button_frame.pack(pady=(0, 14))
-        ttk.Button(button_frame, text="抽取表情", command=self.extract_expression_content, style="Primary.TButton").pack(side=tk.LEFT, padx=8)
+        button_frame.pack(pady=(0, 12))
+        ttk.Button(button_frame, text="表情统计", command=self.copy_expression_stats_summary, style="Secondary.TButton").pack(side=tk.LEFT, padx=8)
         ttk.Button(button_frame, text="清空输入", command=self.clear_expression_input, style="Secondary.TButton").pack(side=tk.LEFT, padx=8)
+        ttk.Button(button_frame, text="抽取表情", command=self.extract_expression_content, style="Primary.TButton").pack(side=tk.LEFT, padx=8)
         ttk.Button(button_frame, text="复制结果", command=self.copy_expression_result, style="Secondary.TButton").pack(side=tk.LEFT, padx=8)
 
+        ttk.Label(parent, text="具体表情查看:", font=self.UI_FONT_BOLD).pack(pady=(0, 6), anchor=tk.W)
+        self.expression_detail_text = scrolledtext.ScrolledText(parent, height=5, width=92)
+        self._style_text_widget(self.expression_detail_text)
+        self.expression_detail_text.configure(state=tk.DISABLED)
+        self.expression_detail_text.pack(pady=(0, 10), fill=tk.BOTH, expand=True)
+
         ttk.Label(parent, text="增强后文本:", font=self.UI_FONT_BOLD).pack(pady=(0, 6), anchor=tk.W)
-        self.expression_output_text = scrolledtext.ScrolledText(parent, height=14, width=92)
+        self.expression_output_text = scrolledtext.ScrolledText(parent, height=12, width=92)
         self._style_text_widget(self.expression_output_text)
         self.expression_output_text.pack(pady=(0, 2), fill=tk.BOTH, expand=True)
 
@@ -1843,9 +2098,12 @@ class BlindBoxExtractor:
             )
             self.expression_output_text.delete(1.0, tk.END)
             self.expression_output_text.insert(tk.END, result)
+            self._stage_expression_stats_result(input_text, result)
+            self._set_expression_detail_text(self._format_expression_detail_summary(result))
         except ValueError as exc:
             self.expression_output_text.delete(1.0, tk.END)
             self.expression_output_text.insert(tk.END, str(exc))
+            self._set_expression_detail_text("")
 
     def clear_expression_input(self):
         if self.expression_input_text:
@@ -1860,6 +2118,13 @@ class BlindBoxExtractor:
             self.root.clipboard_clear()
             self.root.clipboard_append(content)
             self.root.update()
+
+    def copy_expression_stats_summary(self):
+        self._commit_pending_expression_stats()
+        content = self._format_expression_stats_summary()
+        self.root.clipboard_clear()
+        self.root.clipboard_append(content)
+        self.root.update()
 
     def copy_to_clipboard(self):
         content = self.output_text.get(1.0, tk.END).strip()

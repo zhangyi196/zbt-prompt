@@ -1,9 +1,11 @@
 import importlib.util
 import pathlib
+import sys
 import unittest
 
 
 MODULE_PATH = pathlib.Path(__file__).with_name("内容抽取.py")
+sys.path.insert(0, str(MODULE_PATH.parent))
 SPEC = importlib.util.spec_from_file_location("content_extractor", MODULE_PATH)
 content_extractor = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(content_extractor)
@@ -21,11 +23,21 @@ class FakeRoot:
     def __init__(self, clipboard_text="", raises=False):
         self.clipboard_text = clipboard_text
         self.raises = raises
+        self.copied_text = None
 
     def clipboard_get(self):
         if self.raises:
             raise content_extractor.tk.TclError("clipboard unavailable")
         return self.clipboard_text
+
+    def clipboard_clear(self):
+        self.copied_text = ""
+
+    def clipboard_append(self, value):
+        self.copied_text = value
+
+    def update(self):
+        pass
 
 
 class FakeEntry:
@@ -38,6 +50,9 @@ class FakeEntry:
     def insert(self, index, value):
         self.content = value
 
+    def get(self, start, end):
+        return self.content
+
 
 class FakeText:
     def __init__(self, initial="seed"):
@@ -48,6 +63,9 @@ class FakeText:
 
     def insert(self, index, value):
         self.content = value
+
+    def get(self, start, end):
+        return self.content
 
 
 class ClearInputBehaviorTests(unittest.TestCase):
@@ -80,6 +98,15 @@ class ClearInputBehaviorTests(unittest.TestCase):
         extractor.clear_expression_input()
 
         self.assertEqual(extractor.expression_input_text.content, "")
+
+    def test_copy_expression_result_ignores_expression_detail_text(self):
+        extractor = self.make_extractor()
+        extractor.expression_output_text = FakeText(initial="增强后文本")
+        extractor.expression_detail_text = FakeText(initial="具体表情查看")
+
+        extractor.copy_expression_result()
+
+        self.assertEqual(extractor.root.copied_text, "增强后文本")
 
 
 if __name__ == "__main__":

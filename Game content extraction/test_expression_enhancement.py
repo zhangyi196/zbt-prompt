@@ -155,6 +155,7 @@ class ExpressionEnhancementTests(unittest.TestCase):
         temp_dir.mkdir()
         self.addCleanup(shutil.rmtree, temp_dir, True)
         extractor.history_file = str(temp_dir / "draw_history.json")
+        extractor.expression_stats_file = str(temp_dir / "expression_stats.json")
 
         if history_data is not None:
             pathlib.Path(extractor.history_file).write_text(
@@ -163,6 +164,7 @@ class ExpressionEnhancementTests(unittest.TestCase):
             )
 
         extractor.draw_history = extractor._load_draw_history()
+        extractor.expression_stats = extractor._load_expression_stats()
         return extractor
 
     def make_extractor_with_library(self, library_text, history_data=None):
@@ -526,6 +528,77 @@ class ExpressionEnhancementTests(unittest.TestCase):
         self.assertEqual(extractor.draw_history["item_pools"], history_data["item_pools"])
         self.assertEqual(extractor.draw_history["animal_pools"], history_data["animal_pools"])
         self.assertIn("expression_category:负向:单人", extractor.draw_history["expression_pools"])
+
+    def test_expression_stats_summary_includes_all_library_categories(self):
+        extractor = self.make_extractor()
+        extractor.expression_stats["committed_counts"]["正向"] = {"喜欢": 2}
+        extractor.expression_stats["committed_counts"]["负向"] = {"困惑": 3}
+
+        summary = extractor._format_expression_stats_summary()
+
+        for polarity, expressions in self.library.items():
+            for expression_name in expressions:
+                expected_count = "2" if expression_name == "喜欢" else "3" if expression_name == "困惑" else "0"
+                self.assertIn(f"{expression_name} {expected_count}", summary)
+        self.assertIn("统计口径：每组输入只统计最后一次实际使用结果", summary)
+        self.assertIn("不得为了补低频强行选择不贴剧情的表情", summary)
+
+    def test_expression_stats_commits_only_latest_result_for_same_input(self):
+        extractor = self.make_extractor()
+        first = extractor.enhance_expression_text(NEGATIVE_SAMPLE, template_index=4)
+        second = extractor.enhance_expression_text(
+            NEGATIVE_SAMPLE.replace("具体表情: 困惑", "具体表情: 生气"),
+            template_index=4,
+        )
+
+        extractor._stage_expression_stats_result(NEGATIVE_SAMPLE, first)
+        extractor._stage_expression_stats_result(NEGATIVE_SAMPLE, second)
+        extractor._commit_pending_expression_stats()
+
+        counts = extractor.expression_stats["committed_counts"]["负向"]
+        self.assertNotIn("困惑", counts)
+        self.assertEqual(counts["生气"], 1)
+
+    def test_expression_stats_commits_previous_input_when_input_changes(self):
+        extractor = self.make_extractor()
+        first = extractor.enhance_expression_text(NEGATIVE_SAMPLE, template_index=4)
+        changed_input = NEGATIVE_SAMPLE.replace("具体表情: 困惑", "具体表情: 生气")
+        second = extractor.enhance_expression_text(changed_input, template_index=4)
+
+        extractor._stage_expression_stats_result(NEGATIVE_SAMPLE, first)
+        extractor._stage_expression_stats_result(changed_input, second)
+        extractor._commit_pending_expression_stats()
+
+        counts = extractor.expression_stats["committed_counts"]["负向"]
+        self.assertEqual(counts["困惑"], 1)
+        self.assertEqual(counts["生气"], 1)
+
+    def test_expression_stats_recommit_replaces_current_committed_result(self):
+        extractor = self.make_extractor()
+        first = extractor.enhance_expression_text(NEGATIVE_SAMPLE, template_index=4)
+        second = extractor.enhance_expression_text(
+            NEGATIVE_SAMPLE.replace("具体表情: 困惑", "具体表情: 生气"),
+            template_index=4,
+        )
+
+        extractor._stage_expression_stats_result(NEGATIVE_SAMPLE, first)
+        extractor._commit_pending_expression_stats()
+        extractor._stage_expression_stats_result(NEGATIVE_SAMPLE, second)
+        extractor._commit_pending_expression_stats()
+
+        counts = extractor.expression_stats["committed_counts"]["负向"]
+        self.assertNotIn("困惑", counts)
+        self.assertEqual(counts["生气"], 1)
+
+    def test_expression_detail_summary_extracts_character_and_expression(self):
+        extractor = self.make_extractor()
+        result = extractor.enhance_expression_text(NEGATIVE_SAMPLE, template_index=4)
+
+        summary = extractor._format_expression_detail_summary(result)
+
+        self.assertIn("1. 人物定位：画面中间人物", summary)
+        self.assertIn("具体表情：困惑，", summary)
+        self.assertNotIn("表情功能", summary)
 
 
 if __name__ == "__main__":

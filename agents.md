@@ -50,7 +50,7 @@
 
 - `Game content extraction/` 只用原生 `tkinter/ttk`；不改成 Web、数据库、服务端或大型工程。
 - `Game content extraction/` 的开发、验证和打包默认使用项目内解释器 `Game content extraction/.venv/Scripts/python.exe`，避免缺少 `tkinter`、Tcl 或 Tk。
-- `draw_history.json` 服务物品、动物和表情历史；表情只写 `expression_pools`。
+- `draw_history.json` 服务物品、动物和表情抽取降权历史；表情只写 `expression_pools`；表情前置反馈统计独立写入 `Game content extraction/expression_stats.json`。
 - 图像抓取只复制文件；批量重命名必须保留“目标文件已存在则跳过”的保护逻辑。
 
 ## 修改与发布

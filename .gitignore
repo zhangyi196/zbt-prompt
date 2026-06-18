@@ -45,6 +45,9 @@ Game content extraction/installer.v*-test.iss
 Game content extraction/_tmp_history_test_*/
 Game content extraction/_tmp_history_verify_*/
 
+# Local extraction history
+Game content extraction/expression_stats.json
+
 # Skill scratch output
 .workflow/.scratchpad/green-circle-photo-prompts/
 
