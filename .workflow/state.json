@@ -1,8 +1,8 @@
 {
   "version": "2.0",
   "project_name": "zbt-prompt",
-  "status": "idle",
-  "current_milestone": "M2",
+  "status": "completed",
+  "current_milestone": null,
   "current_task_id": null,
   "milestones": [
     {
@@ -85,121 +85,6 @@
       "harvested": false,
       "created_at": "2026-05-21T17:55:00+08:00",
       "completed_at": "2026-05-21T17:55:00+08:00"
-    },
-    {
-      "id": "PLN-002",
-      "type": "plan",
-      "scope": "phase",
-      "status": "completed",
-      "milestone": "M2",
-      "phase": 1,
-      "path": ".workflow/scratch/20260521-plan-P1-group-salience/",
-      "depends_on": "BRN-001",
-      "harvested": false,
-      "created_at": "2026-05-21T18:22:00+08:00",
-      "completed_at": "2026-05-21T18:22:00+08:00"
-    },
-    {
-      "id": "EXC-002",
-      "type": "execute",
-      "scope": "phase",
-      "status": "completed",
-      "milestone": "M2",
-      "phase": 1,
-      "path": ".workflow/scratch/20260521-plan-P1-group-salience/",
-      "depends_on": "PLN-002",
-      "harvested": true,
-      "created_at": "2026-05-21T18:40:00+08:00",
-      "completed_at": "2026-05-21T18:40:00+08:00"
-    },
-    {
-      "id": "VRF-002",
-      "type": "verify",
-      "scope": "phase",
-      "status": "completed",
-      "milestone": "M2",
-      "phase": 1,
-      "path": ".workflow/scratch/20260521-plan-P1-group-salience/",
-      "depends_on": "EXC-002",
-      "harvested": false,
-      "created_at": "2026-05-21T19:00:00+08:00",
-      "completed_at": "2026-05-21T19:00:00+08:00"
-    },
-    {
-      "id": "ANL-002",
-      "type": "analyze",
-      "scope": "adhoc",
-      "status": "completed",
-      "milestone": "M2",
-      "phase": null,
-      "path": ".workflow/scratch/analyze-group23-vlm-hallucination-clothing-2026-05-27/",
-      "harvested": false,
-      "created_at": "2026-05-27T12:00:00+08:00",
-      "completed_at": "2026-05-27T12:00:00+08:00"
-    },
-    {
-      "id": "QCK-001",
-      "type": "quick",
-      "scope": "adhoc",
-      "status": "completed",
-      "milestone": "M2",
-      "phase": null,
-      "title": "针对组图23，根据上面描述的进行修改list2的内容",
-      "description": "收紧组图 23 的 List 2 强信号规则并统一输出项数量",
-      "directory": ".workflow/scratch/quick-group23-list2-content-2026-05-27/",
-      "path": ".workflow/scratch/quick-group23-list2-content-2026-05-27/",
-      "verified": "skipped",
-      "harvested": false,
-      "created_at": "2026-05-27T12:30:00+08:00",
-      "completed_at": "2026-05-27T12:31:00+08:00"
-    },
-    {
-      "id": "QCK-002",
-      "type": "quick",
-      "scope": "adhoc",
-      "status": "completed",
-      "milestone": "M2",
-      "phase": null,
-      "title": "请帮助我根据以上内容为list2进行重构",
-      "description": "重构组图 23 的 List 2 为 6 类强变化菜单",
-      "directory": ".workflow/scratch/quick-group23-list2-restructure-2026-05-27/",
-      "path": ".workflow/scratch/quick-group23-list2-restructure-2026-05-27/",
-      "verified": "skipped",
-      "harvested": false,
-      "created_at": "2026-05-27T11:58:45+08:00",
-      "completed_at": "2026-05-27T12:32:00+08:00"
-    },
-    {
-      "id": "QCK-003",
-      "type": "quick",
-      "scope": "adhoc",
-      "status": "completed",
-      "milestone": "M2",
-      "phase": null,
-      "title": "根据以上方案帮助我进行压缩，不激进压缩",
-      "description": "保守压缩组图 23 提示词，收敛重复规则并保持固定输出协议",
-      "directory": ".workflow/scratch/quick-compress-group23-prompt-2026-05-27/",
-      "path": ".workflow/scratch/quick-compress-group23-prompt-2026-05-27/",
-      "verified": "skipped",
-      "harvested": false,
-      "created_at": "2026-05-27T16:38:54.242532+08:00",
-      "completed_at": "2026-05-27T16:52:52.647964+08:00"
-    },
-    {
-      "id": "QCK-004",
-      "type": "quick",
-      "scope": "adhoc",
-      "status": "completed",
-      "milestone": "M2",
-      "phase": null,
-      "title": "修复 M2 审计入口路径与路线图状态",
-      "description": "解决 M2 milestone audit 的根入口路径不一致与 roadmap 进度未同步 warning。",
-      "directory": ".workflow/scratch/quick-fix-m2-audit-warnings-20260618/",
-      "path": ".workflow/scratch/quick-fix-m2-audit-warnings-20260618/",
-      "verified": "passed",
-      "harvested": false,
-      "created_at": "2026-06-18T00:00:00+08:00",
-      "completed_at": "2026-06-18T00:00:00+08:00"
     }
   ],
   "last_updated": "2026-06-18T00:00:00+08:00",
@@ -210,5 +95,104 @@
     "deferred": []
   },
   "transition_history": [],
-  "milestone_history": []
+  "milestone_history": [
+    {
+      "milestone": "M2",
+      "status": "completed",
+      "completed_at": "2026-06-18T00:00:00+08:00",
+      "archive_path": ".workflow/milestones/M2/",
+      "archived_artifacts": [
+        {
+          "id": "PLN-002",
+          "type": "plan",
+          "scope": "phase",
+          "status": "completed",
+          "phase": 1,
+          "path": ".workflow/scratch/20260521-plan-P1-group-salience/",
+          "archive_path": ".workflow/milestones/M2/artifacts/",
+          "completed_at": "2026-05-21T18:22:00+08:00",
+          "harvested": false
+        },
+        {
+          "id": "EXC-002",
+          "type": "execute",
+          "scope": "phase",
+          "status": "completed",
+          "phase": 1,
+          "path": ".workflow/scratch/20260521-plan-P1-group-salience/",
+          "archive_path": ".workflow/milestones/M2/artifacts/",
+          "completed_at": "2026-05-21T18:40:00+08:00",
+          "harvested": true
+        },
+        {
+          "id": "VRF-002",
+          "type": "verify",
+          "scope": "phase",
+          "status": "completed",
+          "phase": 1,
+          "path": ".workflow/scratch/20260521-plan-P1-group-salience/",
+          "archive_path": ".workflow/milestones/M2/artifacts/",
+          "completed_at": "2026-05-21T19:00:00+08:00",
+          "harvested": false
+        },
+        {
+          "id": "ANL-002",
+          "type": "analyze",
+          "scope": "adhoc",
+          "status": "completed",
+          "phase": null,
+          "path": ".workflow/scratch/analyze-group23-vlm-hallucination-clothing-2026-05-27/",
+          "archive_path": ".workflow/milestones/M2/artifacts/",
+          "completed_at": "2026-05-27T12:00:00+08:00",
+          "harvested": false
+        },
+        {
+          "id": "QCK-001",
+          "type": "quick",
+          "scope": "adhoc",
+          "status": "completed",
+          "phase": null,
+          "path": ".workflow/scratch/quick-group23-list2-content-2026-05-27/",
+          "archive_path": ".workflow/milestones/M2/artifacts/",
+          "completed_at": "2026-05-27T12:31:00+08:00",
+          "harvested": false
+        },
+        {
+          "id": "QCK-002",
+          "type": "quick",
+          "scope": "adhoc",
+          "status": "completed",
+          "phase": null,
+          "path": ".workflow/scratch/quick-group23-list2-restructure-2026-05-27/",
+          "archive_path": ".workflow/milestones/M2/artifacts/",
+          "completed_at": "2026-05-27T12:32:00+08:00",
+          "harvested": false
+        },
+        {
+          "id": "QCK-003",
+          "type": "quick",
+          "scope": "adhoc",
+          "status": "completed",
+          "phase": null,
+          "path": ".workflow/scratch/quick-compress-group23-prompt-2026-05-27/",
+          "archive_path": ".workflow/milestones/M2/artifacts/",
+          "completed_at": "2026-05-27T16:52:52.647964+08:00",
+          "harvested": false
+        },
+        {
+          "id": "QCK-004",
+          "type": "quick",
+          "scope": "adhoc",
+          "status": "completed",
+          "phase": null,
+          "path": ".workflow/scratch/quick-fix-m2-audit-warnings-20260618/",
+          "archive_path": ".workflow/milestones/M2/artifacts/",
+          "completed_at": "2026-06-18T00:00:00+08:00",
+          "harvested": false
+        }
+      ],
+      "audit_report": ".workflow/milestones/M2/audit-report.md",
+      "summary": ".workflow/milestones/M2/summary.md"
+    }
+  ]
 }

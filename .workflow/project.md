@@ -58,4 +58,9 @@
 - 内部生产人员（直接用户）
 
 ---
-*Last updated: 2026-05-21 after initialization*
+## Milestone Status
+
+- 2026-06-18: M2 completed and archived. Group-image salience rules passed audit after root navigation and roadmap state were synchronized.
+
+---
+*Last updated: 2026-06-18 after M2 completion*

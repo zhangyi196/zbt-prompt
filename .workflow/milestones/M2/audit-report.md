@@ -2,13 +2,15 @@
 
 Date: 2026-06-18
 Milestone: M2
-Verdict: PASS with warnings
+Verdict: PASS
 
 ## Scope
 
 Audit target is the current milestone from `.workflow/state.json`: `M2`.
 
 The skill expects an integration CSV wave via `spawn_agents_on_csv`. That tool is not exposed in this session, so the integration wave was executed as a local read-only audit using the same two dimensions and recorded in `.workflow/.csv-wave/20260618-audit-M2/tasks.csv`.
+
+Post-fix recheck: the two documentation-state warnings found in the first audit pass were fixed by commit `50b1f7f docs: 修复 M2 审计入口与路线图状态`; this report and `tasks.csv` now reflect the rechecked state.
 
 ## Artifact Coverage
 
@@ -21,7 +23,7 @@ Notes:
 - `.workflow/state.json:5` sets `current_milestone` to `M2`.
 - `.workflow/state.json:17-22` marks `M2` as `completed`.
 - `.workflow/state.json:90-123` records the completed `PLN-002 -> EXC-002 -> VRF-002` chain.
-- `.workflow/state.json:129-190` also records completed ad-hoc M2 artifacts `ANL-002`, `QCK-001`, `QCK-002`, and `QCK-003`.
+- `.workflow/state.json` also records completed ad-hoc M2 artifacts `ANL-002`, `QCK-001`, `QCK-002`, `QCK-003`, and the warning-fix record `QCK-004`.
 
 ## Execution Completeness
 
@@ -49,31 +51,31 @@ Evidence:
 
 ### Navigation And Registry Integration
 
-Result: WARNING
+Result: PASS
 
-Gaps:
+Resolved:
 
-- `agents.md:15-18` references `prompts/group-image/...`, but the actual directory is `prompts/2.group-image/...`.
-- `README.md:10`, `README.md:37`, and `README.md:39` also reference `prompts/group-image/...`.
-- `.workflow/codebase/*` and `.workflow/roadmap.md` consistently reference `prompts/2.group-image/...`, so the mismatch is limited to root navigation docs.
+- `agents.md:15-18` now references `prompts/2.group-image/...`.
+- `README.md:10`, `README.md:37`, and `README.md:39` now reference `prompts/2.group-image/...`.
+- `agents.md` and `README.md` also point main-image entries to `prompts/1.main-image/...`.
+- Recheck found no legacy unnumbered prompt path references in `agents.md`, `README.md`, or `.workflow/roadmap.md`.
 
 Impact:
 
-- Not a prompt execution blocker if callers use actual files or codebase registry.
-- It is a documentation routing risk for future agents, because root entry files point to paths that do not exist.
+- The root navigation docs now match the actual prompt directory layout and codebase registry.
 
 ### Roadmap State Integration
 
-Result: WARNING
+Result: PASS
 
-Gap:
+Resolved:
 
-- `.workflow/state.json` marks M2 completed, while `.workflow/roadmap.md:37` still lists Phase 1 as `Not started`.
+- `.workflow/roadmap.md:37` now lists Phase 1 as `Completed`.
+- `.workflow/state.json` includes `QCK-004`, recording the quick fix for the audit warnings.
 
 Impact:
 
-- Not an execution blocker.
-- It can mislead milestone status checks and future planning.
+- Milestone status is now consistent across state and roadmap artifacts.
 
 ## Known Open Concern
 
@@ -81,14 +83,12 @@ Impact:
 
 ## Verdict
 
-PASS with warnings.
+PASS.
 
-M2 has completed plan, execute, and verify artifacts; all planned tasks are complete; prompt rules are present in the actual prompt files. No critical integration gap was found.
+M2 has completed plan, execute, and verify artifacts; all planned tasks are complete; prompt rules are present in the actual prompt files; the two documentation-state warnings from the first audit pass have been resolved. No critical integration gap was found.
 
-Warnings to resolve before milestone archival:
+Remaining non-blocking concern:
 
-1. Fix root navigation paths from `prompts/group-image/...` to `prompts/2.group-image/...` in `agents.md` and `README.md`.
-2. Update `.workflow/roadmap.md` progress so Phase 1 no longer says `Not started`.
-3. Optionally add static prompt regression checks for the M2 rule strings.
+1. Optionally add static prompt regression checks for the M2 rule strings.
 
-Recommended next step: address the two documentation state warnings, then run `$maestro-milestone-complete "M2"`.
+Recommended next step: run `$maestro-milestone-complete "M2"` when ready.

@@ -1,0 +1,107 @@
+{
+  "id": "TASK-003",
+  "title": "同步组图入口说明与跨文件一致性",
+  "description": "在前两份 prompt 文案稳定后，更新 prompts/2.group-image/agents.md 的入口与使用边界，确保组图 23 与组图 4 的显著性新规则有稳定入口描述。",
+  "issue_id": null,
+  "issue_refs": [],
+  "type": "feature",
+  "priority": "medium",
+  "effort": "small",
+  "action": "修改 prompts/2.group-image/agents.md 的入口说明与使用边界：为组图 23 明确写入 ‘List 2 临时提升至 18 条’ 与 ‘第一眼可见的小区域强信号’；为组图 4 明确写入 ‘30% 只是下限，第一眼可见才是最终准入条件’ 与 ‘图案变化不落在地板、毛毯、整墙、整窗帘等大块表面’。",
+  "status": "completed",
+  "completed_at": "2026-05-21T18:40:00+08:00",
+  "actual_duration": "10m",
+  "scope": "prompts/2.group-image",
+  "focus_paths": [
+    "prompts/2.group-image/agents.md"
+  ],
+  "read_first": [
+    "prompts/2.group-image/agents.md",
+    "prompts/2.group-image/组图 23.md",
+    "prompts/2.group-image/组图 4.md",
+    ".workflow/scratch/brainstorm-group23-group4-salience-2026-05-21/feature-specs/F-001-group23-list2-salience.md",
+    ".workflow/scratch/brainstorm-group23-group4-salience-2026-05-21/feature-specs/F-002-group4-visibility-salience.md"
+  ],
+  "depends_on": [
+    "TASK-001",
+    "TASK-002"
+  ],
+  "wave": 2,
+  "parallel_group": null,
+  "execution_group": null,
+  "executor": "agent",
+  "convergence": {
+    "criteria": [
+      "prompts/2.group-image/agents.md contains '- `组图 23.md`：Ref-A / Ref-B 到 Target 的差异迁移；List 2 临时提升至 18 条'",
+      "prompts/2.group-image/agents.md contains '第一眼可见的小区域强信号'",
+      "prompts/2.group-image/agents.md contains '- `组图 4.md`：18 个找不同差异点，九宫格每区 2 个；30% 只是下限，第一眼可见才是最终准入条件。'",
+      "prompts/2.group-image/agents.md contains '地板、毛毯、整墙、整窗帘'"
+    ],
+    "verification": "Read prompts/2.group-image/agents.md and verify the two exact bullet strings appear in the 入口 section, while the大块表面限制 string appears in 使用边界, not only in one combined paragraph.",
+    "definition_of_done": "本目录入口说明与执行细则保持一致，后续读取 agents.md 时即可看到最新显著性边界。"
+  },
+  "files": [
+    {
+      "path": "prompts/2.group-image/agents.md",
+      "action": "modify",
+      "target": "入口 / 使用边界",
+      "change": "为组图 23 入口补充 List 2 临时提升到 18 条与第一眼可见小区域强信号；为组图 4 入口补充 30% 只是下限与第一眼可见终审；在使用边界中补充大块表面图案变化限制。"
+    }
+  ],
+  "implementation": [
+    "在入口段重写组图 23 的一行描述，加入 ‘List 2 临时提升至 18 条’ 和 ‘第一眼可见的小区域强信号’ 两个明确短语。",
+    "在入口段重写组图 4 的一行描述，加入 ‘30% 只是下限，第一眼可见才是最终准入条件’。",
+    "在使用边界中加入或更新大块表面限制，明确图案变化不落在地板、毛毯、整墙、整窗帘等大块表面。",
+    "不扩写到根目录 agents.md 或 README.md，保持本目录入口文件只承载稳定入口与硬边界。"
+  ],
+  "test": {
+    "commands": [],
+    "unit": [],
+    "integration": [],
+    "success_metrics": [
+      "入口描述与执行细则可通过精确字符串检索比对",
+      "本目录 agents.md 未越界承载详细执行步骤"
+    ]
+  },
+  "reference": {
+    "pattern": "每次修改本目录提示词后，同步维护本目录 agents.md 作为稳定入口说明",
+    "files": [
+      "prompts/2.group-image/agents.md"
+    ],
+    "examples": null
+  },
+  "rationale": {
+    "chosen_approach": "把跨文件一致性收敛到独立收尾任务，避免在两个并行任务中同时改入口文件造成冲突。",
+    "decision_factors": [
+      "agents.md 只应维护稳定入口和边界",
+      "前两份 prompt 的最终措辞稳定后再同步入口更安全",
+      "需要给后续执行者一个最新、简洁的入口概述"
+    ],
+    "tradeoffs": "增加一个收尾任务会多一次编辑，但能减少并行改同文件的碰撞。"
+  },
+  "risks": [
+    "若入口描述早于正文同步，容易出现规则分叉。",
+    "若入口写得过细，会违反‘稳定入口’的边界。"
+  ],
+  "code_skeleton": null,
+  "doc_context": {
+    "affected_features": [
+      "FT-001",
+      "FT-006"
+    ],
+    "affected_components": [
+      "TC-005",
+      "TC-006"
+    ],
+    "affected_requirements": [
+      "REQ-004"
+    ],
+    "adr_ids": []
+  },
+  "meta": {
+    "estimated_time": "10m",
+    "risk": "low",
+    "autonomous": true,
+    "checkpoint": false
+  }
+}

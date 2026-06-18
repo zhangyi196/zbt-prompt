@@ -1,0 +1,219 @@
+{
+  "phase": 1,
+  "status": "completed_with_concerns",
+  "verified_at": "2026-05-21T19:00:00+08:00",
+  "verifier": "workflow-verifier",
+  "must_haves": {
+    "truths": [
+      "组图 23 的 List 2 已从 16 条提升到 18 条，并加入第一眼可见闸门。",
+      "组图 4 已把 30% 下限升级为第一眼可见的最终准入条件。",
+      "组图入口说明已同步到 agents.md，避免执行细则与入口描述分叉。"
+    ],
+    "artifacts": [
+      "prompts/2.group-image/组图 23.md",
+      "prompts/2.group-image/组图 4.md",
+      "prompts/2.group-image/agents.md",
+      ".workflow/scratch/20260521-plan-P1-group-salience/.summaries/TASK-001-summary.md",
+      ".workflow/scratch/20260521-plan-P1-group-salience/.summaries/TASK-002-summary.md",
+      ".workflow/scratch/20260521-plan-P1-group-salience/.summaries/TASK-003-summary.md"
+    ],
+    "key_links": [
+      "FT-001 ↔ TC-005 ↔ prompts/2.group-image/组图 23.md",
+      "FT-001 ↔ TC-006 ↔ prompts/2.group-image/组图 4.md",
+      "FT-006 ↔ TC-020 ↔ prompts/2.group-image/agents.md"
+    ]
+  },
+  "layer1_truths": [
+    {
+      "id": "L1-T1",
+      "claim": "组图 23 的辅助差异规则已升级为 18 条，并以第一眼可见作为前置条件。",
+      "status": "passed",
+      "evidence": [
+        "prompts/2.group-image/组图 23.md:76-80",
+        "prompts/2.group-image/组图 23.md:116-149"
+      ]
+    },
+    {
+      "id": "L1-T2",
+      "claim": "组图 4 的准入标准已从面积阈值补强为第一眼可见终审，并限制图案变化落点。",
+      "status": "passed",
+      "evidence": [
+        "prompts/2.group-image/组图 4.md:20-20",
+        "prompts/2.group-image/组图 4.md:127-127",
+        "prompts/2.group-image/组图 4.md:248-254"
+      ]
+    },
+    {
+      "id": "L1-T3",
+      "claim": "组图入口说明与使用边界已同步更新，保留稳定入口和边界分层。",
+      "status": "passed",
+      "evidence": [
+        "prompts/2.group-image/agents.md:9-10",
+        "prompts/2.group-image/agents.md:19-19"
+      ]
+    }
+  ],
+  "layer2_artifacts": [
+    {
+      "id": "L2-A1",
+      "path": "prompts/2.group-image/组图 23.md",
+      "status": "passed",
+      "checks": {
+        "exists": true,
+        "substantive": true,
+        "wired": true
+      },
+      "evidence": [
+        "prompts/2.group-image/组图 23.md:76-80",
+        "prompts/2.group-image/组图 23.md:116-149"
+      ]
+    },
+    {
+      "id": "L2-A2",
+      "path": "prompts/2.group-image/组图 4.md",
+      "status": "passed",
+      "checks": {
+        "exists": true,
+        "substantive": true,
+        "wired": true
+      },
+      "evidence": [
+        "prompts/2.group-image/组图 4.md:20-20",
+        "prompts/2.group-image/组图 4.md:127-127",
+        "prompts/2.group-image/组图 4.md:248-254"
+      ]
+    },
+    {
+      "id": "L2-A3",
+      "path": "prompts/2.group-image/agents.md",
+      "status": "passed",
+      "checks": {
+        "exists": true,
+        "substantive": true,
+        "wired": true
+      },
+      "evidence": [
+        "prompts/2.group-image/agents.md:9-10",
+        "prompts/2.group-image/agents.md:19-19"
+      ]
+    },
+    {
+      "id": "L2-A4",
+      "path": ".workflow/scratch/20260521-plan-P1-group-salience/.summaries/TASK-001-summary.md",
+      "status": "passed",
+      "checks": {
+        "exists": true,
+        "substantive": true,
+        "wired": true
+      },
+      "evidence": [
+        ".workflow/scratch/20260521-plan-P1-group-salience/.summaries/TASK-001-summary.md:5-17"
+      ]
+    },
+    {
+      "id": "L2-A5",
+      "path": ".workflow/scratch/20260521-plan-P1-group-salience/.summaries/TASK-002-summary.md",
+      "status": "passed",
+      "checks": {
+        "exists": true,
+        "substantive": true,
+        "wired": true
+      },
+      "evidence": [
+        ".workflow/scratch/20260521-plan-P1-group-salience/.summaries/TASK-002-summary.md:5-16"
+      ]
+    },
+    {
+      "id": "L2-A6",
+      "path": ".workflow/scratch/20260521-plan-P1-group-salience/.summaries/TASK-003-summary.md",
+      "status": "passed",
+      "checks": {
+        "exists": true,
+        "substantive": true,
+        "wired": true
+      },
+      "evidence": [
+        ".workflow/scratch/20260521-plan-P1-group-salience/.summaries/TASK-003-summary.md:5-14"
+      ]
+    }
+  ],
+  "layer3_wiring": [
+    {
+      "id": "L3-W1",
+      "claim": "FT-001 仍把组图 23 与组图 4 作为独立 prompt-rule 组件，未破坏链路分层。",
+      "status": "passed",
+      "evidence": [
+        ".workflow/codebase/feature-maps/ai-prompt-engine.md:11-16",
+        ".workflow/codebase/feature-maps/ai-prompt-engine.md:24-26",
+        ".workflow/codebase/tech-registry/prompt-engine.md:20-29"
+      ]
+    },
+    {
+      "id": "L3-W2",
+      "claim": "组图执行细则应收敛在 prompts/2.group-image/agents.md，而根目录只保留稳定入口。",
+      "status": "passed",
+      "evidence": [
+        ".workflow/codebase/feature-maps/project-navigation.md:20-33",
+        ".workflow/codebase/feature-maps/ai-prompt-engine.md:28-33"
+      ]
+    },
+    {
+      "id": "L3-W3",
+      "claim": "当前改动没有跨越到 data 层或桌面工具层，符合项目边界。",
+      "status": "passed",
+      "evidence": [
+        ".workflow/codebase/feature-maps/project-navigation.md:28-33",
+        ".workflow/codebase/feature-maps/ai-prompt-engine.md:24-26"
+      ]
+    }
+  ],
+  "anti_pattern_scan": {
+    "status": "passed",
+    "blockers": [],
+    "warnings": [],
+    "checks": [
+      "prompts/2.group-image/*.md 未发现 TODO/FIXME/TBD/placeholder 匹配",
+      "新规则未引入空实现或占位文本"
+    ]
+  },
+  "nyquist": {
+    "status": "limited",
+    "coverage_score": 20,
+    "requirement_map": [
+      {
+        "requirement": "组图 23 List 2 从 16 条提升到 18 条，并要求第一眼可见",
+        "evidence": "静态字符串校验已覆盖",
+        "test": null,
+        "status": "covered_by_static_verification"
+      },
+      {
+        "requirement": "组图 4 的 30% 下限升级为第一眼可见终审，并限制图案落点",
+        "evidence": "静态字符串校验已覆盖",
+        "test": null,
+        "status": "covered_by_static_verification"
+      },
+      {
+        "requirement": "组图入口说明与使用边界同步",
+        "evidence": "静态字符串校验已覆盖",
+        "test": null,
+        "status": "covered_by_static_verification"
+      }
+    ],
+    "suggested_tests": [
+      "对 prompts/2.group-image/组图 23.md、组图 4.md、agents.md 执行精确字符串 grep 回归",
+      "若后续接入 prompt 生成回归器，再把这些门槛纳入自动化样例"
+    ]
+  },
+  "gaps": [
+    {
+      "id": "GAP-001",
+      "type": "coverage",
+      "severity": "low",
+      "description": "prompts/2.group-image 变更缺少仓库内自动化回归测试，当前主要依赖静态字符串与结构校验。",
+      "source": "nyquist",
+      "status": "open",
+      "related_issue": null
+    }
+  ],
+  "fix_plans": []
+}
