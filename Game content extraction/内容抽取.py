@@ -101,7 +101,7 @@ class BlindBoxExtractor:
         self.expression_window = None
         self.expression_input_text = None
         self.expression_detail_text = None
-        self.expression_output_text = None
+        self.expression_output_text = ""
         self.expression_template_mode_var = None
         self.expression_template_index_var = None
         self.image_fetcher_folder1_var = tk.StringVar()
@@ -1666,11 +1666,6 @@ class BlindBoxExtractor:
         self.expression_detail_text.configure(state=tk.DISABLED)
         self.expression_detail_text.pack(pady=(0, 10), fill=tk.BOTH, expand=True)
 
-        ttk.Label(parent, text="增强后文本:", font=self.UI_FONT_BOLD).pack(pady=(0, 6), anchor=tk.W)
-        self.expression_output_text = scrolledtext.ScrolledText(parent, height=12, width=92)
-        self._style_text_widget(self.expression_output_text)
-        self.expression_output_text.pack(pady=(0, 2), fill=tk.BOTH, expand=True)
-
     def _build_image_fetcher_workspace(self, parent):
         path_frame = ttk.LabelFrame(parent, text="图像抓取目录")
         path_frame.pack(pady=(4, 12), fill=tk.X)
@@ -2084,7 +2079,7 @@ class BlindBoxExtractor:
             self.root.after_idle(self.expression_input_text.focus_set)
 
     def extract_expression_content(self):
-        if not self.expression_input_text or not self.expression_output_text:
+        if not self.expression_input_text:
             return
 
         try:
@@ -2096,28 +2091,25 @@ class BlindBoxExtractor:
                 template_index=template_index,
                 random_template=random_template,
             )
-            self.expression_output_text.delete(1.0, tk.END)
-            self.expression_output_text.insert(tk.END, result)
+            self.expression_output_text = result
             self._stage_expression_stats_result(input_text, result)
             self._set_expression_detail_text(self._format_expression_detail_summary(result))
         except ValueError as exc:
-            self.expression_output_text.delete(1.0, tk.END)
-            self.expression_output_text.insert(tk.END, str(exc))
-            self._set_expression_detail_text("")
+            self.expression_output_text = str(exc)
+            self._set_expression_detail_text(f"错误：{exc}")
 
     def clear_expression_input(self):
         if self.expression_input_text:
             self._clear_and_optionally_paste(self.expression_input_text, is_text_widget=True)
 
     def copy_expression_result(self):
-        if not self.expression_output_text:
+        content = str(getattr(self, "expression_output_text", "") or "").strip()
+        if not content:
             return
 
-        content = self.expression_output_text.get(1.0, tk.END).strip()
-        if content:
-            self.root.clipboard_clear()
-            self.root.clipboard_append(content)
-            self.root.update()
+        self.root.clipboard_clear()
+        self.root.clipboard_append(content)
+        self.root.update()
 
     def copy_expression_stats_summary(self):
         self._commit_pending_expression_stats()

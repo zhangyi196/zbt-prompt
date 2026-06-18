@@ -58,6 +58,9 @@ class FakeText:
     def __init__(self, initial="seed"):
         self.content = initial
 
+    def configure(self, **kwargs):
+        pass
+
     def delete(self, start, end):
         self.content = ""
 
@@ -101,12 +104,26 @@ class ClearInputBehaviorTests(unittest.TestCase):
 
     def test_copy_expression_result_ignores_expression_detail_text(self):
         extractor = self.make_extractor()
-        extractor.expression_output_text = FakeText(initial="增强后文本")
+        extractor.expression_output_text = "增强后文本"
         extractor.expression_detail_text = FakeText(initial="具体表情查看")
 
         extractor.copy_expression_result()
 
         self.assertEqual(extractor.root.copied_text, "增强后文本")
+
+    def test_extract_expression_error_is_shown_in_detail_text(self):
+        extractor = self.make_extractor()
+        extractor.expression_input_text = FakeText(initial="bad")
+        extractor.expression_detail_text = FakeText(initial="")
+        extractor.expression_template_mode_var = FakeVar("random")
+        extractor.enhance_expression_text = lambda *args, **kwargs: (_ for _ in ()).throw(
+            ValueError("缺少字段")
+        )
+
+        extractor.extract_expression_content()
+
+        self.assertEqual(extractor.expression_output_text, "缺少字段")
+        self.assertEqual(extractor.expression_detail_text.content, "错误：缺少字段")
 
 
 if __name__ == "__main__":
