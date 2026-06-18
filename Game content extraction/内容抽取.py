@@ -429,24 +429,51 @@ class BlindBoxExtractor:
         counts = stats.get("committed_counts", {})
 
         lines = [
-            "表情统计参考，仅用于同等贴合时提升多样性，不得覆盖剧情判断。",
+            "表情统计参考，仅用于强贴合候选内排序，不得覆盖剧情判断。",
             "统计口径：每组输入只统计最后一次实际使用结果；当前摘要来自已提交的实际使用结果。",
             "",
         ]
         for polarity in ("正向", "负向"):
             polarity_counts = counts.get(polarity, {})
-            summary_items = [
-                f"{expression_name} {int(polarity_counts.get(expression_name, 0) or 0)}"
-                for expression_name in category_order.get(polarity, [])
-            ]
             lines.append(f"{polarity}：")
-            lines.append("，".join(summary_items) + "。")
+            grouped_counts = self._group_expression_stats_by_count(
+                category_order.get(polarity, []),
+                polarity_counts,
+            )
+            lines.append(
+                f"优先补齐：{self._format_expression_stats_group(grouped_counts['priority'])}。"
+            )
+            lines.append(
+                f"正常可用：{self._format_expression_stats_group(grouped_counts['normal'])}。"
+            )
+            lines.append(
+                f"降权冷却：{self._format_expression_stats_group(grouped_counts['cooldown'])}。"
+            )
             lines.append("")
 
         lines.append(
-            "选择规则：先按剧情和人物反馈筛选贴合类别；同等贴合时优先低统计表情，减少高统计表情；不得为了补低频强行选择不贴剧情的表情。"
+            "选择规则：先按剧情、人物反馈和极性筛出 4-6 个强贴合候选；0 次优先补齐，1-2 次正常可用，3 次及以上降权冷却；不得为了补低频选择弱相关表情。"
         )
         return "\n".join(lines).strip()
+
+    def _group_expression_stats_by_count(self, expression_names, polarity_counts):
+        grouped_counts = {
+            "priority": [],
+            "normal": [],
+            "cooldown": [],
+        }
+        for expression_name in expression_names:
+            count = int(polarity_counts.get(expression_name, 0) or 0)
+            if count <= 0:
+                grouped_counts["priority"].append(expression_name)
+            elif count <= 2:
+                grouped_counts["normal"].append(f"{expression_name} {count}")
+            else:
+                grouped_counts["cooldown"].append(f"{expression_name} {count}")
+        return grouped_counts
+
+    def _format_expression_stats_group(self, items):
+        return "，".join(items) if items else "无"
 
     def _format_expression_detail_summary(self, text):
         entries = self._extract_expression_usage_entries(text, include_display=True)

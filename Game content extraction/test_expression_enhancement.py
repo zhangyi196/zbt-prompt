@@ -529,19 +529,23 @@ class ExpressionEnhancementTests(unittest.TestCase):
         self.assertEqual(extractor.draw_history["animal_pools"], history_data["animal_pools"])
         self.assertIn("expression_category:负向:单人", extractor.draw_history["expression_pools"])
 
-    def test_expression_stats_summary_includes_all_library_categories(self):
+    def test_expression_stats_summary_groups_categories_by_count(self):
         extractor = self.make_extractor()
         extractor.expression_stats["committed_counts"]["正向"] = {"喜欢": 2}
         extractor.expression_stats["committed_counts"]["负向"] = {"困惑": 3}
 
         summary = extractor._format_expression_stats_summary()
 
-        for polarity, expressions in self.library.items():
-            for expression_name in expressions:
-                expected_count = "2" if expression_name == "喜欢" else "3" if expression_name == "困惑" else "0"
-                self.assertIn(f"{expression_name} {expected_count}", summary)
+        self.assertIn("正向：", summary)
+        self.assertIn("优先补齐：崇拜", summary)
+        self.assertIn("正常可用：喜欢 2", summary)
+        self.assertIn("降权冷却：无", summary)
+        self.assertIn("负向：", summary)
+        self.assertIn("优先补齐：生气", summary)
+        self.assertIn("降权冷却：困惑 3", summary)
         self.assertIn("统计口径：每组输入只统计最后一次实际使用结果", summary)
-        self.assertIn("不得为了补低频强行选择不贴剧情的表情", summary)
+        self.assertIn("0 次优先补齐，1-2 次正常可用，3 次及以上降权冷却", summary)
+        self.assertIn("不得为了补低频选择弱相关表情", summary)
 
     def test_expression_stats_commits_only_latest_result_for_same_input(self):
         extractor = self.make_extractor()
