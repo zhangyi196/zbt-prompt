@@ -184,9 +184,25 @@
       "harvested": false,
       "created_at": "2026-05-27T16:38:54.242532+08:00",
       "completed_at": "2026-05-27T16:52:52.647964+08:00"
+    },
+    {
+      "id": "QCK-004",
+      "type": "quick",
+      "scope": "adhoc",
+      "status": "completed",
+      "milestone": "M2",
+      "phase": null,
+      "title": "修复 M2 审计入口路径与路线图状态",
+      "description": "解决 M2 milestone audit 的根入口路径不一致与 roadmap 进度未同步 warning。",
+      "directory": ".workflow/scratch/quick-fix-m2-audit-warnings-20260618/",
+      "path": ".workflow/scratch/quick-fix-m2-audit-warnings-20260618/",
+      "verified": "passed",
+      "harvested": false,
+      "created_at": "2026-06-18T00:00:00+08:00",
+      "completed_at": "2026-06-18T00:00:00+08:00"
     }
   ],
-  "last_updated": "2026-05-27T16:52:52.647964+08:00",
+  "last_updated": "2026-06-18T00:00:00+08:00",
   "last_codebase_rebuild": "2026-05-21T16:00:00+08:00",
   "accumulated_context": {
     "key_decisions": [],

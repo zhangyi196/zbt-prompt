@@ -3,19 +3,19 @@
 
 # Agents Guide
 
-本仓库维护中文提示词规则与配套桌面工具；根目录 `agents.md` 只做总导航，主图提示词细则收敛在 `prompts/main-image/agents.md`，`Game content extraction/` 工具细则见 `Game content extraction/agents.md`。
+本仓库维护中文提示词规则与配套桌面工具；根目录 `agents.md` 只做总导航，主图提示词细则收敛在 `prompts/1.main-image/agents.md`，`Game content extraction/` 工具细则见 `Game content extraction/agents.md`。
 
 ## 入口
 
 - `skills/green-circle-photo-prompts/SKILL.md`：文件夹路径驱动的洗图 skill；主 agent 调度 4 个 subagent，直接调用 `prompts/0.image-prompt/绿圈洗图 2 v1.2.1.1 3组.md` 作为系统提示词，并按参考图同名写入 `txt`。
 - `prompts/0.image-prompt/agents.md`：绿圈洗图提示词入口与版本管理。
-- `prompts/main-image/agents.md`：主图 AI 提示词总入口。
-- `prompts/main-image/主图 第一步.md`：输入 Target 后直接输出盲盒类别编号、动物字段、禁用字段和补偿字段。
-- `prompts/main-image/主图 第二步 .md`：审核和摆放候选物；用户给了候选就不得脑补新候选，默认按稳定承载面上的可见物体处理。
-- `prompts/group-image/agents.md`：组图 AI 提示词总入口。
-- `prompts/group-image/组图 4.md`：18 个找不同差异点，九宫格每区 2 个。
-- `prompts/group-image/组图 23.md`：Ref-A / Ref-B 到 Target 的差异迁移。
-- `prompts/group-image/组图 23 表情前置.md`、`组图 23 表情库.md`、`组图 23 表情库 版本管理.md`：人物表情前置规则、正向 24 类 + 负向 24 类事实源与版本记录；其中表情库固定留在根目录。
+- `prompts/1.main-image/agents.md`：主图 AI 提示词总入口。
+- `prompts/1.main-image/主图 第一步.md`：输入 Target 后直接输出盲盒类别编号、动物字段、禁用字段和补偿字段。
+- `prompts/1.main-image/主图 第二步 .md`：审核和摆放候选物；用户给了候选就不得脑补新候选，默认按稳定承载面上的可见物体处理。
+- `prompts/2.group-image/agents.md`：组图 AI 提示词总入口。
+- `prompts/2.group-image/组图 4.md`：18 个找不同差异点，九宫格每区 2 个。
+- `prompts/2.group-image/组图 23.md`：Ref-A / Ref-B 到 Target 的差异迁移。
+- `prompts/2.group-image/组图 23 表情前置.md`、`组图 23 表情库.md`、`组图 23 表情库 版本管理.md`：人物表情前置规则、正向 24 类 + 负向 24 类事实源与版本记录；其中表情库固定留在根目录。
 - `美式卡通具体表情写法.md`：表情库 2.0.1 具体写法草案；每类按主锚点、识别条件、变化旋钮和禁止偏移生成 8 个具体卡通脸部变体。
 - `表情库 2.0.0版本.md`：人物表情库 2.0.1 目录草案；当前只记录正向 24 类、负向 24 类的分类、核心面部表现和禁止表现，后续以正式库为准。
 - `Game content extraction/data/agents.md`、`审查规则.md`、`审查文件.md`、`审查文件/{类别} 审查文档.md`、`修改规则.md`、`全局重复词定位清单.md`：盲盒数据和审查 / 修改规则；改 `blind_boxes.py` 前先读。
@@ -56,7 +56,7 @@
 ## 修改与发布
 
 - 修改前先读目标文件职责和对应规则文档；修改中只动相关段落；修改后做回归验证。
-- 根目录 `agents.md` 只保留稳定规则和入口；主图执行细则写在 `prompts/main-image/agents.md`，工具执行细则写在 `Game content extraction/agents.md`。
+- 根目录 `agents.md` 只保留稳定规则和入口；主图执行细则写在 `prompts/1.main-image/agents.md`，工具执行细则写在 `Game content extraction/agents.md`。
 - 涉及 App 逻辑时同步查看 `Game content extraction/agents.md`。
 - `Game content extraction/build/`、`Game content extraction/dist/` 和 `Game content extraction/release/*.exe` 属于本地构建产物，默认保持忽略；若 `.gitignore` 命中已跟踪文件，需同步取消跟踪。
 - 桌面工具安装包固定输出到 `Game content extraction/release/`；发布前先确认本地安装包名、版本号和 Release 资产一致。

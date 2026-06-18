@@ -1,0 +1,9 @@
+{
+  "task": "解决 M2 milestone audit 的两个 warning：根入口路径不一致、roadmap 进度未同步",
+  "flags": {
+    "discuss": false,
+    "full": false
+  },
+  "created_at": "2026-06-18T00:00:00+08:00",
+  "status": "completed"
+}

@@ -1,0 +1,31 @@
+{
+  "summary": "同步 M2 审计 warning 指出的入口路径和 roadmap 状态",
+  "tasks": [
+    {
+      "id": "TASK-001",
+      "title": "修正根入口路径",
+      "status": "completed",
+      "files": [
+        "agents.md",
+        "README.md"
+      ],
+      "convergence_criteria": [
+        "根入口不再引用 prompts/group-image",
+        "根入口不再引用 prompts/main-image"
+      ]
+    },
+    {
+      "id": "TASK-002",
+      "title": "同步 roadmap 进度",
+      "status": "completed",
+      "files": [
+        ".workflow/roadmap.md"
+      ],
+      "convergence_criteria": [
+        "Phase 1 勾选为 completed",
+        "Progress 表不再显示 Not started"
+      ]
+    }
+  ],
+  "status": "completed"
+}

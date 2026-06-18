@@ -1,13 +1,13 @@
 # zbt prompt
 
-本仓库维护中文提示词规则，并包含本地 `tkinter` 工具 `Game content extraction/`。项目总导航见 [agents.md](agents.md)，主图提示词细则见 [prompts/main-image/agents.md](prompts/main-image/agents.md)，工具细则见 [Game content extraction/agents.md](Game%20content%20extraction/agents.md)。
+本仓库维护中文提示词规则，并包含本地 `tkinter` 工具 `Game content extraction/`。项目总导航见 [agents.md](agents.md)，主图提示词细则见 [prompts/1.main-image/agents.md](prompts/1.main-image/agents.md)，工具细则见 [Game content extraction/agents.md](Game%20content%20extraction/agents.md)。
 
 ## 目录
 
 - `skills/green-circle-photo-prompts/`：文件夹路径驱动的洗图 skill，直接调用 `prompts/0.image-prompt/绿圈洗图 2 v1.2.1.1 3组.md` 作为系统提示词，并按参考图同名生成 `txt`。
 - `prompts/0.image-prompt/`：绿圈洗图 AI 提示词目录，含专属 `agents.md` 和版本管理文档。
-- `prompts/main-image/`：主图 AI 提示词目录，含专属 `agents.md`、`主图 第一步.md`、`主图 第二步 .md`。
-- `prompts/group-image/`：组图 AI 提示词目录，含专属 `agents.md`、`组图 4.md`、`组图 23.md`、`组图 23 表情前置.md`。
+- `prompts/1.main-image/`：主图 AI 提示词目录，含专属 `agents.md`、`主图 第一步.md`、`主图 第二步 .md`。
+- `prompts/2.group-image/`：组图 AI 提示词目录，含专属 `agents.md`、`组图 4.md`、`组图 23.md`、`组图 23 表情前置.md`。
 - `组图 23 表情库.md`、`组图 23 表情库 版本管理.md`：人物表情模板库与版本记录，正向 24 类、负向 24 类，保留根目录固定位置供提示词和工具共用。
 - `美式卡通具体表情写法.md`：人物表情库 2.0.1 具体写法草案，说明“主锚点 + 识别条件 + 变化旋钮 + 禁止偏移”生成 8 个具体卡通脸部变体的方法。
 - `表情库 2.0.0版本.md`：人物表情库 2.0.1 目录草案，记录正向 24 类、负向 24 类的分类、核心面部表现和禁止表现。
@@ -18,7 +18,7 @@
 
 ## 盲盒内容库
 
-盲盒物品库已替换为 20 个 `常见场景+用途` 入口，并同步到 `prompts/main-image/主图 第一步.md`。每类按四池维护：
+盲盒物品库已替换为 20 个 `常见场景+用途` 入口，并同步到 `prompts/1.main-image/主图 第一步.md`。每类按四池维护：
 
 - `core_items`
 - `support_items`
@@ -34,9 +34,9 @@
 ## 维护要点
 
 - 提示词保持中文风格、固定输出、数量配额、自检项和既有链路；项目总导航与子目录执行细则分层维护。
-- `prompts/group-image/组图 23.md` 保留 Ref 绑定、人物热区互斥、冷区兜底、空间可放置性和灯具照明关系约束。
+- `prompts/2.group-image/组图 23.md` 保留 Ref 绑定、人物热区互斥、冷区兜底、空间可放置性和灯具照明关系约束。
 - 新增、异物植入或替换为更大物体前，必须确认 Target 中有完整可见、未被占用且不会挤压原主体的空间。
-- 根目录 `agents.md`、`README.md`、`.gitignore`，以及工具目录 `Game content extraction/agents.md`、`Game content extraction/README.md` 必须保持精简，只记录稳定规则和必要入口；主图详细执行规则收敛在 `prompts/main-image/agents.md`，组图详细执行规则收敛在 `prompts/group-image/agents.md`。
+- 根目录 `agents.md`、`README.md`、`.gitignore`，以及工具目录 `Game content extraction/agents.md`、`Game content extraction/README.md` 必须保持精简，只记录稳定规则和必要入口；主图详细执行规则收敛在 `prompts/1.main-image/agents.md`，组图详细执行规则收敛在 `prompts/2.group-image/agents.md`。
 
 ## 发布
 
