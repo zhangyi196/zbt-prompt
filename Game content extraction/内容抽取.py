@@ -19,7 +19,7 @@ from data.animals import ANIMALS
 from data.blind_boxes import BLIND_BOXES, BLIND_BOX_ITEM_POOL_BUNDLES
 from data.item_states import ITEM_STATE_GROUPS, ITEM_STATE_GROUP_WEIGHTS
 
-APP_VERSION = "0.1.8"
+APP_VERSION = "0.1.9"
 UPDATE_API_URL = "https://api.github.com/repos/zhangyi196/zbt-prompt/releases/latest"
 UPDATE_RELEASES_LIST_API_URL = "https://api.github.com/repos/zhangyi196/zbt-prompt/releases?per_page=20"
 UPDATE_RELEASES_URL = "https://github.com/zhangyi196/zbt-prompt/releases"
@@ -441,35 +441,47 @@ class BlindBoxExtractor:
                 polarity_counts,
             )
             lines.append(
-                f"优先补齐：{self._format_expression_stats_group(grouped_counts['priority'])}。"
+                f"权重5（0次，优先补齐）：{self._format_expression_stats_group(grouped_counts['weight5'])}。"
             )
             lines.append(
-                f"正常可用：{self._format_expression_stats_group(grouped_counts['normal'])}。"
+                f"权重4（1次，优先可用）：{self._format_expression_stats_group(grouped_counts['weight4'])}。"
             )
             lines.append(
-                f"降权冷却：{self._format_expression_stats_group(grouped_counts['cooldown'])}。"
+                f"权重3（2次，正常可用）：{self._format_expression_stats_group(grouped_counts['weight3'])}。"
+            )
+            lines.append(
+                f"权重2（3-4次，降权）：{self._format_expression_stats_group(grouped_counts['weight2'])}。"
+            )
+            lines.append(
+                f"权重1（5次及以上，强降权）：{self._format_expression_stats_group(grouped_counts['weight1'])}。"
             )
             lines.append("")
 
         lines.append(
-            "选择规则：先按剧情、人物反馈和极性筛出 4-6 个强贴合候选；0 次优先补齐，1-2 次正常可用，3 次及以上降权冷却；不得为了补低频选择弱相关表情。"
+            "选择规则：先按剧情、人物反馈和极性筛出 4-6 个强贴合候选；统计权重只在强贴合候选内排序，不跨剧情补低频；同等贴合时优先高权重，权重1-2仅在唯一强匹配或功能明显更贴合时使用；不得为了补低频选择弱相关表情。"
         )
         return "\n".join(lines).strip()
 
     def _group_expression_stats_by_count(self, expression_names, polarity_counts):
         grouped_counts = {
-            "priority": [],
-            "normal": [],
-            "cooldown": [],
+            "weight5": [],
+            "weight4": [],
+            "weight3": [],
+            "weight2": [],
+            "weight1": [],
         }
         for expression_name in expression_names:
             count = int(polarity_counts.get(expression_name, 0) or 0)
             if count <= 0:
-                grouped_counts["priority"].append(expression_name)
-            elif count <= 2:
-                grouped_counts["normal"].append(f"{expression_name} {count}")
+                grouped_counts["weight5"].append(expression_name)
+            elif count == 1:
+                grouped_counts["weight4"].append(f"{expression_name} {count}")
+            elif count == 2:
+                grouped_counts["weight3"].append(f"{expression_name} {count}")
+            elif count <= 4:
+                grouped_counts["weight2"].append(f"{expression_name} {count}")
             else:
-                grouped_counts["cooldown"].append(f"{expression_name} {count}")
+                grouped_counts["weight1"].append(f"{expression_name} {count}")
         return grouped_counts
 
     def _format_expression_stats_group(self, items):
