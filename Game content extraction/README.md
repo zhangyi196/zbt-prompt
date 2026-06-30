@@ -18,10 +18,10 @@
 
 ## 下载
 
-当前用于检查更新测试的版本对：`v0.1.9 -> v0.2.0`。`v0.2.0` 包含人物表情统计的手动降低入口。
+当前用于检查更新测试的版本对：`v0.2.0 -> v0.2.1`。`v0.2.1` 包含人物表情库中 `松口气` 替换 `憋笑嘴硬`，并保留人物表情统计的手动降低入口。
 
 - Release 页面：<https://github.com/zhangyi196/zbt-prompt/releases>
-- 测试安装包：`GameContentExtraction-Setup-v0.1.9.exe`、`GameContentExtraction-Setup-v0.2.0.exe`
+- 测试安装包：`GameContentExtraction-Setup-v0.2.0.exe`、`GameContentExtraction-Setup-v0.2.1.exe`
 - 具体文件大小、SHA256 和最新测试资产以 Releases 页面为准。
 - 安装器会显示安装路径选择页，可修改默认安装目录。
 

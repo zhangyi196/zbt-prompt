@@ -1,0 +1,83 @@
+{
+  "$schema": "context-package/1.0",
+  "source": {
+    "type": "grill",
+    "artifact_id": "GRL-003",
+    "session_path": ".workflow/scratch/20260630-grill-replace-biexiao-zuiying/",
+    "generated_at": "2026-06-30T15:50:00+08:00"
+  },
+  "requirements": [
+    {
+      "id": "R-001",
+      "title": "替换低频正向表情类别",
+      "description": "将正向表情 `憋笑嘴硬` 替换为 `松口气`，保持正向类别总数 24 个。",
+      "priority": "must",
+      "ref": "grill-report.md#Q12"
+    }
+  ],
+  "constraints": [
+    {
+      "id": "C-001",
+      "area": "consistency",
+      "constraint": "MUST keep the expression library category list and front prompt category list aligned.",
+      "rationale": "工具测试会校验前置类别顺序等于表情库顺序。",
+      "status": "locked",
+      "ref": "Game content extraction/test_expression_enhancement.py"
+    },
+    {
+      "id": "C-002",
+      "area": "scope",
+      "constraint": "MUST remove `憋笑嘴硬` as a formal positive category and replace it with `松口气` across the expression library and front prompt category list.",
+      "rationale": "用户确认替换整个类别，并选择 `松口气`。",
+      "status": "locked",
+      "ref": "grill-report.md#Q11"
+    },
+    {
+      "id": "C-003",
+      "area": "runtime-data",
+      "constraint": "MUST NOT edit runtime history/stat files for this library replacement.",
+      "rationale": "本地抽取历史和统计属于用户数据，不应随库规则修改硬改。",
+      "status": "locked",
+      "ref": "grill-report.md#Q21"
+    }
+  ],
+  "domain": {
+    "problem_statement": "`憋笑嘴硬` 作为正向正式类别使用率低，需要替换为更常见、更清晰的 `松口气`。",
+    "terminology": [
+      {
+        "term": "松口气",
+        "definition": "用于危险解除、误会化解、终于过关、紧张后放松的正向表情类别。",
+        "code_ref": "new",
+        "status": "locked"
+      }
+    ],
+    "audience": "内部生产人员",
+    "industry": "找不同游戏内容生产"
+  },
+  "non_goals": [
+    {
+      "title": "不迁移本地历史统计",
+      "rationale": "只替换仓库规则与事实源，不处理用户本机运行时数据。",
+      "ref": "grill-report.md#Q22"
+    }
+  ],
+  "insights": [
+    {
+      "area": "category-design",
+      "summary": "`松口气` 比 `憋笑嘴硬` 更常见，并避开现有藏笑 / 坏笑类重叠。",
+      "evidence": "现有正向类别包含 `忍笑`、`眯眼坏笑`、`偷乐憋笑`。",
+      "ref": "grill-report.md#Q12"
+    }
+  ],
+  "open_questions": [],
+  "references": [
+    {
+      "type": "grill-report",
+      "path": "grill-report.md"
+    },
+    {
+      "type": "terminology",
+      "path": "terminology.md"
+    }
+  ]
+}

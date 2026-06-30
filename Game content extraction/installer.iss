@@ -1,8 +1,8 @@
 #define MyAppName "游戏内容抽取工具"
-#define MyAppVersion "0.2.0"
+#define MyAppVersion "0.2.1"
 #define MyAppPublisher "zbt prompt"
 #define MyAppExeName "内容抽取.exe"
-#define MyOutputName "GameContentExtraction-Setup-v0.2.0"
+#define MyOutputName "GameContentExtraction-Setup-v0.2.1"
 
 [Setup]
 AppId={{66DB8C36-AB7F-4F7C-B7B6-9A3796A29EA1}
