@@ -19,7 +19,7 @@ from data.animals import ANIMALS
 from data.blind_boxes import BLIND_BOXES, BLIND_BOX_ITEM_POOL_BUNDLES
 from data.item_states import ITEM_STATE_GROUPS, ITEM_STATE_GROUP_WEIGHTS
 
-APP_VERSION = "0.1.9"
+APP_VERSION = "0.2.0"
 UPDATE_API_URL = "https://api.github.com/repos/zhangyi196/zbt-prompt/releases/latest"
 UPDATE_RELEASES_LIST_API_URL = "https://api.github.com/repos/zhangyi196/zbt-prompt/releases?per_page=20"
 UPDATE_RELEASES_URL = "https://github.com/zhangyi196/zbt-prompt/releases"
@@ -377,6 +377,39 @@ class BlindBoxExtractor:
                 polarity_counts[expression_name] = next_count
             else:
                 polarity_counts.pop(expression_name, None)
+
+    def _reduce_expression_stats_for_polarity(self, polarity, amount):
+        if polarity not in ("正向", "负向"):
+            raise ValueError("极性只能选择正向或负向")
+        try:
+            reduce_amount = int(amount)
+        except (TypeError, ValueError):
+            raise ValueError("降低次数必须是正整数") from None
+        if reduce_amount <= 0:
+            raise ValueError("降低次数必须是正整数")
+
+        stats = getattr(self, "expression_stats", None)
+        if not isinstance(stats, dict):
+            stats = self._load_expression_stats()
+        counts = stats.setdefault("committed_counts", {})
+        if not isinstance(counts.get(polarity), dict):
+            counts[polarity] = {}
+
+        changed_count = 0
+        polarity_counts = counts[polarity]
+        for expression_name in self._get_expression_category_order().get(polarity, []):
+            current_count = int(polarity_counts.get(expression_name, 0) or 0)
+            if current_count <= 0:
+                continue
+            next_count = max(0, current_count - reduce_amount)
+            if next_count:
+                polarity_counts[expression_name] = next_count
+            else:
+                polarity_counts.pop(expression_name, None)
+            changed_count += 1
+
+        self._save_expression_stats()
+        return changed_count
 
     def _commit_pending_expression_stats(self):
         stats = getattr(self, "expression_stats", None)
@@ -1698,6 +1731,7 @@ class BlindBoxExtractor:
         ttk.Button(button_frame, text="清空输入", command=self.clear_expression_input, style="Secondary.TButton").pack(side=tk.LEFT, padx=8)
         ttk.Button(button_frame, text="抽取表情", command=self.extract_expression_content, style="Primary.TButton").pack(side=tk.LEFT, padx=8)
         ttk.Button(button_frame, text="复制结果", command=self.copy_expression_result, style="Secondary.TButton").pack(side=tk.LEFT, padx=8)
+        ttk.Button(button_frame, text="降低统计", command=self.open_expression_stats_reduction_dialog, style="Secondary.TButton").pack(side=tk.LEFT, padx=8)
 
         ttk.Label(parent, text="具体表情查看:", font=self.UI_FONT_BOLD).pack(pady=(0, 6), anchor=tk.W)
         self.expression_detail_text = scrolledtext.ScrolledText(parent, height=5, width=92)
@@ -2156,6 +2190,66 @@ class BlindBoxExtractor:
         self.root.clipboard_clear()
         self.root.clipboard_append(content)
         self.root.update()
+
+    def open_expression_stats_reduction_dialog(self):
+        dialog = tk.Toplevel(self.root)
+        dialog.title("降低表情统计")
+        dialog.resizable(False, False)
+        dialog.transient(self.root)
+        dialog.configure(bg=self.UI_COLORS["panel_bg"])
+
+        polarity_var = tk.StringVar(value="正向")
+        amount_var = tk.StringVar(value="1")
+        content_frame = ttk.Frame(dialog, padding=(18, 16))
+        content_frame.pack(fill=tk.BOTH, expand=True)
+
+        ttk.Label(content_frame, text="选择极性:", font=self.UI_FONT_BOLD).grid(row=0, column=0, sticky=tk.W, pady=(0, 8))
+        polarity_frame = ttk.Frame(content_frame)
+        polarity_frame.grid(row=0, column=1, sticky=tk.W, pady=(0, 8))
+        ttk.Radiobutton(polarity_frame, text="正向", variable=polarity_var, value="正向").pack(side=tk.LEFT, padx=(0, 10))
+        ttk.Radiobutton(polarity_frame, text="负向", variable=polarity_var, value="负向").pack(side=tk.LEFT)
+
+        ttk.Label(content_frame, text="降低次数:", font=self.UI_FONT_BOLD).grid(row=1, column=0, sticky=tk.W, pady=(0, 12))
+        amount_spinbox = tk.Spinbox(
+            content_frame,
+            from_=1,
+            to=999,
+            width=6,
+            textvariable=amount_var,
+            **self._spinbox_style_options(),
+        )
+        amount_spinbox.grid(row=1, column=1, sticky=tk.W, pady=(0, 12))
+
+        ttk.Label(
+            content_frame,
+            text="每次只降低所选极性的全部表情统计。",
+            style="Muted.TLabel",
+        ).grid(row=2, column=0, columnspan=2, sticky=tk.W, pady=(0, 14))
+
+        button_frame = ttk.Frame(content_frame)
+        button_frame.grid(row=3, column=0, columnspan=2, sticky=tk.E)
+
+        def confirm():
+            try:
+                amount = amount_var.get()
+                changed_count = self._reduce_expression_stats_for_polarity(polarity_var.get(), amount)
+                display_amount = int(amount)
+            except (ValueError, tk.TclError) as exc:
+                messagebox.showerror("降低统计", str(exc), parent=dialog)
+                return
+            messagebox.showinfo(
+                "降低统计",
+                f"已将{polarity_var.get()}全部表情统计降低 {display_amount} 次，影响 {changed_count} 个已有统计项。",
+                parent=dialog,
+            )
+            dialog.destroy()
+
+        ttk.Button(button_frame, text="取消", command=dialog.destroy, style="Secondary.TButton").pack(side=tk.RIGHT, padx=(8, 0))
+        ttk.Button(button_frame, text="确认", command=confirm, style="Primary.TButton").pack(side=tk.RIGHT)
+
+        dialog.grab_set()
+        amount_spinbox.focus_set()
+        self.root.wait_window(dialog)
 
     def copy_to_clipboard(self):
         content = self.output_text.get(1.0, tk.END).strip()

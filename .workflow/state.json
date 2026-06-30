@@ -85,9 +85,28 @@
       "harvested": false,
       "created_at": "2026-05-21T17:55:00+08:00",
       "completed_at": "2026-05-21T17:55:00+08:00"
+    },
+    {
+      "id": "GRL-002",
+      "type": "grill",
+      "scope": "standalone",
+      "status": "completed",
+      "path": ".workflow/scratch/20260630-grill-expression-stats-reduce/",
+      "context_package": ".workflow/scratch/20260630-grill-expression-stats-reduce/context-package.json",
+      "harvested": false,
+      "created_at": "2026-06-30T15:20:00+08:00",
+      "completed_at": "2026-06-30T15:20:00+08:00",
+      "metadata": {
+        "topic": "人物表情统计主动降低次数",
+        "depth": "shallow",
+        "branches_completed": 3,
+        "decisions_locked": 6,
+        "decisions_open": 0,
+        "terms_defined": 8
+      }
     }
   ],
-  "last_updated": "2026-06-18T00:00:00+08:00",
+  "last_updated": "2026-06-30T15:20:00+08:00",
   "last_codebase_rebuild": "2026-05-21T16:00:00+08:00",
   "accumulated_context": {
     "key_decisions": [],

@@ -1,0 +1,108 @@
+{
+  "$schema": "context-package/1.0",
+  "source": {
+    "type": "grill",
+    "artifact_id": "GRL-002",
+    "session_path": ".workflow/scratch/20260630-grill-expression-stats-reduce/",
+    "generated_at": "2026-06-30T15:20:00+08:00"
+  },
+  "requirements": [
+    {
+      "id": "R-001",
+      "title": "主动降低表情统计次数",
+      "description": "在人物表情抽取工作区增加一个手动降低统计按钮；点击后通过弹窗单选正向或负向并输入降低次数，一次只作用所选极性的全部表情。",
+      "priority": "must",
+      "ref": "grill-report.md#Branch-1"
+    }
+  ],
+  "constraints": [
+    {
+      "id": "C-001",
+      "area": "state",
+      "constraint": "MUST only mutate expression_stats.json committed_counts for this feature, not draw_history.json expression_pools.",
+      "rationale": "表情统计和抽取降权历史在项目规则中独立维护。",
+      "status": "locked",
+      "ref": "Game content extraction/agents.md"
+    },
+    {
+      "id": "C-002",
+      "area": "scope",
+      "constraint": "MUST keep manual reduction separate from _commit_pending_expression_stats(); clicking the reduction control MUST NOT auto-submit current_last_entries.",
+      "rationale": "用户确认该功能是人工认为需要降低时再手动点击，不是自动检测或自动跟随统计按钮。",
+      "status": "locked",
+      "ref": "grill-report.md#Q11"
+    },
+    {
+      "id": "C-003",
+      "area": "ui",
+      "constraint": "MUST expose one manual reduction button; the dialog MUST contain polarity radio selection and one positive integer reduction count, applying to exactly one polarity per confirmation.",
+      "rationale": "用户确认希望放置一个按钮，输入次数，单选正向或负向，而不是一次选两个。",
+      "status": "locked",
+      "ref": "grill-report.md#Q12"
+    },
+    {
+      "id": "C-004",
+      "area": "state",
+      "constraint": "MUST apply reduction to all official categories in the selected polarity by default; counts MUST NOT go below zero.",
+      "rationale": "用户原始需求指定默认所有表情，现有统计减法语义也删除小于等于 0 的计数。",
+      "status": "locked",
+      "ref": "grill-report.md#Q22"
+    }
+  ],
+  "domain": {
+    "problem_statement": "当前表情统计只能自动增加或替换最后一次实际使用结果，用户需要手动回调过高的正负向类别次数。",
+    "terminology": [
+      {
+        "term": "表情统计",
+        "definition": "expression_stats.json 中的前置反馈统计。",
+        "code_ref": "Game content extraction/内容抽取.py:235",
+        "status": "locked"
+      },
+      {
+        "term": "主动降低次数",
+        "definition": "用户通过手动按钮把所选极性的一组表情类别统计计数统一下调。",
+        "code_ref": "new",
+        "status": "locked"
+      },
+      {
+        "term": "降低统计按钮",
+        "definition": "表情工作区新增的一个手动校准入口，点击后弹出极性单选和次数输入。",
+        "code_ref": "new",
+        "status": "locked"
+      }
+    ],
+    "audience": "内部生产人员",
+    "industry": "找不同游戏内容生产"
+  },
+  "non_goals": [
+    {
+      "title": "不修改表情模板库",
+      "rationale": "本功能只处理统计次数，不改变 48 类表情事实源。",
+      "ref": "组图 23 表情库.md"
+    },
+    {
+      "title": "不修改抽取降权历史",
+      "rationale": "draw_history.json.expression_pools 负责随机抽取降权，不属于前置反馈统计。",
+      "ref": "Game content extraction/agents.md"
+    }
+  ],
+  "insights": [
+    {
+      "area": "state",
+      "summary": "现有 `_adjust_expression_stats_counts` 已能按条目加减并防止负数，新增功能可以复用其边界语义或抽出批量下调方法。",
+      "evidence": "Game content extraction/内容抽取.py:363",
+      "ref": "grill-report.md#Codebase-Surface"
+    }
+  ],
+  "open_questions": [],
+  "references": [
+    {
+      "type": "grill-report",
+      "path": "grill-report.md"
+    },
+    {
+      "type": "terminology",
+      "path": "terminology.md"
+    }
+  ]
+}

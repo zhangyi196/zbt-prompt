@@ -611,6 +611,61 @@ class ExpressionEnhancementTests(unittest.TestCase):
         self.assertNotIn("困惑", counts)
         self.assertEqual(counts["生气"], 1)
 
+    def test_reduce_expression_stats_for_polarity_reduces_selected_polarity_only(self):
+        extractor = self.make_extractor()
+        extractor.expression_stats["committed_counts"]["正向"] = {
+            "喜欢": 7,
+            "崇拜": 2,
+            "不存在": 9,
+        }
+        extractor.expression_stats["committed_counts"]["负向"] = {
+            "困惑": 5,
+        }
+
+        changed_count = extractor._reduce_expression_stats_for_polarity("正向", 3)
+
+        self.assertEqual(changed_count, 2)
+        self.assertEqual(extractor.expression_stats["committed_counts"]["正向"]["喜欢"], 4)
+        self.assertNotIn("崇拜", extractor.expression_stats["committed_counts"]["正向"])
+        self.assertEqual(extractor.expression_stats["committed_counts"]["正向"]["不存在"], 9)
+        self.assertEqual(extractor.expression_stats["committed_counts"]["负向"]["困惑"], 5)
+
+    def test_reduce_expression_stats_for_polarity_preserves_current_tracking_fields(self):
+        extractor = self.make_extractor()
+        extractor.expression_stats["committed_counts"]["负向"] = {
+            "困惑": 5,
+        }
+        extractor.expression_stats["current_input_hash"] = "abc"
+        extractor.expression_stats["current_last_entries"] = [
+            {"polarity": "负向", "expression": "困惑"},
+        ]
+        extractor.expression_stats["current_committed_entries"] = [
+            {"polarity": "负向", "expression": "困惑"},
+        ]
+
+        extractor._reduce_expression_stats_for_polarity("负向", 2)
+
+        self.assertEqual(extractor.expression_stats["committed_counts"]["负向"]["困惑"], 3)
+        self.assertEqual(extractor.expression_stats["current_input_hash"], "abc")
+        self.assertEqual(
+            extractor.expression_stats["current_last_entries"],
+            [{"polarity": "负向", "expression": "困惑"}],
+        )
+        self.assertEqual(
+            extractor.expression_stats["current_committed_entries"],
+            [{"polarity": "负向", "expression": "困惑"}],
+        )
+
+    def test_reduce_expression_stats_for_polarity_requires_positive_integer(self):
+        extractor = self.make_extractor()
+
+        with self.assertRaisesRegex(ValueError, "降低次数必须是正整数"):
+            extractor._reduce_expression_stats_for_polarity("正向", 0)
+        with self.assertRaisesRegex(ValueError, "降低次数必须是正整数"):
+            extractor._reduce_expression_stats_for_polarity("正向", "bad")
+        with self.assertRaisesRegex(ValueError, "极性只能选择正向或负向"):
+            extractor._reduce_expression_stats_for_polarity("全部", 1)
+
     def test_expression_detail_summary_extracts_character_and_expression(self):
         extractor = self.make_extractor()
         result = extractor.enhance_expression_text(NEGATIVE_SAMPLE, template_index=4)
